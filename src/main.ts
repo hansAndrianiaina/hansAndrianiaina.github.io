@@ -3,7 +3,7 @@ import './style.css'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-import HomeScene from './scenes/HomeScene';
+// import HomeScene from './scenes/HomeScene';
 import UnderConstruction from './scenes/UnderConstruction';
 
 // scene setup
@@ -13,7 +13,7 @@ scene.initialize();
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 const renderer = new THREE. WebGLRenderer({
-  canvas : document.querySelector('#bg'),
+  canvas : document.querySelector('#bg') as HTMLCanvasElement,
 });
 
 renderer.setPixelRatio(window.devicePixelRatio);

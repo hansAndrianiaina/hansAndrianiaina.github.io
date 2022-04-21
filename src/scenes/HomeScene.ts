@@ -10,7 +10,7 @@ export default class HomeScene extends THREE.Scene
         // star object
         const star = new THREE.Mesh(starGeometry, starMaterial);
         // random star position
-        const [x, y, z] = Array(3).fill().map( () => THREE.MathUtils.randFloatSpread(100) );
+        const [x, y, z] = Array(3).fill(null).map( () => THREE.MathUtils.randFloatSpread(100) );
         star.position.set(x,y,z);
         // add star to the scene
         this.add(star);
