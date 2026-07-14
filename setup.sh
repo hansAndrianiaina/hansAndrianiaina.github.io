@@ -18,17 +18,17 @@ REPO_NAME="${1:-my-3d-portfolio}"
 echo "Scaffolding React Three Fiber portfolio: $REPO_NAME"
 echo ""
 
-npm create vite@latest "$REPO_NAME" -- --template react-ts
-cd "$REPO_NAME"
+# npm create vite@latest "$REPO_NAME" -- --template react-ts
+# cd "$REPO_NAME"
 
-echo ""
-echo "Installing dependencies..."
-npm install three @react-three/fiber @react-three/drei
-npm install -D @types/three gh-pages
+# echo ""
+# echo "Installing dependencies..."
+# npm install three @react-three/fiber @react-three/drei
+# npm install -D @types/three gh-pages
 
 mkdir -p public/models
 mkdir -p src/components
-mkdir -p .github/workflows
+# mkdir -p .github/workflows
 
 # ---------------------------------------------------------------
 # vite.config.ts — base path matches repo name for GitHub Pages
