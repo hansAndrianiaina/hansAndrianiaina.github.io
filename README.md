@@ -28,6 +28,42 @@ This is a personal portfolio website built with:
 ├── vite.config.ts
 └── CLAUDE.md             # Project guidelines
 ```
+## Getting Started 
+
+- Clone the repo and install the necessary dependacies : 
+
+```sh
+# 1. Clone the repository
+git clone https://github.com/hansAndrianiaina/hansAndrianiaina.github.io.git
+cd hansAndrianiaina.github.io
+
+# 2. Install dependencies
+npm install
+```
+
+- Run the app using : 
+
+```sh
+# 3. Start development server
+npm run dev
+```
+
+- Then open http://localhost:5173 - should see a dark screen with an orange rotating cube in the center and an info panel at bottom-left with name and links. Orbit controls should allow orbit/pan/zoom.
+
+
+### Requirements
+
+- **node**: v24.18.0
+- **npm**: 11.16.0
+- **React**: 18.3.1
+- **React Three Fiber**: 8.16.8
+- **@react-three/drei**: 9.111.1
+- **@react-three/fiber**: 8.16.8
+- **TypeScript**: 5.6.2 (strict mode)
+- **Vite**: 5.4.10
+- **@vitejs/plugin-react**: 4.3.4
+
+### Install
 
 ## How It Works
 
@@ -60,19 +96,3 @@ This is a personal portfolio website built with:
 - `index.css`: CSS reset + full-screen html/body/#root
 - `App.css`: Dark background (#111), info panel styling (white text, text-shadow, pointer-events handling)
 
-### 6. Tech Stack (package.json dependencies)
-- **React**: 18.3.1
-- **React Three Fiber**: 8.16.8
-- **@react-three/drei**: 9.111.1
-- **@react-three/fiber**: 8.16.8
-- **TypeScript**: 5.6.2 (strict mode)
-- **Vite**: 5.4.10
-- **@vitejs/plugin-react**: 4.3.4
-
-## Verification
-To verify the app works:
-```bash
-npm install
-npm run dev
-```
-Then open http://localhost:5173 - should see a dark screen with an orange rotating cube in the center and an info panel at bottom-left with name and links. Orbit controls should allow orbit/pan/zoom.
