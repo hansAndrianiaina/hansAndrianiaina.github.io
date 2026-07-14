@@ -6,12 +6,13 @@ This is a personal portfolio website built with:
 - **Vite** as the build tool
 - **React Three Fiber** (@react-three/fiber) for 3D rendering
 - **@react-three/drei** for helpers (OrbitControls, Environment, Stats)
-- **Vite** as the build tool
 - **TypeScript** in strict mode
 
 ## Project Structure
 ```
-/home/hanssi/projects/app/hansAndrianiaina.github.io/
+/hansAndrianiaina.github.io/
+├── public/
+│   └── models/           # 3D assets
 ├── src/
 │   ├── main.tsx          # Entry point
 │   ├── App.tsx           # Root component with 3D canvas + info panel
@@ -26,6 +27,7 @@ This is a personal portfolio website built with:
 ├── tsconfig.app.json
 ├── tsconfig.node.json
 ├── vite.config.ts
+├── index.html            # Web entry point
 └── CLAUDE.md             # Project guidelines
 ```
 ## Getting Started 
@@ -63,7 +65,6 @@ npm run dev
 - **Vite**: 5.4.10
 - **@vitejs/plugin-react**: 4.3.4
 
-### Install
 
 ## How It Works
 
