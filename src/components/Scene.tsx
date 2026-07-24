@@ -7,7 +7,14 @@ export default function Scene() {
   return (
     <Canvas camera={{ position: [0, 1, 4], fov: 45 }}>
       <color attach="background" args={['#abbbb8']} />
+      <fog attach="fog" args={['#abbbb8', 10, 20]} />
+
       <Suspense fallback={null}>
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 0]}>
+          {/* args={[width, height]} */}
+          <planeGeometry args={[50, 50]} />
+          <meshStandardMaterial color="gray" />
+        </mesh>
         <Bounds fit clip observe margin={1.2}>
           <Center>
             <Model />
