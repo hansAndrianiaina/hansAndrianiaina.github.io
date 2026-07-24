@@ -10,7 +10,7 @@ export default function Scene() {
       <fog attach="fog" args={['#abbbb8', 10, 20]} />
 
       <Suspense fallback={null}>
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 0]}>
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.1, 0]}>
           {/* args={[width, height]} */}
           <planeGeometry args={[50, 50]} />
           <meshStandardMaterial color="gray" />

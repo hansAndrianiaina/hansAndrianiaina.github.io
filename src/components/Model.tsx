@@ -6,7 +6,6 @@ Command: npx gltfjsx@6.5.3 public/models/scene.glb --types -o src/components/Mod
 import * as THREE from 'three'
 import React from 'react'
 import { useGLTF } from '@react-three/drei'
-// import { GLTF } from 'three-stdlib'
 import type { GLTF } from 'three-stdlib'
 
 type GLTFResult = GLTF & {
@@ -38,6 +37,18 @@ type GLTFResult = GLTF & {
     leave005: THREE.Mesh
     leave006: THREE.Mesh
     leave007: THREE.Mesh
+    room001: THREE.Mesh
+    Torus: THREE.Mesh
+    Torus001: THREE.Mesh
+    Torus002: THREE.Mesh
+    Torus003: THREE.Mesh
+    Torus004: THREE.Mesh
+    Torus005: THREE.Mesh
+    Plane_2: THREE.Mesh
+    Plane_3: THREE.Mesh
+    room003: THREE.Mesh
+    Plane003: THREE.Mesh
+    Plane003_1: THREE.Mesh
   }
   materials: {
     room_base: THREE.MeshStandardMaterial
@@ -63,49 +74,67 @@ export function Model(props: JSX.IntrinsicElements['group']) {
   const { nodes, materials } = useGLTF(MODEL_PATH) as GLTFResult
   return (
     <group {...props} dispose={null}>
-      <group position={[-1.142, -0.01, 0.513]}>
+      <group position={[0, 0, -3.004]}>
+        <mesh geometry={nodes.Plane.geometry} material={materials.room_base} />
+        <mesh geometry={nodes.Plane_1.geometry} material={materials.green_neon} />
+      </group>
+      <group position={[-1.142, -0.01, -2.491]}>
         <mesh geometry={nodes.Cube002.geometry} material={materials.sitting_table_base} />
         <mesh geometry={nodes.Cube002_1.geometry} material={materials.sitting_table_details} />
       </group>
-      <group position={[-2.078, 0, 1.165]} rotation={[0, 1.257, 0]}>
+      <group position={[-2.078, 0, -1.839]} rotation={[0, 1.257, 0]}>
         <mesh geometry={nodes.Cube003.geometry} material={materials.boom_box} />
         <mesh geometry={nodes.Cube003_1.geometry} material={materials.boom_pattern} />
       </group>
-      <group position={[-1.205, 1.215, 0.04]}>
+      <group position={[-1.205, 1.215, -2.964]}>
         <mesh geometry={nodes.Cube004.geometry} material={materials.project_panel} />
         <mesh geometry={nodes.Cube004_1.geometry} material={materials.project_panel_display} />
       </group>
-      <group position={[0.603, 1.215, 0.04]}>
+      <group position={[0.603, 1.215, -2.964]}>
         <mesh geometry={nodes.Cube005.geometry} material={materials.main_screen} />
         <mesh geometry={nodes.Cube005_1.geometry} material={materials.main_screençdisplay} />
       </group>
-      <group position={[-0.8, 1.215, 0.04]} scale={[0.18, 0.2, 1]}>
+      <group position={[-0.8, 1.215, -2.964]} scale={[0.18, 0.2, 1]}>
         <mesh geometry={nodes.Cube004_2.geometry} material={materials.project_panel} />
         <mesh geometry={nodes.Cube004_3.geometry} material={materials.project_panel_display} />
       </group>
-      <group position={[-1.61, 1.215, 0.04]} scale={[0.18, 0.2, 1]}>
+      <group position={[-1.61, 1.215, -2.964]} scale={[0.18, 0.2, 1]}>
         <mesh geometry={nodes.Cube004_4.geometry} material={materials.project_panel} />
         <mesh geometry={nodes.Cube004_5.geometry} material={materials.project_panel_display} />
       </group>
-      <group position={[1.573, 0.031, 0.943]}>
+      <group position={[1.573, 0.031, -2.061]}>
         <mesh geometry={nodes.Icosphere_1.geometry} material={materials.sitting_table_base} />
         <mesh geometry={nodes.Icosphere_2.geometry} material={materials.green_neon} />
       </group>
-      <group position={[1.573, 0.262, 0.943]}>
+      <group position={[1.573, 0.262, -2.061]}>
         <mesh geometry={nodes.Cylinder.geometry} material={materials.sitting_table_base} />
         <mesh geometry={nodes.Cylinder_1.geometry} material={materials.dirt} />
       </group>
-      <mesh geometry={nodes.leave.geometry} material={materials.leaves} position={[1.552, 0.511, 1.09]} rotation={[-2.894, 0.079, 3.11]} scale={0.146} />
-      <mesh geometry={nodes.branch.geometry} material={materials.wood_branch} position={[1.573, 0.262, 0.943]} />
-      <mesh geometry={nodes.leave001.geometry} material={materials.leaves} position={[1.448, 0.488, 1.007]} rotation={[-2.67, 0.871, 2.456]} scale={0.129} />
-      <mesh geometry={nodes.leave002.geometry} material={materials.leaves} position={[1.462, 0.558, 0.953]} rotation={[-2.767, 1.289, 2.674]} scale={0.129} />
-      <mesh geometry={nodes.leave003.geometry} material={materials.leaves} position={[1.636, 0.498, 0.839]} rotation={[-0.115, -0.287, -0.063]} scale={0.129} />
-      <mesh geometry={nodes.leave004.geometry} material={materials.leaves} position={[1.603, 0.604, 1.069]} rotation={[-2.863, -0.274, -2.998]} scale={0.146} />
-      <mesh geometry={nodes.leave005.geometry} material={materials.leaves} position={[1.52, 0.556, 0.87]} rotation={[-0.14, 0.391, 0.022]} scale={0.129} />
-      <mesh geometry={nodes.leave006.geometry} material={materials.leaves} position={[1.66, 0.555, 0.912]} rotation={[-0.243, -1.097, -0.247]} scale={0.129} />
-      <mesh geometry={nodes.leave007.geometry} material={materials.leaves} position={[1.671, 0.534, 1.068]} rotation={[-2.833, -0.576, -2.981]} scale={0.146} />
-      <mesh geometry={nodes.Plane.geometry} material={materials.room_base} />
-      <mesh geometry={nodes.Plane_1.geometry} material={materials.green_neon} />
+      <mesh geometry={nodes.leave.geometry} material={materials.leaves} position={[1.552, 0.511, -1.914]} rotation={[-2.894, 0.079, 3.11]} scale={0.146} />
+      <mesh geometry={nodes.branch.geometry} material={materials.wood_branch} position={[1.573, 0.262, -2.061]} />
+      <mesh geometry={nodes.leave001.geometry} material={materials.leaves} position={[1.448, 0.488, -1.997]} rotation={[-2.67, 0.871, 2.456]} scale={0.129} />
+      <mesh geometry={nodes.leave002.geometry} material={materials.leaves} position={[1.462, 0.558, -2.051]} rotation={[-2.767, 1.289, 2.674]} scale={0.129} />
+      <mesh geometry={nodes.leave003.geometry} material={materials.leaves} position={[1.636, 0.498, -2.165]} rotation={[-0.115, -0.287, -0.063]} scale={0.129} />
+      <mesh geometry={nodes.leave004.geometry} material={materials.leaves} position={[1.603, 0.604, -1.935]} rotation={[-2.863, -0.274, -2.998]} scale={0.146} />
+      <mesh geometry={nodes.leave005.geometry} material={materials.leaves} position={[1.52, 0.556, -2.134]} rotation={[-0.14, 0.391, 0.022]} scale={0.129} />
+      <mesh geometry={nodes.leave006.geometry} material={materials.leaves} position={[1.66, 0.555, -2.092]} rotation={[-0.243, -1.097, -0.247]} scale={0.129} />
+      <mesh geometry={nodes.leave007.geometry} material={materials.leaves} position={[1.671, 0.534, -1.935]} rotation={[-2.833, -0.576, -2.981]} scale={0.146} />
+      <mesh geometry={nodes.room001.geometry} material={materials.room_base} position={[0, 2.015, -2.633]} />
+      <mesh geometry={nodes.Torus.geometry} material={materials.green_neon} position={[0, 2.015, -2.227]} scale={0.083} />
+      <mesh geometry={nodes.Torus001.geometry} material={materials.green_neon} position={[1, 2.015, -2.227]} scale={0.083} />
+      <mesh geometry={nodes.Torus002.geometry} material={materials.green_neon} position={[-1, 2.015, -2.227]} scale={0.083} />
+      <mesh geometry={nodes.Torus003.geometry} material={materials.green_neon} position={[0, 2.015, 2.207]} rotation={[Math.PI, 0, Math.PI]} scale={0.083} />
+      <mesh geometry={nodes.Torus004.geometry} material={materials.green_neon} position={[-1, 2.015, 2.207]} rotation={[Math.PI, 0, Math.PI]} scale={0.083} />
+      <mesh geometry={nodes.Torus005.geometry} material={materials.green_neon} position={[1, 2.015, 2.207]} rotation={[Math.PI, 0, Math.PI]} scale={0.083} />
+      <group position={[0, 0, 2.984]} rotation={[Math.PI, 0, Math.PI]}>
+        <mesh geometry={nodes.Plane_2.geometry} material={materials.room_base} />
+        <mesh geometry={nodes.Plane_3.geometry} material={materials.green_neon} />
+      </group>
+      <mesh geometry={nodes.room003.geometry} material={materials.room_base} position={[0, 2.015, 2.614]} rotation={[Math.PI, 0, Math.PI]} />
+      <group position={[0, 0, 2.984]} rotation={[Math.PI, 0, Math.PI]}>
+        <mesh geometry={nodes.Plane003.geometry} material={materials.room_base} />
+        <mesh geometry={nodes.Plane003_1.geometry} material={materials.green_neon} />
+      </group>
     </group>
   )
 }
