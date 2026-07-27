@@ -15,12 +15,20 @@ import { useRef } from 'react'
 
 import WalkControls from './WalkControls'
 
+import { DragGuardProvider } from '../interaction/DragGuardContext'
+import InteractiveModel from './InteractiveModel'
+import { INTERACTABLES } from '../interaction/interactables'
+
+import AnimationInfoPanel from './AnimationInfoPanel'
+
 type ControlMode = 'orbit' | 'walk'
 
 export default function Scene() {
   const [introDone, setIntroDone] = useState(false)
   const modelRef = useRef<THREE.Group>(null)
   const [mode, setMode] = useState<ControlMode>('walk')
+
+  const [selected, setSelected] = useState<string | null>(null)
 
   return (
     <>
@@ -35,13 +43,15 @@ export default function Scene() {
             <planeGeometry args={[50, 50]} />
             <meshStandardMaterial color="gray" />
           </mesh>
-          <Bounds fit clip  margin={1.2}>
-            <group ref={modelRef}>
-              <Center>
-                <Model />
-              </Center>
-            </group>
-          </Bounds>
+          <DragGuardProvider>
+            <Bounds fit clip margin={1.2}>
+              <group ref={modelRef}>
+                <Center>
+                  <InteractiveModel onSelect={setSelected} />
+                </Center>
+              </group>
+            </Bounds>
+          </DragGuardProvider>
           <Environment preset="city" />
         </Suspense>
           <IntroCamera onComplete={() => setIntroDone(true)} />
@@ -81,6 +91,14 @@ export default function Scene() {
       
       {introDone && (
         <ControlModeToggle mode={mode} onChange={setMode} />
+      )}
+      {introDone && selected && (
+        <AnimationInfoPanel
+          title={INTERACTABLES[selected].title}
+          subtitle={INTERACTABLES[selected].description}
+          onClose={() => setSelected(null)}
+          visible={introDone}
+        />
       )}
     </>
   )

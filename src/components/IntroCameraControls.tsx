@@ -13,7 +13,7 @@ export function useIntroCameraDebug() {
       endY: { value: 0.1, step: 0.1 },
       endZ: { value: 1.9, step: 0.1 },
     }),
-    duration: { value: 3, min: 0.5, max: 10, step: 0.5 },
+    duration: { value: 5, min: 0.5, max: 10, step: 0.5 },
   })
 
   return {

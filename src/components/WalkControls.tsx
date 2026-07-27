@@ -41,7 +41,7 @@ export default function WalkControls() {
     }
     const onPointerUp = () => {
       isDragging.current = false
-      dom.style.cursor = 'grab'
+      dom.style.cursor = 'auto'
     }
     const onPointerMove = (e: PointerEvent) => {
       if (!isDragging.current) return
@@ -54,7 +54,7 @@ export default function WalkControls() {
       targetPitch.current = THREE.MathUtils.clamp(targetPitch.current, -MAX_PITCH, MAX_PITCH)
     }
 
-    dom.style.cursor = 'grab'
+    dom.style.cursor = 'auto'
     dom.addEventListener('pointerdown', onPointerDown)
     window.addEventListener('pointermove', onPointerMove)
     window.addEventListener('pointerup', onPointerUp)
