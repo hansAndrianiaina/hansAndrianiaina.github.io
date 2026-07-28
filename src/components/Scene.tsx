@@ -20,6 +20,7 @@ import InteractiveModel from './InteractiveModel'
 import { INTERACTABLES } from '../interaction/interactables'
 
 import AnimationInfoPanel from './AnimationInfoPanel'
+import InfoPanel from './InfoPanel'
 
 type ControlMode = 'orbit' | 'walk'
 
@@ -91,6 +92,9 @@ export default function Scene() {
       
       {introDone && (
         <ControlModeToggle mode={mode} onChange={setMode} />
+      )}
+      {introDone && (
+        <InfoPanel />
       )}
       {introDone && selected && (
         <AnimationInfoPanel
