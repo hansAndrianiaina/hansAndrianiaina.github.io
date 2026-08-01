@@ -5,6 +5,7 @@ interface AnimationInfoPanelProps {
   title: string
   subtitle?: string
   visible: boolean
+  onClose: () => void
 }
 
 // Corner chamfer sizes as % of box width/height (top-left, top-right, bottom-right, bottom-left)
@@ -18,7 +19,7 @@ const FRAME_POINTS = `${CUT.tl},0 ${100 - CUT.tr},0 100,${CUT.tr} 100,${100 - CU
   100 - CUT.br
 },100 ${CUT.bl},100 0,${100 - CUT.bl} 0,${CUT.tl} ${CUT.tl},0`
 
-export default function AnimationInfoPanel({ title, subtitle, visible }: AnimationInfoPanelProps) {
+export default function AnimationInfoPanel({ title, subtitle, visible, onClose }: AnimationInfoPanelProps) {
   const wrapperStyle: CSSProperties = {
     position: 'absolute',
     bottom: '5%',
@@ -26,7 +27,7 @@ export default function AnimationInfoPanel({ title, subtitle, visible }: Animati
     transform: `translateX(-50%) translateX(${visible ? '0' : '16px'}) scale(${visible ? 1 : 0.98})`,
     opacity: visible ? 0.75 : 0,
     transition: 'opacity 0.6s ease, transform 0.6s ease',
-    pointerEvents: 'none',
+    pointerEvents: 'none', // wrapper stays click-through; the close button re-enables itself below
     minWidth: 300,
     maxWidth: 900,
     filter: 'drop-shadow(0 0 18px rgba(80, 190, 200, 0.25))', 
@@ -50,9 +51,46 @@ export default function AnimationInfoPanel({ title, subtitle, visible }: Animati
     textAlign: 'center',
   }
 
+  const closeButtonStyle: CSSProperties = {
+    position: 'absolute',
+    top: 10,
+    right: 14,
+    width: 20,
+    height: 20,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'transparent',
+    border: 'none',
+    borderRadius: 4,
+    color: 'rgba(210, 238, 240, 0.6)',
+    fontSize: 14,
+    lineHeight: 1,
+    cursor: 'pointer',
+    pointerEvents: visible ? 'auto' : 'none', // only clickable while panel is actually visible
+    transition: 'color 0.2s ease, background 0.2s ease',
+  }
+
   return (
     <div style={wrapperStyle}>
       <div style={panelStyle}>
+        <button
+          type="button"
+          aria-label="Close"
+          onClick={onClose}
+          style={closeButtonStyle}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = '#eafcff'
+            e.currentTarget.style.background = 'rgba(255,255,255,0.08)'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = 'rgba(210, 238, 240, 0.6)'
+            e.currentTarget.style.background = 'transparent'
+          }}
+        >
+          ✕
+        </button>
+
         <div
           style={{
             fontSize: 14,

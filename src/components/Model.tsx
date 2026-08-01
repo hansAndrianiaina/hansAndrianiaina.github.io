@@ -7,6 +7,8 @@ import * as THREE from 'three'
 import { useGLTF } from '@react-three/drei'
 import type { GLTF } from 'three-stdlib'
 
+type GLTFAction = THREE.AnimationClip
+
 type GLTFResult = GLTF & {
   nodes: {
     Plane: THREE.Mesh
@@ -70,7 +72,7 @@ type GLTFResult = GLTF & {
 const MODEL_PATH = import.meta.env.BASE_URL + 'models/scene.glb'
 
 export function Model(props: JSX.IntrinsicElements['group']) {
-  const { nodes, materials } = useGLTF(MODEL_PATH) as GLTFResult
+  const { nodes, materials } = useGLTF(MODEL_PATH) as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>
       <group name="room" position={[0, 0, -3.004]}>

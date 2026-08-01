@@ -1,12 +1,10 @@
-// components/CameraDebugPanel.tsx
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useControls, monitor, button } from 'leva'
 
-export default function CameraDebugPanel() {
+export default function CameraDebugPanel({ onReplay }: { onReplay?: () => void }) {
   const posRef = useRef({ x: 0, y: 0, z: 0 })
 
-  // updates a ref every frame — no React re-render cost at all
   useFrame(({ camera }) => {
     posRef.current = {
       x: Number(camera.position.x.toFixed(2)),
@@ -22,6 +20,10 @@ export default function CameraDebugPanel() {
     'copy to clipboard': button(() => {
       navigator.clipboard.writeText(JSON.stringify(posRef.current))
     }),
+  })
+
+  useControls('Intro Camera', {
+    'replay intro': button(() => onReplay?.()),
   })
 
   return null
