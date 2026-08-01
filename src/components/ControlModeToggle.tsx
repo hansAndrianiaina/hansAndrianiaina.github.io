@@ -13,10 +13,17 @@ export default function ControlModeToggle({
   mode: ControlMode
   onChange: (m: ControlMode) => void
 }) {
-  const trackStyle: CSSProperties = {
+  // 1. Move positioning, opacity, and the drop-shadow to an un-clipped wrapper
+  const wrapperStyle: CSSProperties = {
     position: 'absolute',
     bottom: '5%',
-    right: '2% ',
+    right: '2%',
+    opacity: 0.75,
+    filter: 'drop-shadow(0 0 10px rgba(80, 190, 200, 0.2))',
+  }
+
+  // 2. Keep the clip-path, backgrounds, and layout here
+  const trackStyle: CSSProperties = {
     display: 'flex',
     padding: 3,
     clipPath: TRACK_CLIP,
@@ -28,8 +35,9 @@ export default function ControlModeToggle({
     backgroundSize: '14px 14px, auto',
     backdropFilter: 'blur(6px)',
     WebkitBackdropFilter: 'blur(6px)',
+    // Note: Standard borders don't follow clip-paths well in CSS, 
+    // but leaving this here won't break it if it works for your use case.
     border: '1px solid rgba(190, 240, 245, 0.3)',
-    filter: 'drop-shadow(0 0 10px rgba(80, 190, 200, 0.2))',
     fontFamily: "ui-monospace, 'SF Mono', Menlo, Consolas, monospace",
   }
 
@@ -65,14 +73,16 @@ export default function ControlModeToggle({
   })
 
   return (
-    <div style={trackStyle}>
-      <div style={pillStyle} />
-      <button onClick={() => onChange('orbit')} style={segmentStyle(mode === 'orbit')}>
-        Orbit
-      </button>
-      <button onClick={() => onChange('walk')} style={segmentStyle(mode === 'walk')}>
-        Walk
-      </button>
+    <div style={wrapperStyle}>
+      <div style={trackStyle}>
+        <div style={pillStyle} />
+        <button onClick={() => onChange('orbit')} style={segmentStyle(mode === 'orbit')}>
+          Orbit
+        </button>
+        <button onClick={() => onChange('walk')} style={segmentStyle(mode === 'walk')}>
+          Walk
+        </button>
+      </div>
     </div>
   )
 }

@@ -22,14 +22,14 @@ const FRAME_POINTS = `${CUT.tl},0 ${100 - CUT.tr},0 100,${CUT.tr} 100,${100 - CU
 export default function AnimationInfoPanel({ title, subtitle, visible, onClose }: AnimationInfoPanelProps) {
   const wrapperStyle: CSSProperties = {
     position: 'absolute',
-    bottom: '5%',
-    left: '50%',
-    transform: `translateX(-50%) translateX(${visible ? '0' : '16px'}) scale(${visible ? 1 : 0.98})`,
+    top: '5%',
+    right: '0%',
+    transform: `translateX(-5%)  scale(${visible ? 1 : 0.98})`,
     opacity: visible ? 0.75 : 0,
     transition: 'opacity 0.6s ease, transform 0.6s ease',
     pointerEvents: 'none', // wrapper stays click-through; the close button re-enables itself below
     minWidth: 300,
-    maxWidth: 900,
+    maxWidth: 300,
     filter: 'drop-shadow(0 0 18px rgba(80, 190, 200, 0.25))', 
   }
 

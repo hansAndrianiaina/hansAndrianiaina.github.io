@@ -1,4 +1,4 @@
-import { useState, Suspense } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Environment, Stats, Center, Bounds  } from '@react-three/drei'
 import CameraDebugPanel from './CameraDebugPanel'
@@ -20,9 +20,13 @@ import { INTERACTABLES } from '../interaction/interactables'
 import AnimationInfoPanel from './AnimationInfoPanel'
 import InfoPanel from './InfoPanel'
 import ErrorBoundary from './ErrorBoundary'
+import LoadingScreen from './LoadingScreen'
+import SceneReadySignal from './SceneReadySignal'
 
 type ControlMode = 'orbit' | 'walk'
 
+const MIN_LOADING_MS = 1000   // loading screen stays up at least this long, even on a warm cache
+const MAX_LOADING_MS = 15000  // safety net — reveal anyway if assets never resolve (e.g. network failure)
 
 export default function Scene() {
   const [introDone, setIntroDone] = useState(false)
@@ -30,6 +34,20 @@ export default function Scene() {
   const modelRef = useRefReact<THREE.Group>(null)
   const [mode, setMode] = useState<ControlMode>('walk')
   const [selected, setSelected] = useState<string | null>(null)
+
+  // Loading screen gating: hidden once BOTH are true.
+  const [assetsLoaded, setAssetsLoaded] = useState(false)
+  const [minTimeElapsed, setMinTimeElapsed] = useState(false)
+  const sceneReady = assetsLoaded && minTimeElapsed
+
+  useEffect(() => {
+    const minTimer = setTimeout(() => setMinTimeElapsed(true), MIN_LOADING_MS)
+    const maxTimer = setTimeout(() => setAssetsLoaded(true), MAX_LOADING_MS)
+    return () => {
+      clearTimeout(minTimer)
+      clearTimeout(maxTimer)
+    }
+  }, [])
 
   const handleReplay = () => {
     setIntroDone(false)      // unmounts WalkControls/CustomOrbitControls/CollisionGuard
@@ -94,9 +112,13 @@ export default function Scene() {
               </Bounds>
             </DragGuardProvider>
             <Environment preset="city" />
+            {/* Fires once everything above has actually resolved (see SceneReadySignal.tsx) */}
+            <SceneReadySignal onReady={() => setAssetsLoaded(true)} />
           </Suspense>
 
-          <IntroCamera key={introKey} onComplete={() => setIntroDone(true)} />
+          {/* Held back until the scene is ready, so the intro animation IS the reveal
+              instead of running underneath the loading screen or over unloaded geometry. */}
+          {sceneReady && <IntroCamera key={introKey} onComplete={() => setIntroDone(true)} />}
 
           {introDone && <CameraCollisionGuard targetRef={modelRef} />}
 
@@ -108,6 +130,8 @@ export default function Scene() {
           {import.meta.env.DEV && <Stats />}
         </Canvas>
       </ErrorBoundary>
+
+      <LoadingScreen show={!sceneReady} />
 
       {introDone && (
         <ControlModeToggle mode={mode} onChange={setMode} />
