@@ -11,26 +11,16 @@ type GLTFAction = THREE.AnimationClip
 
 type GLTFResult = GLTF & {
   nodes: {
-    Plane: THREE.Mesh
-    Plane_1: THREE.Mesh
-    Cube002: THREE.Mesh
-    Cube002_1: THREE.Mesh
     boom_box_1: THREE.Mesh
     boom_box_2: THREE.Mesh
-    Cube004: THREE.Mesh
-    Cube004_1: THREE.Mesh
-    Cube005: THREE.Mesh
-    Cube005_1: THREE.Mesh
-    Cube004_2: THREE.Mesh
-    Cube004_3: THREE.Mesh
-    Cube004_4: THREE.Mesh
-    Cube004_5: THREE.Mesh
+    branch: THREE.Mesh
+    Cube: THREE.Mesh
+    Cube001: THREE.Mesh
+    Cube002: THREE.Mesh
+    Cube003: THREE.Mesh
     Icosphere_1: THREE.Mesh
     Icosphere_2: THREE.Mesh
-    Cylinder: THREE.Mesh
-    Cylinder_1: THREE.Mesh
     leave: THREE.Mesh
-    branch: THREE.Mesh
     leave001: THREE.Mesh
     leave002: THREE.Mesh
     leave003: THREE.Mesh
@@ -38,33 +28,60 @@ type GLTFResult = GLTF & {
     leave005: THREE.Mesh
     leave006: THREE.Mesh
     leave007: THREE.Mesh
-    roof: THREE.Mesh
+    Cube005: THREE.Mesh
+    Cube005_1: THREE.Mesh
+    Cube004: THREE.Mesh
+    Cube004_1: THREE.Mesh
+    Cylinder: THREE.Mesh
+    Cylinder_1: THREE.Mesh
+    Cube004_2: THREE.Mesh
+    Cube004_3: THREE.Mesh
+    Cube004_4: THREE.Mesh
+    Cube004_5: THREE.Mesh
+    Cube004_6: THREE.Mesh
+    Cube004_7: THREE.Mesh
+    Cube004_8: THREE.Mesh
+    Cube004_9: THREE.Mesh
+    Cube004_10: THREE.Mesh
+    Cube004_11: THREE.Mesh
+    Cube004_12: THREE.Mesh
+    Cube004_13: THREE.Mesh
+    Cube004_14: THREE.Mesh
+    Cube004_15: THREE.Mesh
+    Cube004_16: THREE.Mesh
+    Cube004_17: THREE.Mesh
+    Cube004_18: THREE.Mesh
+    Cube004_19: THREE.Mesh
+    Plane002: THREE.Mesh
+    Plane002_1: THREE.Mesh
+    room_floor: THREE.Mesh
+    Plane: THREE.Mesh
+    Plane_1: THREE.Mesh
     round_lamp: THREE.Mesh
     round_lamp001: THREE.Mesh
     round_lamp002: THREE.Mesh
     round_lamp003: THREE.Mesh
-    round_lamp005: THREE.Mesh
     round_lamp004: THREE.Mesh
-    Plane_2: THREE.Mesh
-    Plane_3: THREE.Mesh
-    roof001: THREE.Mesh
-    Plane003: THREE.Mesh
-    Plane003_1: THREE.Mesh
+    round_lamp005: THREE.Mesh
+    Cube002_1: THREE.Mesh
+    Cube002_2: THREE.Mesh
   }
   materials: {
-    room_base: THREE.MeshStandardMaterial
-    green_neon: THREE.MeshStandardMaterial
-    sitting_table_base: THREE.MeshStandardMaterial
-    sitting_table_details: THREE.MeshStandardMaterial
     boom_box: THREE.MeshStandardMaterial
     boom_pattern: THREE.MeshStandardMaterial
-    project_panel: THREE.MeshStandardMaterial
-    project_panel_display: THREE.MeshStandardMaterial
+    wood_branch: THREE.MeshStandardMaterial
+    door: THREE.MeshStandardMaterial
+    door_support: THREE.MeshStandardMaterial
+    sitting_table_base: THREE.MeshStandardMaterial
+    green_neon: THREE.MeshStandardMaterial
+    leaves: THREE.MeshStandardMaterial
     main_screen: THREE.MeshStandardMaterial
     main_screençdisplay: THREE.MeshStandardMaterial
+    project_panel: THREE.MeshStandardMaterial
+    project_panel_display: THREE.MeshStandardMaterial
     dirt: THREE.MeshStandardMaterial
-    leaves: THREE.MeshStandardMaterial
-    wood_branch: THREE.MeshStandardMaterial
+    room_base: THREE.MeshStandardMaterial
+    sitting_table_details: THREE.MeshStandardMaterial
   }
   animations: GLTFAction[]
 }
@@ -75,44 +92,20 @@ export function Model(props: JSX.IntrinsicElements['group']) {
   const { nodes, materials } = useGLTF(MODEL_PATH) as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>
-      <group name="room" position={[0, 0, -3.004]}>
-        <mesh name="Plane" geometry={nodes.Plane.geometry} material={materials.room_base} />
-        <mesh name="Plane_1" geometry={nodes.Plane_1.geometry} material={materials.green_neon} />
-      </group>
-      <group name="sitting_table" position={[-1.142, -0.01, -2.491]}>
-        <mesh name="Cube002" geometry={nodes.Cube002.geometry} material={materials.sitting_table_base} />
-        <mesh name="Cube002_1" geometry={nodes.Cube002_1.geometry} material={materials.sitting_table_details} />
-      </group>
       <group name="boom_box" position={[-2.078, 0, -1.839]} rotation={[0, 1.257, 0]}>
         <mesh name="boom_box_1" geometry={nodes.boom_box_1.geometry} material={materials.boom_box} />
         <mesh name="boom_box_2" geometry={nodes.boom_box_2.geometry} material={materials.boom_pattern} />
       </group>
-      <group name="project_panel" position={[-1.205, 1.215, -2.964]}>
-        <mesh name="Cube004" geometry={nodes.Cube004.geometry} material={materials.project_panel} />
-        <mesh name="Cube004_1" geometry={nodes.Cube004_1.geometry} material={materials.project_panel_display} />
-      </group>
-      <group name="main_screen" position={[0.603, 1.215, -2.964]}>
-        <mesh name="Cube005" geometry={nodes.Cube005.geometry} material={materials.main_screen} />
-        <mesh name="Cube005_1" geometry={nodes.Cube005_1.geometry} material={materials.main_screençdisplay} />
-      </group>
-      <group name="next_button" position={[-0.8, 1.215, -2.964]} scale={[0.18, 0.2, 1]}>
-        <mesh name="Cube004_2" geometry={nodes.Cube004_2.geometry} material={materials.project_panel} />
-        <mesh name="Cube004_3" geometry={nodes.Cube004_3.geometry} material={materials.project_panel_display} />
-      </group>
-      <group name="previous_button" position={[-1.61, 1.215, -2.964]} scale={[0.18, 0.2, 1]}>
-        <mesh name="Cube004_4" geometry={nodes.Cube004_4.geometry} material={materials.project_panel} />
-        <mesh name="Cube004_5" geometry={nodes.Cube004_5.geometry} material={materials.project_panel_display} />
-      </group>
-      <group name="Icosphere" position={[1.573, 0.031, -2.061]}>
+      <mesh name="branch" geometry={nodes.branch.geometry} material={materials.wood_branch} position={[1.573, 0.262, -2.061]} />
+      <mesh name="Cube" geometry={nodes.Cube.geometry} material={materials.door} position={[2.358, 1.215, -0.01]} />
+      <mesh name="Cube001" geometry={nodes.Cube001.geometry} material={materials.door_support} position={[2.358, 1.215, -0.01]} />
+      <mesh name="Cube002" geometry={nodes.Cube002.geometry} material={materials.door} position={[-2.358, 1.215, -0.01]} rotation={[-Math.PI, 0, 0]} scale={-1} />
+      <mesh name="Cube003" geometry={nodes.Cube003.geometry} material={materials.door_support} position={[-2.358, 1.215, -0.01]} rotation={[-Math.PI, 0, 0]} scale={-1} />
+      <group name="Icosphere" position={[1.573, 0.034, -2.061]}>
         <mesh name="Icosphere_1" geometry={nodes.Icosphere_1.geometry} material={materials.sitting_table_base} />
         <mesh name="Icosphere_2" geometry={nodes.Icosphere_2.geometry} material={materials.green_neon} />
       </group>
-      <group name="pot" position={[1.573, 0.262, -2.061]}>
-        <mesh name="Cylinder" geometry={nodes.Cylinder.geometry} material={materials.sitting_table_base} />
-        <mesh name="Cylinder_1" geometry={nodes.Cylinder_1.geometry} material={materials.dirt} />
-      </group>
       <mesh name="leave" geometry={nodes.leave.geometry} material={materials.leaves} position={[1.552, 0.511, -1.914]} rotation={[-2.894, 0.079, 3.11]} scale={0.146} />
-      <mesh name="branch" geometry={nodes.branch.geometry} material={materials.wood_branch} position={[1.573, 0.262, -2.061]} />
       <mesh name="leave001" geometry={nodes.leave001.geometry} material={materials.leaves} position={[1.448, 0.488, -1.997]} rotation={[-2.67, 0.871, 2.456]} scale={0.129} />
       <mesh name="leave002" geometry={nodes.leave002.geometry} material={materials.leaves} position={[1.462, 0.558, -2.051]} rotation={[-2.767, 1.289, 2.674]} scale={0.129} />
       <mesh name="leave003" geometry={nodes.leave003.geometry} material={materials.leaves} position={[1.636, 0.498, -2.165]} rotation={[-0.115, -0.287, -0.063]} scale={0.129} />
@@ -120,21 +113,72 @@ export function Model(props: JSX.IntrinsicElements['group']) {
       <mesh name="leave005" geometry={nodes.leave005.geometry} material={materials.leaves} position={[1.52, 0.556, -2.134]} rotation={[-0.14, 0.391, 0.022]} scale={0.129} />
       <mesh name="leave006" geometry={nodes.leave006.geometry} material={materials.leaves} position={[1.66, 0.555, -2.092]} rotation={[-0.243, -1.097, -0.247]} scale={0.129} />
       <mesh name="leave007" geometry={nodes.leave007.geometry} material={materials.leaves} position={[1.671, 0.534, -1.935]} rotation={[-2.833, -0.576, -2.981]} scale={0.146} />
-      <mesh name="roof" geometry={nodes.roof.geometry} material={materials.room_base} position={[0, 2.015, -2.633]} />
+      <group name="main_screen" position={[0.603, 1.215, -2.964]}>
+        <mesh name="Cube005" geometry={nodes.Cube005.geometry} material={materials.main_screen} />
+        <mesh name="Cube005_1" geometry={nodes.Cube005_1.geometry} material={materials.main_screençdisplay} />
+      </group>
+      <group name="next_button" position={[-0.8, 1.215, -2.964]} scale={[0.18, 0.2, 1]}>
+        <mesh name="Cube004" geometry={nodes.Cube004.geometry} material={materials.project_panel} />
+        <mesh name="Cube004_1" geometry={nodes.Cube004_1.geometry} material={materials.project_panel_display} />
+      </group>
+      <group name="pot" position={[1.573, 0.262, -2.061]}>
+        <mesh name="Cylinder" geometry={nodes.Cylinder.geometry} material={materials.sitting_table_base} />
+        <mesh name="Cylinder_1" geometry={nodes.Cylinder_1.geometry} material={materials.dirt} />
+      </group>
+      <group name="previous_button" position={[-1.61, 1.215, -2.964]} scale={[0.18, 0.2, 1]}>
+        <mesh name="Cube004_2" geometry={nodes.Cube004_2.geometry} material={materials.project_panel} />
+        <mesh name="Cube004_3" geometry={nodes.Cube004_3.geometry} material={materials.project_panel_display} />
+      </group>
+      <group name="project_panel" position={[-1.205, 1.215, -2.964]}>
+        <mesh name="Cube004_4" geometry={nodes.Cube004_4.geometry} material={materials.project_panel} />
+        <mesh name="Cube004_5" geometry={nodes.Cube004_5.geometry} material={materials.project_panel_display} />
+      </group>
+      <group name="project_panel001" position={[-2.015, 1.215, -2.305]} rotation={[0, 1.249, 0]}>
+        <mesh name="Cube004_6" geometry={nodes.Cube004_6.geometry} material={materials.project_panel} />
+        <mesh name="Cube004_7" geometry={nodes.Cube004_7.geometry} material={materials.project_panel_display} />
+      </group>
+      <group name="project_panel002" position={[2.038, 1.215, -2.255]} rotation={[0, -1.254, 0]}>
+        <mesh name="Cube004_8" geometry={nodes.Cube004_8.geometry} material={materials.project_panel} />
+        <mesh name="Cube004_9" geometry={nodes.Cube004_9.geometry} material={materials.project_panel_display} />
+      </group>
+      <group name="project_panel003" position={[-2.015, 1.215, 2.285]} rotation={[0, -1.248, -Math.PI]} scale={-1}>
+        <mesh name="Cube004_10" geometry={nodes.Cube004_10.geometry} material={materials.project_panel} />
+        <mesh name="Cube004_11" geometry={nodes.Cube004_11.geometry} material={materials.project_panel_display} />
+      </group>
+      <group name="project_panel004" position={[2.038, 1.215, 2.235]} rotation={[0, 1.254, -Math.PI]} scale={-1}>
+        <mesh name="Cube004_12" geometry={nodes.Cube004_12.geometry} material={materials.project_panel} />
+        <mesh name="Cube004_13" geometry={nodes.Cube004_13.geometry} material={materials.project_panel_display} />
+      </group>
+      <group name="project_panel005" position={[-1.205, 1.215, 2.944]} rotation={[0, 0, -Math.PI]} scale={-1}>
+        <mesh name="Cube004_14" geometry={nodes.Cube004_14.geometry} material={materials.project_panel} />
+        <mesh name="Cube004_15" geometry={nodes.Cube004_15.geometry} material={materials.project_panel_display} />
+      </group>
+      <group name="project_panel006" position={[1.197, 1.215, 2.944]} rotation={[0, 0, -Math.PI]} scale={-1}>
+        <mesh name="Cube004_16" geometry={nodes.Cube004_16.geometry} material={materials.project_panel} />
+        <mesh name="Cube004_17" geometry={nodes.Cube004_17.geometry} material={materials.project_panel_display} />
+      </group>
+      <group name="project_panel007" position={[-0.126, 1.215, 2.944]} rotation={[0, 0, -Math.PI]} scale={-1}>
+        <mesh name="Cube004_18" geometry={nodes.Cube004_18.geometry} material={materials.project_panel} />
+        <mesh name="Cube004_19" geometry={nodes.Cube004_19.geometry} material={materials.project_panel_display} />
+      </group>
+      <group name="roof" position={[0, 2.014, -0.01]}>
+        <mesh name="Plane002" geometry={nodes.Plane002.geometry} material={materials.room_base} />
+        <mesh name="Plane002_1" geometry={nodes.Plane002_1.geometry} material={materials.green_neon} />
+      </group>
+      <mesh name="room_floor" geometry={nodes.room_floor.geometry} material={materials.room_base} position={[0, 0, -0.01]} />
+      <group name="room_wall" position={[0.164, 1.309, -0.01]}>
+        <mesh name="Plane" geometry={nodes.Plane.geometry} material={materials.room_base} />
+        <mesh name="Plane_1" geometry={nodes.Plane_1.geometry} material={materials.green_neon} />
+      </group>
       <mesh name="round_lamp" geometry={nodes.round_lamp.geometry} material={materials.green_neon} position={[0, 2.015, -2.227]} scale={0.083} />
       <mesh name="round_lamp001" geometry={nodes.round_lamp001.geometry} material={materials.green_neon} position={[1, 2.015, -2.227]} scale={0.083} />
       <mesh name="round_lamp002" geometry={nodes.round_lamp002.geometry} material={materials.green_neon} position={[-1, 2.015, -2.227]} scale={0.083} />
       <mesh name="round_lamp003" geometry={nodes.round_lamp003.geometry} material={materials.green_neon} position={[0, 2.015, 2.207]} rotation={[Math.PI, 0, Math.PI]} scale={0.083} />
-      <mesh name="round_lamp005" geometry={nodes.round_lamp005.geometry} material={materials.green_neon} position={[-1, 2.015, 2.207]} rotation={[Math.PI, 0, Math.PI]} scale={0.083} />
       <mesh name="round_lamp004" geometry={nodes.round_lamp004.geometry} material={materials.green_neon} position={[1, 2.015, 2.207]} rotation={[Math.PI, 0, Math.PI]} scale={0.083} />
-      <group name="room002" position={[0, 0, 2.984]} rotation={[Math.PI, 0, Math.PI]}>
-        <mesh name="Plane_2" geometry={nodes.Plane_2.geometry} material={materials.room_base} />
-        <mesh name="Plane_3" geometry={nodes.Plane_3.geometry} material={materials.green_neon} />
-      </group>
-      <mesh name="roof001" geometry={nodes.roof001.geometry} material={materials.room_base} position={[0, 2.015, 2.614]} rotation={[Math.PI, 0, Math.PI]} />
-      <group name="middle_room" position={[0, 0, 2.984]} rotation={[Math.PI, 0, Math.PI]}>
-        <mesh name="Plane003" geometry={nodes.Plane003.geometry} material={materials.room_base} />
-        <mesh name="Plane003_1" geometry={nodes.Plane003_1.geometry} material={materials.green_neon} />
+      <mesh name="round_lamp005" geometry={nodes.round_lamp005.geometry} material={materials.green_neon} position={[-1, 2.015, 2.207]} rotation={[Math.PI, 0, Math.PI]} scale={0.083} />
+      <group name="sitting_table" position={[-1.142, -0.01, -2.491]}>
+        <mesh name="Cube002_1" geometry={nodes.Cube002_1.geometry} material={materials.sitting_table_base} />
+        <mesh name="Cube002_2" geometry={nodes.Cube002_2.geometry} material={materials.sitting_table_details} />
       </group>
     </group>
   )
