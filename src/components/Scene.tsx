@@ -22,6 +22,7 @@ import InfoPanel from './InfoPanel'
 import ErrorBoundary from './ErrorBoundary'
 import LoadingScreen from './LoadingScreen'
 import SceneReadySignal from './SceneReadySignal'
+import { useSoundPlayer } from './SoundPlayer';
 
 type ControlMode = 'orbit' | 'walk'
 
@@ -39,6 +40,8 @@ export default function Scene() {
   const [assetsLoaded, setAssetsLoaded] = useState(false)
   const [minTimeElapsed, setMinTimeElapsed] = useState(false)
   const sceneReady = assetsLoaded && minTimeElapsed
+  const { play : playAmbientSound } = useSoundPlayer(import.meta.env.BASE_URL + 'sounds/ambient.mp3', { volume: 0.5 });
+
 
   useEffect(() => {
     const minTimer = setTimeout(() => setMinTimeElapsed(true), MIN_LOADING_MS)
@@ -118,7 +121,11 @@ export default function Scene() {
 
           {/* Held back until the scene is ready, so the intro animation IS the reveal
               instead of running underneath the loading screen or over unloaded geometry. */}
-          {sceneReady && <IntroCamera key={introKey} onComplete={() => setIntroDone(true)} />}
+          {sceneReady && <IntroCamera key={introKey} onComplete={() => {
+            setIntroDone(true)
+            playAmbientSound()
+            }} />}
+
 
           {introDone && <CameraCollisionGuard targetRef={modelRef} />}
 

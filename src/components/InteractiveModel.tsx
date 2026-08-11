@@ -5,6 +5,7 @@ import type { ThreeEvent } from '@react-three/fiber'
 import { Model } from './Model'
 import { INTERACTABLES } from '../interaction/interactables'
 import { useDidDrag } from '../interaction/DragGuardContext'
+import { useSoundPlayer } from './SoundPlayer';
 
 const HOVER_COLOR = new THREE.Color('#ffffff')
 const HOVER_INTENSITY = 0.35
@@ -17,6 +18,8 @@ export default function InteractiveModel({ onSelect }: { onSelect: (name: string
   const didDragRef = useDidDrag()
   const [, setHovered] = useState<string | null>(null)
   const originalEmissive = useRef<Map<THREE.Material, THREE.Color>>(new Map())
+
+  const { play } = useSoundPlayer(import.meta.env.BASE_URL + 'sounds/click.mp3', { volume: 0.5 });
 
   // Clone materials for interactive meshes only - runs once on mount
   // Use useMemo with empty deps to ensure it only runs once
@@ -75,6 +78,7 @@ export default function InteractiveModel({ onSelect }: { onSelect: (name: string
     if (!INTERACTABLE_NAMES.has(e.object.name)) return
     e.stopPropagation()
     if (didDragRef.current) return // swallow the click that ended a drag
+    play(); // Play click sound on selection
     onSelect(e.object.name)
   }, [onSelect, didDragRef])
 
