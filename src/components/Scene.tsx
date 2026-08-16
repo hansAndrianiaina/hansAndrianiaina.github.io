@@ -40,7 +40,7 @@ export default function Scene() {
   const [assetsLoaded, setAssetsLoaded] = useState(false)
   const [minTimeElapsed, setMinTimeElapsed] = useState(false)
   const sceneReady = assetsLoaded && minTimeElapsed
-  const { play : playAmbientSound } = useSoundPlayer(import.meta.env.BASE_URL + 'sounds/ambient.mp3', { volume: 0.5 });
+  const { play : playAmbientSound } = useSoundPlayer(import.meta.env.BASE_URL + 'sounds/ambient.mp3', { volume: 0.125 });
 
 
   useEffect(() => {
@@ -148,8 +148,8 @@ export default function Scene() {
       )}
       {introDone && selected && (
         <AnimationInfoPanel
-          title={INTERACTABLES[selected].title}
-          subtitle={INTERACTABLES[selected].description}
+          title={INTERACTABLES[selected].title || 'Coming soon'}
+          subtitle={INTERACTABLES[selected].description || 'More information will be available soon.'}
           onClose={() => setSelected(null)}
           visible={introDone}
         />

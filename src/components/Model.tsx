@@ -110,9 +110,8 @@ type GLTFResult = GLTF & {
 
 const MODEL_PATH = import.meta.env.BASE_URL + 'models/scene.glb'
 
-
 export function Model(props: JSX.IntrinsicElements['group']) {
-  const { nodes, materials } = useGLTF(MODEL_PATH)  as unknown as GLTFResult
+  const { nodes, materials } = useGLTF(MODEL_PATH)  as unknown  as GLTFResult
   return (
     <group {...props} dispose={null}>
       <group name="boom_box" position={[-2.137, 0, -1.356]} rotation={[0, Math.PI / 2, 0]}>
@@ -190,23 +189,23 @@ export function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="Cube004_4" geometry={nodes.Cube004_4.geometry} material={materials.project_panel} />
         <mesh name="Cube004_5" geometry={nodes.Cube004_5.geometry} material={materials.project_panel_display} />
       </group>
-      <group name="project_panel003" position={[-2.015, 1.215, 2.285]} rotation={[0, -1.248, -Math.PI]} scale={-1}>
+      <group name="project_panel003" position={[-2.015, 1.215, 2.285]} rotation={[-Math.PI, 1.248, -Math.PI]}>
         <mesh name="Cube004_6" geometry={nodes.Cube004_6.geometry} material={materials.project_panel} />
         <mesh name="Cube004_7" geometry={nodes.Cube004_7.geometry} material={materials.project_panel_display} />
       </group>
-      <group name="project_panel004" position={[2.038, 1.215, 2.235]} rotation={[0, 1.254, -Math.PI]} scale={-1}>
+      <group name="project_panel004" position={[2.038, 1.215, 2.235]} rotation={[Math.PI, -1.254, Math.PI]}>
         <mesh name="Cube004_8" geometry={nodes.Cube004_8.geometry} material={materials.project_panel} />
         <mesh name="Cube004_9" geometry={nodes.Cube004_9.geometry} material={materials.project_panel_display} />
       </group>
-      <group name="project_panel005" position={[-1.205, 1.215, 2.944]} rotation={[0, 0, -Math.PI]} scale={-1}>
+      <group name="project_panel005" position={[-1.205, 1.215, 2.944]} rotation={[-Math.PI, 0, -Math.PI]}>
         <mesh name="Cube004_10" geometry={nodes.Cube004_10.geometry} material={materials.project_panel} />
         <mesh name="Cube004_11" geometry={nodes.Cube004_11.geometry} material={materials.project_panel_display} />
       </group>
-      <group name="project_panel006" position={[1.197, 1.215, 2.944]} rotation={[0, 0, -Math.PI]} scale={-1}>
+      <group name="project_panel006" position={[1.197, 1.215, 2.944]} rotation={[-Math.PI, 0, -Math.PI]}>
         <mesh name="Cube004_12" geometry={nodes.Cube004_12.geometry} material={materials.project_panel} />
         <mesh name="Cube004_13" geometry={nodes.Cube004_13.geometry} material={materials.project_panel_display} />
       </group>
-      <group name="project_panel007" position={[-0.126, 1.215, 2.944]} rotation={[0, 0, -Math.PI]} scale={-1}>
+      <group name="project_panel007" position={[-0.126, 1.215, 2.944]} rotation={[-Math.PI, 0, -Math.PI]}>
         <mesh name="Cube004_14" geometry={nodes.Cube004_14.geometry} material={materials.project_panel} />
         <mesh name="Cube004_15" geometry={nodes.Cube004_15.geometry} material={materials.project_panel_display} />
       </group>
