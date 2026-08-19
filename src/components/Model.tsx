@@ -74,6 +74,9 @@ type GLTFResult = GLTF & {
     Cube004_13: THREE.Mesh
     Cube004_14: THREE.Mesh
     Cube004_15: THREE.Mesh
+    Sphere: THREE.Mesh
+    Sphere_1: THREE.Mesh
+    Sphere_2: THREE.Mesh
     Plane002: THREE.Mesh
     Plane002_1: THREE.Mesh
     room_floor: THREE.Mesh
@@ -102,6 +105,9 @@ type GLTFResult = GLTF & {
     leaves: THREE.MeshStandardMaterial
     project_panel: THREE.MeshStandardMaterial
     project_panel_display: THREE.MeshStandardMaterial
+    robot_material: THREE.MeshStandardMaterial
+    robot_light: THREE.MeshStandardMaterial
+    robot_black: THREE.MeshStandardMaterial
     room_base: THREE.MeshStandardMaterial
     sitting_table_details: THREE.MeshStandardMaterial
   }
@@ -208,6 +214,11 @@ export function Model(props: JSX.IntrinsicElements['group']) {
       <group name="project_panel007" position={[-0.126, 1.215, 2.944]} rotation={[-Math.PI, 0, -Math.PI]}>
         <mesh name="Cube004_14" geometry={nodes.Cube004_14.geometry} material={materials.project_panel} />
         <mesh name="Cube004_15" geometry={nodes.Cube004_15.geometry} material={materials.project_panel_display} />
+      </group>
+      <group name="robot" position={[-1.25, 1.058, -1.315]} scale={0.157}>
+        <mesh name="Sphere" geometry={nodes.Sphere.geometry} material={materials.robot_material} />
+        <mesh name="Sphere_1" geometry={nodes.Sphere_1.geometry} material={materials.robot_light} />
+        <mesh name="Sphere_2" geometry={nodes.Sphere_2.geometry} material={materials.robot_black} />
       </group>
       <group name="roof" position={[0, 2.014, -0.01]}>
         <mesh name="Plane002" geometry={nodes.Plane002.geometry} material={materials.room_base} />
