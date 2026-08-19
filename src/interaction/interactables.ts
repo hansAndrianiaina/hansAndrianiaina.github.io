@@ -28,4 +28,7 @@ export const INTERACTABLES: Record<string, InteractableConfig> = {
   Cube005_1: { title: 'DOSSIER-H', description: 'A comprehensive overview of Hanssi\'s professional journey — academic background, key roles held, technical expertise, and the mission-driven work that has shaped their career to date.' },
   Cube: { title: 'Door', description: 'This door is currently locked' },
   Cube002: { title: 'Door', description: 'This door is currently locked' },
+  Sphere: { title: 'Robutler', description: 'A robotic assistant acting as a butler. Program is currently under implementation. You will be able to talk to it soon.' },
+  Sphere_1: { title: 'Robutler', description: 'A robotic assistant acting as a butler. Program is currently under implementation. You will be able to talk to it soon.' },
+  Sphere_2: { title: 'Robutler', description: 'A robotic assistant acting as a butler. Program is currently under implementation. You will be able to talk to it soon.' },
 }
