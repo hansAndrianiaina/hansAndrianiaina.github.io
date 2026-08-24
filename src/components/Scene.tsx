@@ -15,7 +15,7 @@ import CustomOrbitControls from './CustomOrbitControls'
 
 import { DragGuardProvider } from '../interaction/DragGuardContext'
 import InteractiveModel from './InteractiveModel'
-import { INTERACTABLES } from '../interaction/interactables'
+import { INTERACTABLES, toPanelProps } from '../interaction/interactables'
 
 import AnimationInfoPanel from './AnimationInfoPanel'
 import InfoPanel from './InfoPanel'
@@ -148,11 +148,10 @@ export default function Scene() {
       )}
       {introDone && selected && (
         <AnimationInfoPanel
-          title={INTERACTABLES[selected].title || 'Coming soon'}
-          subtitle={INTERACTABLES[selected].description || 'More information will be available soon.'}
+          {...toPanelProps(INTERACTABLES[selected])}
+          visible={introDone && INTERACTABLES[selected].title !== ''}
           onClose={() => setSelected(null)}
-          visible={introDone}
-        />
+        />        
       )}
     </>
   )

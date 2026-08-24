@@ -1,0 +1,74 @@
+{
+  "Cube004": { "title": "" },
+  "Cube004_2": { "title": "" },
+  "Cube004_4": { "title": "" },
+  "Cube004_6": { "title": "" },
+  "Cube004_8": { "title": "" },
+  "Cube004_10": { "title": "" },
+  "Cube004_12": { "title": "" },
+  "Cube004_14": { "title": "" },
+  "Icosphere_5": { "title": "Levitational support", "panel": { "description": { "heading": "Description", "content": "A levitational support system for the flower pot" } } },
+  "Cylinder_4": { "title": "Flower pot", "panel": { "description": { "heading": "Description", "content": "An artistic flower pot" } } },
+  "Icosphere_3": { "title": "Levitational support", "panel": { "description": { "heading": "Description", "content": "A levitational support system for the flower pot" } } },
+  "Cylinder_2": { "title": "Flower pot", "panel": { "description": { "heading": "Description", "content": "An artistic flower pot" } } },
+  "Icosphere_1": { "title": "Levitational support", "panel": { "description": { "heading": "Description", "content": "A levitational support system for the flower pot" } } },
+  "Cylinder": { "title": "Flower pot", "panel": { "description": { "heading": "Description", "content": "An artistic flower pot" } } },
+  "Cube002_1": { "title": "Sitting table", "panel": { "description": { "heading": "Description", "content": "You can sit there" } } },
+  "Cube002_2": { "title": "Sitting table", "panel": { "description": { "heading": "Description", "content": "You can sit there" } } },
+  "boom_box_1": { "title": "Boom Box", "panel": { "description": { "heading": "Description", "content": "Play music" } } },
+  "boom_box_2": { "title": "Boom Box", "panel": { "description": { "heading": "Description", "content": "Play music" } } },
+  "Cube005_1": {
+    "title": "DOSSIER-H",
+    "panel": {
+      "hook": "Data product engineer & 3D artist",
+      "description": {
+        "heading": "Description",
+        "content": "A comprehensive overview of Hanssi's professional journey — academic background, key roles held, technical expertise, and the mission-driven work that has shaped their career to date."
+      },
+      "overview": {
+        "heading": "Content",
+        "content": "Academic background, key roles, and the mission-driven work that has shaped Hanssi's career so far."
+      },
+      "howItWorks": {
+        "heading": "Field Notes",
+        "items": [
+          "Data product engineering — pipelines, tooling, product thinking",
+          "3D art & real-time interactive scenes",
+          "This portfolio itself is one of the case studies"
+        ]
+      },
+      "techStack": ["React", "TypeScript", "Three.js", "Blender", "Python"],
+      "demoUrl": "https://www.linkedin.com/in/hanssi-andrianiaina-rasolomanana-047183205/",
+      "demoLabel": "Open Résumé ↗"
+    }
+  },
+  "Cube": { "title": "Door", "panel": { "description": { "heading": "Status", "content": "This door is currently locked" } } },
+  "Cube002": { "title": "Door", "panel": { "description": { "heading": "Status", "content": "This door is currently locked" } } },
+  "Sphere": {
+    "title": "Robutler",
+    "panel": {
+      "description": {
+        "heading": "Description",
+        "content": "A robotic assistant acting as a butler. Program is currently under implementation. You will be able to talk to it soon."
+      }
+    }
+  },
+  "Sphere_1": {
+    "title": "Robutler",
+    "panel": {
+      "description": {
+        "heading": "Description",
+        "content": "A robotic assistant acting as a butler. Program is currently under implementation. You will be able to talk to it soon."
+      }
+    }
+  },
+  "Sphere_2": {
+    "title": "Robutler",
+    "panel": {
+      "description": {
+        "heading": "Description",
+        "content": "A robotic assistant acting as a butler. Program is currently under implementation. You will be able to talk to it soon."
+      }
+    }
+  }
+}
