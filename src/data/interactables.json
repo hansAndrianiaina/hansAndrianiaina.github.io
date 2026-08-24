@@ -42,8 +42,8 @@
       "demoLabel": "Open Résumé ↗"
     }
   },
-  "Cube": { "title": "Door", "panel": { "description": { "heading": "Description", "content": "This door is currently locked" } } },
-  "Cube002": { "title": "Door", "panel": { "description": { "heading": "Description", "content": "This door is currently locked" } } },
+  "Cube": { "title": "Door", "panel": { "description": { "heading": "Status", "content": "This door is currently locked" } } },
+  "Cube002": { "title": "Door", "panel": { "description": { "heading": "Status", "content": "This door is currently locked" } } },
   "Sphere": {
     "title": "Robutler",
     "panel": {
