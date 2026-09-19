@@ -1,5 +1,6 @@
 // components/ControlModeToggle.tsx
 import type { CSSProperties } from 'react'
+import { useMobile } from '../hooks/useMobile'
 
 type ControlMode = 'orbit' | 'walk'
 
@@ -13,14 +14,28 @@ export default function ControlModeToggle({
   mode: ControlMode
   onChange: (m: ControlMode) => void
 }) {
+  const { isMobile } = useMobile()
+
   // 1. Move positioning, opacity, and the drop-shadow to an un-clipped wrapper
-  const wrapperStyle: CSSProperties = {
-    position: 'absolute',
-    bottom: '5%',
-    right: '2%',
-    opacity: 0.75,
-    filter: 'drop-shadow(0 0 10px rgba(80, 190, 200, 0.2))',
-  }
+  const wrapperStyle: CSSProperties = isMobile
+    ? {
+        // Mobile: bottom-centre, above the browser's home indicator
+        position: 'absolute',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        bottom: 'calc(16px + env(safe-area-inset-bottom, 0px))',
+        opacity: 0.85,
+        zIndex: 9,
+        filter: 'drop-shadow(0 0 10px rgba(80, 190, 200, 0.2))',
+      }
+    : {
+        position: 'absolute',
+        bottom: '5%',
+        right: '2%',
+        opacity: 0.75,
+        zIndex: 9,
+        filter: 'drop-shadow(0 0 10px rgba(80, 190, 200, 0.2))',
+      }
 
   // 2. Keep the clip-path, backgrounds, and layout here
   const trackStyle: CSSProperties = {
@@ -58,11 +73,13 @@ export default function ControlModeToggle({
   const segmentStyle = (active: boolean): CSSProperties => ({
     position: 'relative',
     zIndex: 1,
-    width: 72,
+    width: isMobile ? 96 : 72,
+    minHeight: isMobile ? 44 : undefined, // WCAG 2.5.5 touch target
     padding: '7px 0',
     border: 'none',
     background: 'transparent',
     cursor: 'pointer',
+    touchAction: 'manipulation', // no double-tap-to-zoom delay on the buttons
     fontSize: 12,
     fontWeight: 600,
     letterSpacing: '0.08em',

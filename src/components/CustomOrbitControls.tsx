@@ -1,6 +1,12 @@
+import * as THREE from 'three'
 import { OrbitControls } from '@react-three/drei'
 
-export default function CustomOrbitControls() {
+// One finger orbits; two fingers pinch-zoom AND twist-rotate at the same time.
+// (Pan is disabled below, so DOLLY_ROTATE is what you want here rather than DOLLY_PAN.)
+// Module-level constant so the object identity is stable across renders.
+const TOUCHES = { ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_ROTATE }
+
+export default function CustomOrbitControls({ touch = false }: { touch?: boolean }) {
  return  <OrbitControls  
             makeDefault
             // enabled={introDone}
@@ -21,6 +27,11 @@ export default function CustomOrbitControls() {
             enablePan={false}               // no dragging to pan
             enableZoom={true}               // allow/disallow scroll zoom
             enableRotate={true}             // allow/disallow orbit rotation
+
+            // Touch gestures (OrbitControls also sets `touch-action: none` on the canvas itself)
+            touches={TOUCHES}
+            rotateSpeed={touch ? 0.7 : 1}   // a full-width swipe is a big arc on a small screen
+            zoomSpeed={touch ? 0.8 : 1}
 
             // Feel
             enableDamping

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, type CSSProperties } from 'react'
+import { useMobile } from '../hooks/useMobile'
 
 // Corner chamfer sizes as % of box width/height (top-left, top-right, bottom-right, bottom-left)
 const CUT = { tl: 6, tr: 4, br: 9, bl: 4 }
@@ -28,21 +29,47 @@ const LINKS = [
   },
 ]
 
-export default function InfoPanel() {
-  const [minimized, setMinimized] = useState(true)
+interface InfoPanelProps {
+  /** Lets the parent collapse the panel (e.g. while an object info panel is open on mobile). */
+  forceMinimized?: boolean
+}
+
+export default function InfoPanel({ forceMinimized = false }: InfoPanelProps) {
+  const { isMobile } = useMobile()
+  const [userMinimized, setUserMinimized] = useState(true)
+  const minimized = userMinimized || forceMinimized
+
+  // 44px chevron on mobile needs a slightly wider collapsed badge than the 26px desktop one.
+  const collapsedWidth = isMobile ? 120 : 100
 
   // The wrapper handles positioning, size transitions, and the outer drop-shadow
-  const wrapperStyle: CSSProperties = {
-    position: 'absolute',
-    bottom: '5%',
-    left: '0%',
-    transform: `translateX(5%)  scale(${minimized ? 0.98 : 1})`,
-    opacity: 0.75,
-    width: minimized ? 100 : '100%',
-    maxWidth: minimized ? 100 : 340,
-    transition: 'width 0.35s ease, max-width 0.35s ease',
-    filter: 'drop-shadow(0 0 18px rgba(80, 190, 200, 0.22))',
-  }
+  const wrapperStyle: CSSProperties = isMobile
+    ? {
+        // Mobile: top-left, so it never collides with the joysticks / mode toggle at the bottom
+        position: 'absolute',
+        top: 'calc(12px + env(safe-area-inset-top, 0px))',
+        left: 'calc(12px + env(safe-area-inset-left, 0px))',
+        zIndex: 7,
+        transform: `scale(${minimized ? 0.98 : 1})`,
+        transformOrigin: 'top left',
+        opacity: 0.85,
+        width: minimized ? collapsedWidth : 'calc(100vw - 24px)',
+        maxWidth: minimized ? collapsedWidth : 340,
+        transition: 'width 0.35s ease, max-width 0.35s ease',
+        filter: 'drop-shadow(0 0 18px rgba(80, 190, 200, 0.22))',
+      }
+    : {
+        position: 'absolute',
+        bottom: '5%',
+        left: '0%',
+        zIndex: 7,
+        transform: `translateX(5%)  scale(${minimized ? 0.98 : 1})`,
+        opacity: 0.75,
+        width: minimized ? 100 : '100%',
+        maxWidth: minimized ? 100 : 340,
+        transition: 'width 0.35s ease, max-width 0.35s ease',
+        filter: 'drop-shadow(0 0 18px rgba(80, 190, 200, 0.22))',
+      }
 
   // The panel handles the clipping path, background, and padding
   const panelStyle: CSSProperties = {
@@ -64,6 +91,8 @@ export default function InfoPanel() {
     color: '#eafcff',
     fontFamily: "system-ui, -apple-system, 'Segoe UI', sans-serif",
   }
+
+  const toggleSize = isMobile ? 44 : 26
 
   return (
     <div style={wrapperStyle}>
@@ -140,13 +169,13 @@ export default function InfoPanel() {
           </div>
 
           <button
-            onClick={() => setMinimized((m) => !m)}
+            onClick={() => setUserMinimized((m) => !m)}
             aria-label={minimized ? 'Maximize panel' : 'Minimize panel'}
             aria-expanded={!minimized}
             style={{
               flexShrink: 0,
-              width: 26,
-              height: 26,
+              width: toggleSize,
+              height: toggleSize,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -155,6 +184,7 @@ export default function InfoPanel() {
               clipPath: 'polygon(6px 0, 100% 0, 100% 100%, 0 100%, 0 6px)',
               color: '#eafcff',
               cursor: 'pointer',
+              touchAction: 'manipulation',
             }}
           >
             <svg width="10" height="10" viewBox="0 0 10 10">
@@ -173,7 +203,7 @@ export default function InfoPanel() {
         {/* collapsible body: links */}
         <div
           style={{
-            maxHeight: minimized ? 0 : 60,
+            maxHeight: minimized ? 0 : isMobile ? 110 : 60,
             opacity: minimized ? 0 : 1,
             overflow: 'hidden',
             transition: 'max-height 0.35s ease, opacity 0.25s ease',
@@ -196,6 +226,10 @@ export default function InfoPanel() {
                 rel={link.external ? 'noreferrer' : undefined}
                 style={{
                   flex: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: isMobile ? 44 : undefined, // WCAG 2.5.5 touch target
                   textAlign: 'center',
                   padding: '7px 0',
                   clipPath: CHIP_CLIP,
