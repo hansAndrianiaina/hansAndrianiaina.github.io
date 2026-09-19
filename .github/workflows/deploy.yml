@@ -2,19 +2,43 @@ name: Deploy
 
 on:
   push:
-    branches: [main]
+    branches: 
+      - main
+      - dev
+
+# Grants permission to write to your gh-pages deployment branch
+permissions:
+  contents: write
 
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+
       - run: npm ci
       - run: npm run build
-      - uses: peaceiris/actions-gh-pages@v3
+
+      # Step A: Deploy the LIVE site (Triggers ONLY on pushes to main)
+      - name: Deploy Live Production
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+
+      # Step B: Deploy the PREVIEW site (Triggers ONLY on pushes to dev)
+      - name: Deploy Dev Preview
+        if: github.ref == 'refs/heads/dev'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          # Places the dev site into a 'dev' subdirectory so it doesn't overwrite production
+          destination_dir: dev
+          # Crucial: Prevents this deployment from wiping out your main production site
+          keep_files: true 
