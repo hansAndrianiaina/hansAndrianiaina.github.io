@@ -1,4 +1,4 @@
-import { useEffect, useState, Suspense } from 'react'
+import { useEffect, useState, Suspense, useCallback } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Environment, Stats, Center, Bounds  } from '@react-three/drei'
 import CameraDebugPanel from './CameraDebugPanel'
@@ -23,6 +23,9 @@ import ErrorBoundary from './ErrorBoundary'
 import LoadingScreen from './LoadingScreen'
 import SceneReadySignal from './SceneReadySignal'
 import { useSoundPlayer } from './SoundPlayer';
+import { useMobile } from '../hooks/useMobile';
+import { VirtualJoystickProvider } from './VirtualJoystick';
+import { TouchControlOverlay } from './TouchControlOverlay';
 
 type ControlMode = 'orbit' | 'walk'
 
@@ -30,11 +33,16 @@ const MIN_LOADING_MS = 1000   // loading screen stays up at least this long, eve
 const MAX_LOADING_MS = 15000  // safety net — reveal anyway if assets never resolve (e.g. network failure)
 
 export default function Scene() {
+  const { isTouch } = useMobile()
+
   const [introDone, setIntroDone] = useState(false)
   const [introKey, setIntroKey] = useState(0)   // bump to force IntroCamera remount
   const modelRef = useRefReact<THREE.Group>(null)
-  const [mode, setMode] = useState<ControlMode>('walk')
+  // Default to orbit on touch devices for better UX
+  const [mode, setMode] = useState<ControlMode>(isTouch ? 'orbit' : 'walk')
   const [selected, setSelected] = useState<string | null>(null)
+  const [showTouchHints, setShowTouchHints] = useState(isTouch)
+  const [hintsDismissed, setHintsDismissed] = useState(false)
 
   // Loading screen gating: hidden once BOTH are true.
   const [assetsLoaded, setAssetsLoaded] = useState(false)
@@ -57,9 +65,14 @@ export default function Scene() {
     setIntroKey((k) => k + 1) // remounts IntroCamera fresh
   }
 
+  const dismissTouchHints = useCallback(() => {
+    setShowTouchHints(false)
+    setHintsDismissed(true)
+  }, [])
+
   return (
     <>
-      
+
       <ErrorBoundary
         fallback={
           <div
@@ -129,9 +142,22 @@ export default function Scene() {
 
           {introDone && <CameraCollisionGuard targetRef={modelRef} />}
 
-          {introDone && mode === 'walk' && <WalkControls />}
+          {/* Walk mode with virtual joystick on touch */}
+          {introDone && mode === 'walk' && (
+            <VirtualJoystickProvider enabled={isTouch}>
+              <WalkControls />
+            </VirtualJoystickProvider>
+          )}
           {introDone && mode === 'orbit' && <CustomOrbitControls />}
 
+          {/* Touch control hints overlay */}
+          {introDone && isTouch && showTouchHints && !hintsDismissed && (
+            <TouchControlOverlay
+              mode={mode}
+              visible={true}
+              onDismiss={dismissTouchHints}
+            />
+          )}
 
           {import.meta.env.DEV && <CameraDebugPanel onReplay={handleReplay} />}
           {import.meta.env.DEV && <Stats />}
@@ -151,7 +177,7 @@ export default function Scene() {
           {...toPanelProps(INTERACTABLES[selected])}
           visible={introDone && INTERACTABLES[selected].title !== ''}
           onClose={() => setSelected(null)}
-        />        
+        />
       )}
     </>
   )

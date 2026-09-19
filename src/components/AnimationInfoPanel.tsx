@@ -171,7 +171,8 @@
 
 
 // src/components/AnimationInfoPanel.tsx
-import type { CSSProperties } from 'react'
+import { useEffect, useState, type CSSProperties } from 'react'
+import { useMobile } from '../hooks/useMobile'
 
 interface InfoSection {
   /** Section label, e.g. "Mission Brief", "Under the Hood" — your call, it's just a heading. */
@@ -278,22 +279,41 @@ export default function AnimationInfoPanel({
   visible,
   onClose,
 }: AnimationInfoPanelProps) {
+  const { isMobile, isTablet } = useMobile()
+  const [isTouch, setIsTouch] = useState(false)
+
+  useEffect(() => {
+    setIsTouch(window.matchMedia('(pointer: coarse)').matches)
+  }, [])
+
+  const isMobileLayout = isMobile || (isTablet && isTouch)
+
+  // Mobile: full-width at top with safe area inset, larger touch targets
+  // Desktop: current top-right design
   const wrapperStyle: CSSProperties = {
     position: 'absolute',
-    top: '5%',
-    right: '0%',
-    transform: `translateX(-5%)  scale(${visible ? 1 : 0.98})`,
+    top: isMobileLayout ? 'env(safe-area-inset-top, 0px)' : '5%',
+    left: isMobileLayout ? 0 : 'auto',
+    right: isMobileLayout ? 0 : '0%',
+    transform: isMobileLayout
+      ? `translateX(0) scale(${visible ? 1 : 0.98})`
+      : `translateX(-5%) scale(${visible ? 1 : 0.98})`,
     opacity: visible ? 0.75 : 0,
     transition: 'opacity 0.6s ease, transform 0.6s ease',
     pointerEvents: 'none', // wrapper stays click-through; interactive children re-enable themselves below
-    minWidth: 320,
-    maxWidth: 320,
+    minWidth: isMobileLayout ? 0 : 320,
+    maxWidth: isMobileLayout ? 'none' : 320,
+    width: isMobileLayout ? '100%' : undefined,
+    paddingTop: isMobileLayout ? 'env(safe-area-inset-top, 0px)' : 0,
     filter: 'drop-shadow(0 0 18px rgba(80, 190, 200, 0.25))',
+    zIndex: 200,
   }
 
   const panelStyle: CSSProperties = {
     position: 'relative',
-    padding: '22px 26px',
+    padding: isMobileLayout ? '18px 20px' : '22px 26px',
+    maxHeight: isMobileLayout ? 'calc(100vh - env(safe-area-inset-top, 0px) - 60px)' : 'none',
+    overflow: isMobileLayout ? 'auto' : 'visible',
     clipPath: CLIP_PATH,
     WebkitClipPath: CLIP_PATH,
     background: `
@@ -306,15 +326,17 @@ export default function AnimationInfoPanel({
     WebkitBackdropFilter: 'blur(6px)',
     color: '#eafcff',
     fontFamily: "system-ui, -apple-system, 'Segoe UI', sans-serif",
-    textAlign: 'center',
+    textAlign: isMobileLayout ? 'left' : 'center',
   }
 
   const closeButtonStyle: CSSProperties = {
     position: 'absolute',
-    top: 10,
-    right: 14,
-    width: 20,
-    height: 20,
+    top: isMobileLayout ? 14 : 10,
+    right: isMobileLayout ? 18 : 14,
+    width: isMobileLayout ? 36 : 20,
+    height: isMobileLayout ? 36 : 20,
+    minWidth: isMobileLayout ? 36 : undefined,
+    minHeight: isMobileLayout ? 36 : undefined,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -322,11 +344,12 @@ export default function AnimationInfoPanel({
     border: 'none',
     borderRadius: 4,
     color: 'rgba(210, 238, 240, 0.6)',
-    fontSize: 14,
+    fontSize: isMobileLayout ? 18 : 14,
     lineHeight: 1,
     cursor: 'pointer',
     pointerEvents: visible ? 'auto' : 'none', // only clickable while panel is actually visible
     transition: 'color 0.2s ease, background 0.2s ease',
+    touchAction: 'manipulation',
   }
 
   const demoButtonStyle: CSSProperties = {
@@ -334,8 +357,8 @@ export default function AnimationInfoPanel({
     alignItems: 'center',
     gap: 6,
     marginTop: 18,
-    padding: '8px 18px',
-    fontSize: 11,
+    padding: isMobileLayout ? '12px 24px' : '8px 18px',
+    fontSize: isMobileLayout ? 12 : 11,
     fontWeight: 700,
     letterSpacing: '0.1em',
     textTransform: 'uppercase',
@@ -348,19 +371,22 @@ export default function AnimationInfoPanel({
     pointerEvents: visible ? 'auto' : 'none',
     boxShadow: '0 0 10px rgba(190, 245, 250, 0.5)',
     transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+    minHeight: isMobileLayout ? 44 : undefined,
+    touchAction: 'manipulation',
   }
 
   const tagStyle: CSSProperties = {
     display: 'inline-block',
-    padding: '3px 9px',
+    padding: isMobileLayout ? '6px 12px' : '3px 9px',
     margin: '0 6px 6px 0',
-    fontSize: 10,
+    fontSize: isMobileLayout ? 11 : 10,
     fontWeight: 600,
     letterSpacing: '0.04em',
     color: 'rgba(220, 245, 248, 0.9)',
     background: 'rgba(170, 230, 235, 0.1)',
     border: '1px solid rgba(180, 235, 240, 0.3)',
     borderRadius: 3,
+    touchAction: 'manipulation',
   }
 
   return (
