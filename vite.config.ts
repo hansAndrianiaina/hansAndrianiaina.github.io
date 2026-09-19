@@ -5,6 +5,6 @@ import react from '@vitejs/plugin-react'
 const currentBranch = process.env.VITE_GITHUB_REF_NAME
 
 export default defineConfig({
-  base: currentBranch === 'dev' ? '/dev' : '/',
+  base: currentBranch === 'dev' ? '/dev/' : '/',
   plugins: [react()],
 })
