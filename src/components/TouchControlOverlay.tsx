@@ -1,174 +1,146 @@
-import { useEffect, useState, useRef } from 'react'
+// src/components/TouchControlOverlay.tsx
+// Gesture hints shown once, on the first touch. Dismisses after 5s or on the next
+// touch (ignoring a 1s grace window so the second finger of a pinch doesn't close it).
+//
+// Also draws a small ripple where the finger lands in Orbit mode, as visual feedback
+// (Walk mode already has the joysticks for that).
+//
+// Everything is driven by refs / CSS transitions / Web Animations: no per-touch React renders.
+import { useEffect, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 
-interface TouchControlOverlayProps {
-  mode: 'orbit' | 'walk'
-  visible: boolean
-  onDismiss: () => void
+type ControlMode = 'orbit' | 'walk'
+
+const AUTO_DISMISS_MS = 5000
+const GRACE_MS = 1000
+const FADE_MS = 400
+
+const HINTS: Record<ControlMode, string[]> = {
+  orbit: ['Drag to orbit', 'Pinch to zoom', 'Tap an object for info'],
+  walk: ['Left stick to move', 'Right stick to look', 'Tap an object for info'],
 }
 
-const HINT_DURATION = 5000
-const FADE_DURATION = 400
+const CLIP = 'polygon(9px 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%, 0 9px)'
 
-const containerStyle: CSSProperties = {
-  position: 'absolute',
-  inset: 0,
-  pointerEvents: 'none',
-  zIndex: 50,
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  gap: 24,
-  transition: `opacity ${FADE_DURATION}ms ease`,
-}
-
-const hintStyle: CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: 12,
-  padding: '12px 20px',
-  background: 'rgba(11, 27, 36, 0.85)',
-  border: '1px solid rgba(190, 240, 245, 0.3)',
-  borderRadius: 12,
-  backdropFilter: 'blur(10px)',
-  WebkitBackdropFilter: 'blur(10px)',
-  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(190, 245, 250, 0.1)',
-  maxWidth: '90vw',
-  textAlign: 'center',
-}
-
-const iconStyle: CSSProperties = {
-  flexShrink: 0,
-  width: 28,
-  height: 28,
-  color: 'rgba(190, 240, 245, 0.9)',
-}
-
-const textStyle: CSSProperties = {
-  fontSize: 13,
-  fontWeight: 500,
-  lineHeight: 1.4,
-  color: '#eafcff',
-  fontFamily: "system-ui, -apple-system, 'Segoe UI', sans-serif",
-}
-
-const kbdStyle: CSSProperties = {
-  fontSize: 11,
-  fontWeight: 600,
-  letterSpacing: '0.04em',
-  padding: '2px 6px',
-  background: 'rgba(255, 255, 255, 0.1)',
-  border: '1px solid rgba(190, 240, 245, 0.2)',
-  borderRadius: 4,
-  fontFamily: "ui-monospace, 'SF Mono', Menlo, Consolas, monospace",
-  color: 'rgba(190, 240, 245, 0.85)',
-}
-
-const orbitHints = [
-  { icon: DragIcon, text: 'Drag to orbit', desktop: 'Click & drag' },
-  { icon: PinchIcon, text: 'Pinch to zoom', desktop: 'Scroll wheel' },
-  { icon: TapIcon, text: 'Tap object for info', desktop: 'Click object' },
-]
-
-const walkHints = [
-  { icon: LeftJoystickIcon, text: 'Left stick: move', desktop: 'WASD / Arrows' },
-  { icon: RightJoystickIcon, text: 'Right stick: look', desktop: 'Drag to look' },
-  { icon: TapIcon, text: 'Tap object for info', desktop: 'Click object' },
-]
-
-function DragIcon({ style }: { style?: CSSProperties }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={style}>
-      <path d="M5 9l5 5 5-5" />
-      <path d="M5 15l5 5 5-5" />
-      <path d="M12 3v18" />
-    </svg>
-  )
-}
-
-function PinchIcon({ style }: { style?: CSSProperties }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={style}>
-      <path d="M12 5v14" />
-      <path d="M5 12h14" />
-      <circle cx="12" cy="5" r="2" fill="currentColor" opacity="0.5" />
-      <circle cx="12" cy="19" r="2" fill="currentColor" opacity="0.5" />
-    </svg>
-  )
-}
-
-function TapIcon({ style }: { style?: CSSProperties }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={style}>
-      <circle cx="12" cy="12" r="10" />
-      <circle cx="12" cy="12" r="3" fill="currentColor" opacity="0.5" />
-    </svg>
-  )
-}
-
-function LeftJoystickIcon({ style }: { style?: CSSProperties }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={style}>
-      <circle cx="9" cy="15" r="7" />
-      <circle cx="9" cy="15" r="3" fill="currentColor" opacity="0.5" />
-      <path d="M9 8v7M16 15H9" />
-    </svg>
-  )
-}
-
-function RightJoystickIcon({ style }: { style?: CSSProperties }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={style}>
-      <circle cx="15" cy="9" r="7" />
-      <circle cx="15" cy="9" r="3" fill="currentColor" opacity="0.5" />
-      <path d="M15 16v-7M8 9h7" />
-    </svg>
-  )
-}
-
-function HintItem({ icon: Icon, text, desktop }: { icon: React.FC<{ style?: CSSProperties }>; text: string; desktop: string }) {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-      <Icon style={iconStyle} aria-hidden="true" />
-      <div style={{ textAlign: 'left' }}>
-        <div style={textStyle}>{text}</div>
-        <div style={{ ...kbdStyle, fontSize: 10, marginTop: 2 }}>{desktop}</div>
-      </div>
-    </div>
-  )
-}
-
-export function TouchControlOverlay({ mode, visible, onDismiss }: TouchControlOverlayProps) {
-  const [opacity, setOpacity] = useState(0)
-  const timerRef = useRef<ReturnType<typeof setTimeout>>()
-  const hints = mode === 'orbit' ? orbitHints : walkHints
+export default function TouchControlOverlay({ mode }: { mode: ControlMode }) {
+  const [visible, setVisible] = useState(false)
+  const modeRef = useRef(mode)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const rippleRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (visible) {
-      setOpacity(1)
-      timerRef.current = setTimeout(() => {
-        setOpacity(0)
-        timerRef.current = setTimeout(onDismiss, FADE_DURATION)
-      }, HINT_DURATION)
-    } else {
-      setOpacity(0)
-      if (timerRef.current) clearTimeout(timerRef.current)
-    }
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current)
-    }
-  }, [visible, onDismiss])
+    modeRef.current = mode
+  }, [mode])
 
-  if (!visible && opacity === 0) return null
+  useEffect(() => {
+    let phase: 'idle' | 'shown' | 'done' = 'idle'
+    let shownAt = 0
+    let timer: number | undefined
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    const dismiss = () => {
+      if (phase === 'done') return
+      phase = 'done'
+      window.clearTimeout(timer)
+      setVisible(false)
+    }
+
+    const ripple = (clientX: number, clientY: number) => {
+      const el = rippleRef.current
+      const box = containerRef.current
+      if (!el || !box || reduceMotion) return
+      const rect = box.getBoundingClientRect()
+      el.style.left = `${clientX - rect.left}px`
+      el.style.top = `${clientY - rect.top}px`
+      el.animate(
+        [
+          { transform: 'translate(-50%, -50%) scale(0.4)', opacity: 0.8 },
+          { transform: 'translate(-50%, -50%) scale(1.5)', opacity: 0 },
+        ],
+        { duration: 450, easing: 'ease-out' },
+      )
+    }
+
+    const onPointerDown = (e: PointerEvent) => {
+      if (e.pointerType !== 'touch') return
+
+      if (modeRef.current === 'orbit') ripple(e.clientX, e.clientY)
+
+      if (phase === 'idle') {
+        phase = 'shown'
+        shownAt = performance.now()
+        setVisible(true)
+        timer = window.setTimeout(dismiss, AUTO_DISMISS_MS)
+      } else if (phase === 'shown' && performance.now() - shownAt > GRACE_MS) {
+        dismiss()
+      }
+    }
+
+    window.addEventListener('pointerdown', onPointerDown, true)
+    return () => {
+      window.removeEventListener('pointerdown', onPointerDown, true)
+      window.clearTimeout(timer)
+    }
+  }, [])
+
+  const containerStyle: CSSProperties = {
+    position: 'absolute',
+    inset: 0,
+    overflow: 'hidden',
+    pointerEvents: 'none', // never blocks the canvas
+    zIndex: 6,
+  }
+
+  const hintWrapStyle: CSSProperties = {
+    position: 'absolute',
+    left: '50%',
+    top: '38%',
+    transform: 'translate(-50%, -50%)',
+    maxWidth: 'calc(100vw - 48px)',
+    opacity: visible ? 0.9 : 0,
+    transition: `opacity ${FADE_MS}ms ease`,
+    filter: 'drop-shadow(0 0 14px rgba(80, 190, 200, 0.25))',
+  }
+
+  const hintPanelStyle: CSSProperties = {
+    padding: '14px 22px',
+    clipPath: CLIP,
+    WebkitClipPath: CLIP,
+    background: `
+      radial-gradient(rgba(173,227,232,0.35) 1px, transparent 1.5px),
+      linear-gradient(155deg, #0b1b24 0%, #123a44 55%, #1d4d55 100%)
+    `,
+    backgroundSize: '14px 14px, auto',
+    border: '1px solid rgba(190, 240, 245, 0.3)',
+    color: '#eafcff',
+    fontFamily: "ui-monospace, 'SF Mono', Menlo, Consolas, monospace",
+    fontSize: 13,
+    lineHeight: 1.9,
+    letterSpacing: '0.03em',
+    textAlign: 'center',
+  }
+
+  const rippleStyle: CSSProperties = {
+    position: 'absolute',
+    width: 56,
+    height: 56,
+    borderRadius: '50%',
+    border: '2px solid rgba(190, 245, 250, 0.9)',
+    boxShadow: '0 0 12px rgba(150, 235, 240, 0.6)',
+    opacity: 0,
+    pointerEvents: 'none',
+  }
 
   return (
-    <div style={{ ...containerStyle, opacity }} role="status" aria-live="polite" aria-atomic="true">
-      {hints.map((hint, i) => (
-        <div key={i} style={hintStyle}>
-          <HintItem {...hint} />
+    <div ref={containerRef} style={containerStyle}>
+      <div style={hintWrapStyle} role="status" aria-live="polite" aria-hidden={!visible}>
+        <div style={hintPanelStyle}>
+          {HINTS[mode].map((hint) => (
+            <div key={hint}>{hint}</div>
+          ))}
         </div>
-      ))}
+      </div>
+      <div ref={rippleRef} style={rippleStyle} />
     </div>
   )
 }

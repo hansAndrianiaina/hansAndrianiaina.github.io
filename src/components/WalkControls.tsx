@@ -2,22 +2,22 @@
 import { useRef, useEffect } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
-import { useVirtualJoystick } from './VirtualJoystick'
+import { touchInput } from '../interaction/touchInput'
 
 const SPEED = 3
 const LOOK_SENSITIVITY = 0.0025
+const JOYSTICK_LOOK_SPEED = 2.2   // rad/s at full right-stick deflection
 const MAX_PITCH = Math.PI / 2 - 0.05
 const LOOK_DAMPING = 8      // higher = snappier, lower = floatier
 const MOVE_DAMPING = 6      // higher = more responsive stop/start, lower = more glide
-const JOYSTICK_LOOK_SENSITIVITY = 0.03 // radians per frame at full tilt
 
 export default function WalkControls() {
   const { camera, gl } = useThree()
-  const { move, look } = useVirtualJoystick()
-
   const keys = useRef({ forward: false, backward: false, left: false, right: false })
 
-  const isDragging = useRef(false)
+  // The pointer currently dragging to look (mouse / pen only). null = not dragging.
+  // Tracking the id keeps a second finger / pointer from corrupting the drag delta.
+  const activePointerId = useRef<number | null>(null)
   const lastPointer = useRef({ x: 0, y: 0 })
 
   // targets = where input wants us to be, current = what's actually rendered (smoothed)
@@ -39,21 +39,22 @@ export default function WalkControls() {
     const dom = gl.domElement
 
     const onPointerDown = (e: PointerEvent) => {
-      // Don't start pointer look if a touch is active on joystick
-      if (e.pointerType === 'touch' && (move.active || look.active)) return
-      isDragging.current = true
+      // On touch screens, look is driven by the right joystick (see VirtualJoystick),
+      // so a finger on the canvas must not also rotate the camera.
+      if (e.pointerType === 'touch') return
+      if (activePointerId.current !== null) return
+      activePointerId.current = e.pointerId
       lastPointer.current = { x: e.clientX, y: e.clientY }
       dom.style.cursor = 'grabbing'
     }
-    const onPointerUp = () => {
-      isDragging.current = false
+    // Shared by pointerup AND pointercancel so a cancelled gesture can't leave the drag stuck on.
+    const endDrag = (e: PointerEvent) => {
+      if (e.pointerId !== activePointerId.current) return
+      activePointerId.current = null
       dom.style.cursor = 'auto'
     }
     const onPointerMove = (e: PointerEvent) => {
-      if (!isDragging.current) return
-      // Don't process pointer move if touch look is active
-      if (look.active) return
-
+      if (e.pointerId !== activePointerId.current) return
       const dx = e.clientX - lastPointer.current.x
       const dy = e.clientY - lastPointer.current.y
       lastPointer.current = { x: e.clientX, y: e.clientY }
@@ -66,7 +67,8 @@ export default function WalkControls() {
     dom.style.cursor = 'auto'
     dom.addEventListener('pointerdown', onPointerDown)
     window.addEventListener('pointermove', onPointerMove)
-    window.addEventListener('pointerup', onPointerUp)
+    window.addEventListener('pointerup', endDrag)
+    window.addEventListener('pointercancel', endDrag)
 
     const onKeyDown = (e: KeyboardEvent) => {
       switch (e.code) {
@@ -90,44 +92,41 @@ export default function WalkControls() {
     return () => {
       dom.removeEventListener('pointerdown', onPointerDown)
       window.removeEventListener('pointermove', onPointerMove)
-      window.removeEventListener('pointerup', onPointerUp)
+      window.removeEventListener('pointerup', endDrag)
+      window.removeEventListener('pointercancel', endDrag)
       document.removeEventListener('keydown', onKeyDown)
       document.removeEventListener('keyup', onKeyUp)
       dom.style.cursor = 'auto'
     }
-  }, [gl, move.active, look.active])
+  }, [gl])
 
   useFrame((_, delta) => {
-    // --- damped look ---
-    const lookAlpha = 1 - Math.exp(-LOOK_DAMPING * delta) // frame-rate independent smoothing
-
-    // Apply joystick look (touch) - adds to target yaw/pitch
-    if (look.active) {
-      targetYaw.current -= look.x * JOYSTICK_LOOK_SENSITIVITY
-      targetPitch.current -= look.y * JOYSTICK_LOOK_SENSITIVITY
-      targetPitch.current = THREE.MathUtils.clamp(targetPitch.current, -MAX_PITCH, MAX_PITCH)
+    // --- right joystick look (rate-based: holding the stick keeps turning) ---
+    if (touchInput.lookX !== 0 || touchInput.lookY !== 0) {
+      targetYaw.current -= touchInput.lookX * JOYSTICK_LOOK_SPEED * delta
+      targetPitch.current = THREE.MathUtils.clamp(
+        targetPitch.current + touchInput.lookY * JOYSTICK_LOOK_SPEED * delta,
+        -MAX_PITCH,
+        MAX_PITCH,
+      )
     }
 
+    // --- damped look ---
+    const lookAlpha = 1 - Math.exp(-LOOK_DAMPING * delta) // frame-rate independent smoothing
     currentYaw.current = THREE.MathUtils.lerp(currentYaw.current, targetYaw.current, lookAlpha)
     currentPitch.current = THREE.MathUtils.lerp(currentPitch.current, targetPitch.current, lookAlpha)
     camera.quaternion.setFromEuler(new THREE.Euler(currentPitch.current, currentYaw.current, 0, 'YXZ'))
 
     // --- damped movement ---
-    targetVelocity.current.set(0, 0, 0)
-
-    // Keyboard input (desktop)
+    // Start from the left joystick (analog, -1..1), then add keyboard (digital).
+    targetVelocity.current.set(touchInput.moveX, 0, -touchInput.moveY)
     if (keys.current.forward) targetVelocity.current.z -= 1
     if (keys.current.backward) targetVelocity.current.z += 1
     if (keys.current.left) targetVelocity.current.x -= 1
     if (keys.current.right) targetVelocity.current.x += 1
-
-    // Joystick input (touch) - move.x is left/right, move.y is forward/back
-    if (move.active) {
-      targetVelocity.current.x += move.x
-      targetVelocity.current.z += move.y
-    }
-
-    if (targetVelocity.current.lengthSq() > 0) targetVelocity.current.normalize()
+    // Clamp to unit length: keyboard diagonals are still normalized like before,
+    // while a half-pushed joystick keeps its partial speed.
+    if (targetVelocity.current.lengthSq() > 1) targetVelocity.current.normalize()
     targetVelocity.current.multiplyScalar(SPEED)
     targetVelocity.current.applyQuaternion(camera.quaternion)
     targetVelocity.current.y = 0

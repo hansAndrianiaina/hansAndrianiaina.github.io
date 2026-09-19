@@ -1,366 +1,229 @@
-import { useRef, useEffect, useState, useCallback, createContext, useContext, ReactNode } from 'react'
-import type { CSSProperties } from 'react'
+// src/components/VirtualJoystick.tsx
+// Dual on-screen joysticks for Walk mode on touch devices.
+//   left  = move (forward / back / strafe)
+//   right = look (yaw / pitch, rate-based)
+//
+// Values are written to the shared `touchInput` object (see interaction/touchInput.ts),
+// which WalkControls reads each frame. Thumb movement is applied straight to the DOM
+// node, so dragging never triggers a React re-render.
+//
+// Keyboard fallback: WalkControls already handles WASD / arrow keys.
+import { useCallback, useEffect, useRef, useState } from 'react'
+import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react'
+import { touchInput, resetTouchInput } from '../interaction/touchInput'
 
-interface JoystickState {
-  x: number
-  y: number
-  active: boolean
+const BASE_SIZE = 120
+const THUMB_SIZE = 52
+const MAX_TRAVEL = 40 // px the thumb centre can move from the base centre
+const DEADZONE = 0.12
+const HIDE_AFTER_MS = 3000
+const FADE_MS = 300
+
+interface JoystickProps {
+  label: string
+  /** x: right = +1, y: up = +1 */
+  onChange: (x: number, y: number) => void
+  onActiveChange: (active: boolean) => void
 }
-
-interface VirtualJoystickContextValue {
-  move: JoystickState
-  look: JoystickState
-  registerMove: (ref: React.RefObject<HTMLDivElement>) => void
-  registerLook: (ref: React.RefObject<HTMLDivElement>) => void
-  show: () => void
-  hide: () => void
-}
-
-const VirtualJoystickContext = createContext<VirtualJoystickContextValue | null>(null)
-
-export function useVirtualJoystick() {
-  const ctx = useContext(VirtualJoystickContext)
-  if (!ctx) throw new Error('useVirtualJoystick must be used within VirtualJoystickProvider')
-  return ctx
-}
-
-const JOYSTICK_SIZE = 120
-const THUMB_SIZE = 50
-const MAX_RADIUS = (JOYSTICK_SIZE - THUMB_SIZE) / 2
-const AUTO_HIDE_DELAY = 3000
-const FADE_DURATION = 300
 
 const baseStyle: CSSProperties = {
-  position: 'absolute',
-  bottom: 20,
-  width: JOYSTICK_SIZE,
-  height: JOYSTICK_SIZE,
-  touchAction: 'none',
+  position: 'relative',
+  width: BASE_SIZE,
+  height: BASE_SIZE,
+  borderRadius: '50%',
+  pointerEvents: 'auto',
+  touchAction: 'none', // stop the browser from scrolling/zooming while dragging the stick
   userSelect: 'none',
   WebkitUserSelect: 'none',
-  zIndex: 100,
-  transition: `opacity ${FADE_DURATION}ms ease, transform ${FADE_DURATION}ms ease`,
+  WebkitTouchCallout: 'none',
+  background: `
+    radial-gradient(rgba(173,227,232,0.3) 1px, transparent 1.5px),
+    radial-gradient(circle at 50% 42%, rgba(29,77,85,0.75) 0%, rgba(11,27,36,0.85) 100%)
+  `,
+  backgroundSize: '14px 14px, auto',
+  border: '1px solid rgba(190, 240, 245, 0.35)',
+  boxShadow: '0 0 18px rgba(80, 190, 200, 0.22), inset 0 0 20px rgba(80, 190, 200, 0.12)',
+  backdropFilter: 'blur(6px)',
+  WebkitBackdropFilter: 'blur(6px)',
 }
 
 const ringStyle: CSSProperties = {
   position: 'absolute',
-  inset: 0,
+  inset: 20,
   borderRadius: '50%',
-  background: 'radial-gradient(circle at 30% 30%, rgba(190, 240, 245, 0.15), transparent 60%), rgba(11, 27, 36, 0.6)',
-  border: '2px solid rgba(190, 240, 245, 0.3)',
-  boxShadow: 'inset 0 0 20px rgba(0, 0, 0, 0.5), 0 0 20px rgba(190, 240, 245, 0.1)',
-  backdropFilter: 'blur(8px)',
-  WebkitBackdropFilter: 'blur(8px)',
+  border: '1px solid rgba(190, 240, 245, 0.18)',
+  pointerEvents: 'none',
 }
 
 const thumbStyle: CSSProperties = {
   position: 'absolute',
+  left: '50%',
+  top: '50%',
   width: THUMB_SIZE,
   height: THUMB_SIZE,
+  marginLeft: -THUMB_SIZE / 2,
+  marginTop: -THUMB_SIZE / 2,
   borderRadius: '50%',
-  background: 'linear-gradient(135deg, rgba(211, 246, 248, 0.9) 0%, rgba(143, 222, 230, 0.7) 100%)',
-  border: '2px solid rgba(190, 240, 245, 0.5)',
-  boxShadow: '0 0 15px rgba(190, 245, 250, 0.6), inset 0 -3px 6px rgba(0, 0, 0, 0.2)',
-  transform: 'translate(-50%, -50%)',
-  transition: 'transform 50ms ease-out',
+  background: 'linear-gradient(135deg, #d3f6f8 0%, #8fdee6 100%)',
+  boxShadow: '0 0 12px rgba(150, 235, 240, 0.55)',
+  opacity: 0.9,
   pointerEvents: 'none',
+  willChange: 'transform',
 }
 
-const labelStyle: CSSProperties = {
-  position: 'absolute',
-  bottom: -24,
-  left: '50%',
-  transform: 'translateX(-50%)',
-  fontSize: 11,
-  fontWeight: 600,
-  letterSpacing: '0.08em',
-  textTransform: 'uppercase',
-  color: 'rgba(190, 240, 245, 0.7)',
-  fontFamily: "ui-monospace, 'SF Mono', Menlo, Consolas, monospace",
-  whiteSpace: 'nowrap',
-  pointerEvents: 'none',
-}
+function Joystick({ label, onChange, onActiveChange }: JoystickProps) {
+  const baseRef = useRef<HTMLDivElement>(null)
+  const thumbRef = useRef<HTMLDivElement>(null)
+  const pointerId = useRef<number | null>(null)
+  const center = useRef({ x: 0, y: 0 })
 
-function JoystickBase({
-  children,
-  position,
-  label,
-  ref,
-  opacity,
-  onTouchStart,
-  onTouchMove,
-  onTouchEnd,
-}: {
-  children: ReactNode
-  position: 'left' | 'right'
-  label: string
-  ref: React.RefObject<HTMLDivElement>
-  opacity: number
-  onTouchStart: (e: React.TouchEvent) => void
-  onTouchMove: (e: React.TouchEvent) => void
-  onTouchEnd: (e: React.TouchEvent) => void
-}) {
-  const isLeft = position === 'left'
-  const horizontalPos = isLeft ? { left: 20 } : { right: 20 }
+  const moveThumb = (tx: number, ty: number, animate: boolean) => {
+    const thumb = thumbRef.current
+    if (!thumb) return
+    thumb.style.transition = animate ? 'transform 0.15s ease-out' : 'none'
+    thumb.style.transform = `translate(${tx}px, ${ty}px)`
+  }
+
+  const update = (clientX: number, clientY: number) => {
+    const dx = clientX - center.current.x
+    const dy = clientY - center.current.y
+    const angle = Math.atan2(dy, dx)
+    const clamped = Math.min(Math.hypot(dx, dy), MAX_TRAVEL)
+
+    moveThumb(Math.cos(angle) * clamped, Math.sin(angle) * clamped, false)
+
+    const magnitude = clamped / MAX_TRAVEL
+    if (magnitude < DEADZONE) {
+      onChange(0, 0)
+      return
+    }
+    // Re-scale so output ramps smoothly from 0 at the edge of the deadzone to 1 at full deflection.
+    const scaled = (magnitude - DEADZONE) / (1 - DEADZONE)
+    onChange(Math.cos(angle) * scaled, -Math.sin(angle) * scaled) // screen-y is down, stick-y is up
+  }
+
+  const release = () => {
+    if (pointerId.current === null) return
+    pointerId.current = null
+    moveThumb(0, 0, true)
+    onChange(0, 0)
+    onActiveChange(false)
+  }
+
+  const handlePointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (pointerId.current !== null) return // this stick already has a finger on it
+    const base = baseRef.current
+    if (!base) return
+    const rect = base.getBoundingClientRect()
+    center.current = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }
+    pointerId.current = e.pointerId
+    base.setPointerCapture(e.pointerId) // keep receiving events even if the finger leaves the base
+    onActiveChange(true)
+    update(e.clientX, e.clientY)
+  }
+
+  const handlePointerMove = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (e.pointerId !== pointerId.current) return
+    update(e.clientX, e.clientY)
+  }
+
+  const handlePointerEnd = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (e.pointerId !== pointerId.current) return
+    release()
+  }
 
   return (
     <div
-      ref={ref}
-      style={{
-        ...baseStyle,
-        ...horizontalPos,
-        opacity,
-        pointerEvents: opacity > 0 ? 'auto' : 'none',
-      }}
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
-      onTouchCancel={onTouchEnd}
+      ref={baseRef}
+      role="group"
       aria-label={label}
-      role="joystick"
-      aria-orientation="both"
+      style={baseStyle}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerEnd}
+      onPointerCancel={handlePointerEnd}
+      onLostPointerCapture={handlePointerEnd}
+      onContextMenu={(e) => e.preventDefault()}
     >
       <div style={ringStyle} />
-      {children}
-      <div style={labelStyle}>{label}</div>
+      <div ref={thumbRef} style={thumbStyle} />
     </div>
   )
 }
 
-function MoveJoystick({ opacity, ref, onTouchStart, onTouchMove, onTouchEnd, thumbPos }: {
-  opacity: number
-  ref: React.RefObject<HTMLDivElement>
-  onTouchStart: (e: React.TouchEvent) => void
-  onTouchMove: (e: React.TouchEvent) => void
-  onTouchEnd: (e: React.TouchEvent) => void
-  thumbPos: { x: number; y: number }
-}) {
-  return (
-    <JoystickBase
-      ref={ref}
-      position="left"
-      label="Move"
-      opacity={opacity}
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
-    >
-      <div
-        style={{
-          ...thumbStyle,
-          left: `calc(50% + ${thumbPos.x}px)`,
-          top: `calc(50% + ${thumbPos.y}px)`,
-        }}
-      />
-    </JoystickBase>
-  )
-}
+export default function VirtualJoysticks() {
+  const [visible, setVisible] = useState(true) // visible on entering Walk mode so users discover them
+  const activeCount = useRef(0)
+  const hideTimer = useRef<number | undefined>(undefined)
 
-function LookJoystick({ opacity, ref, onTouchStart, onTouchMove, onTouchEnd, thumbPos }: {
-  opacity: number
-  ref: React.RefObject<HTMLDivElement>
-  onTouchStart: (e: React.TouchEvent) => void
-  onTouchMove: (e: React.TouchEvent) => void
-  onTouchEnd: (e: React.TouchEvent) => void
-  thumbPos: { x: number; y: number }
-}) {
-  return (
-    <JoystickBase
-      ref={ref}
-      position="right"
-      label="Look"
-      opacity={opacity}
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
-    >
-      <div
-        style={{
-          ...thumbStyle,
-          left: `calc(50% + ${thumbPos.x}px)`,
-          top: `calc(50% + ${thumbPos.y}px)`,
-        }}
-      />
-    </JoystickBase>
-  )
-}
-
-export function VirtualJoystickProvider({ children, enabled = true }: { children: ReactNode; enabled?: boolean }) {
-  const moveRef = useRef<HTMLDivElement>(null)
-  const lookRef = useRef<HTMLDivElement>(null)
-
-  const [moveState, setMoveState] = useState<JoystickState>({ x: 0, y: 0, active: false })
-  const [lookState, setLookState] = useState<JoystickState>({ x: 0, y: 0, active: false })
-  const [opacity, setOpacity] = useState(enabled ? 1 : 0)
-  const [visible, setVisible] = useState(enabled)
-
-  const hideTimerRef = useRef<ReturnType<typeof setTimeout>>()
-  const animationFrameRef = useRef<number>()
-
-  const clampPosition = useCallback((clientX: number, clientY: number, ref: React.RefObject<HTMLDivElement>) => {
-    const el = ref.current
-    if (!el) return { x: 0, y: 0, clampedX: 0, clampedY: 0 }
-
-    const rect = el.getBoundingClientRect()
-    const centerX = rect.left + rect.width / 2
-    const centerY = rect.top + rect.height / 2
-
-    let dx = clientX - centerX
-    let dy = clientY - centerY
-    const distance = Math.hypot(dx, dy)
-
-    if (distance > MAX_RADIUS) {
-      const ratio = MAX_RADIUS / distance
-      dx *= ratio
-      dy *= ratio
-    }
-
-    const normalizedX = dx / MAX_RADIUS
-    const normalizedY = dy / MAX_RADIUS
-
-    return { x: dx, y: dy, clampedX: normalizedX, clampedY: normalizedY }
+  const scheduleHide = useCallback(() => {
+    window.clearTimeout(hideTimer.current)
+    if (activeCount.current > 0) return // never hide while a finger is on a stick
+    hideTimer.current = window.setTimeout(() => setVisible(false), HIDE_AFTER_MS)
   }, [])
 
-  const handleMoveStart = useCallback((e: React.TouchEvent) => {
-    e.preventDefault()
-    const touch = e.touches[0]
-    const { clampedX, clampedY } = clampPosition(touch.clientX, touch.clientY, moveRef)
-    setMoveState({ x: clampedX, y: clampedY, active: true })
-  }, [clampPosition])
-
-  const handleMoveMove = useCallback((e: React.TouchEvent) => {
-    e.preventDefault()
-    const touch = e.touches[0]
-    const { clampedX, clampedY } = clampPosition(touch.clientX, touch.clientY, moveRef)
-    setMoveState({ x: clampedX, y: clampedY, active: true })
-  }, [clampPosition])
-
-  const handleMoveEnd = useCallback(() => {
-    setMoveState({ x: 0, y: 0, active: false })
-  }, [])
-
-  const handleLookStart = useCallback((e: React.TouchEvent) => {
-    e.preventDefault()
-    const touch = e.touches[0]
-    const { clampedX, clampedY } = clampPosition(touch.clientX, touch.clientY, lookRef)
-    setLookState({ x: clampedX, y: clampedY, active: true })
-  }, [clampPosition])
-
-  const handleLookMove = useCallback((e: React.TouchEvent) => {
-    e.preventDefault()
-    const touch = e.touches[0]
-    const { clampedX, clampedY } = clampPosition(touch.clientX, touch.clientY, lookRef)
-    setLookState({ x: clampedX, y: clampedY, active: true })
-  }, [clampPosition])
-
-  const handleLookEnd = useCallback(() => {
-    setLookState({ x: 0, y: 0, active: false })
-  }, [])
-
-  const show = useCallback(() => {
-    if (hideTimerRef.current) clearTimeout(hideTimerRef.current)
-    setVisible(true)
-    setOpacity(1)
-
-    hideTimerRef.current = setTimeout(() => {
-      setOpacity(0)
-      hideTimerRef.current = setTimeout(() => setVisible(false), FADE_DURATION)
-    }, AUTO_HIDE_DELAY)
-  }, [])
-
-  const hide = useCallback(() => {
-    if (hideTimerRef.current) clearTimeout(hideTimerRef.current)
-    setOpacity(0)
-    hideTimerRef.current = setTimeout(() => setVisible(false), FADE_DURATION)
-  }, [])
-
-  // Smooth return-to-center animation for thumbs
   useEffect(() => {
-    let moveX = moveState.x
-    let moveY = moveState.y
-    let lookX = lookState.x
-    let lookY = lookState.y
+    scheduleHide()
 
-    const animate = () => {
-      if (!moveState.active) {
-        moveX *= 0.85
-        moveY *= 0.85
-        if (Math.abs(moveX) < 0.01) moveX = 0
-        if (Math.abs(moveY) < 0.01) moveY = 0
-      }
-      if (!lookState.active) {
-        lookX *= 0.85
-        lookY *= 0.85
-        if (Math.abs(lookX) < 0.01) lookX = 0
-        if (Math.abs(lookY) < 0.01) lookY = 0
-      }
-
-      setMoveState(prev => ({ ...prev, x: moveX, y: moveY }))
-      setLookState(prev => ({ ...prev, x: lookX, y: lookY }))
-
-      animationFrameRef.current = requestAnimationFrame(animate)
+    // Any touch on the screen brings the sticks back.
+    const onPointerDown = (e: PointerEvent) => {
+      if (e.pointerType !== 'touch') return
+      setVisible(true)
+      scheduleHide()
     }
+    window.addEventListener('pointerdown', onPointerDown, true)
 
-    animate()
-    return () => cancelAnimationFrame(animationFrameRef.current!)
-  }, [moveState.active, lookState.active, moveState.x, moveState.y, lookState.x, lookState.y])
+    return () => {
+      window.removeEventListener('pointerdown', onPointerDown, true)
+      window.clearTimeout(hideTimer.current)
+      resetTouchInput() // never leave the camera drifting after unmount / mode switch
+    }
+  }, [scheduleHide])
 
-  const thumbMoveX = moveState.x * MAX_RADIUS
-  const thumbMoveY = moveState.y * MAX_RADIUS
-  const thumbLookX = lookState.x * MAX_RADIUS
-  const thumbLookY = lookState.y * MAX_RADIUS
+  const handleActiveChange = useCallback(
+    (active: boolean) => {
+      activeCount.current = Math.max(0, activeCount.current + (active ? 1 : -1))
+      if (active) {
+        setVisible(true)
+        window.clearTimeout(hideTimer.current)
+      } else {
+        scheduleHide()
+      }
+    },
+    [scheduleHide],
+  )
 
-  const contextValue: VirtualJoystickContextValue = {
-    move: moveState,
-    look: lookState,
-    registerMove: (ref) => { moveRef.current = ref.current },
-    registerLook: (ref) => { lookRef.current = ref.current },
-    show,
-    hide,
+  const handleMove = useCallback((x: number, y: number) => {
+    touchInput.moveX = x
+    touchInput.moveY = y
+  }, [])
+
+  const handleLook = useCallback((x: number, y: number) => {
+    touchInput.lookX = x
+    touchInput.lookY = y
+  }, [])
+
+  // Sits above the mode toggle (which is bottom-centre on mobile) so nothing overlaps.
+  const containerStyle: CSSProperties = {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 'calc(76px + env(safe-area-inset-bottom, 0px))',
+    paddingLeft: 'calc(20px + env(safe-area-inset-left, 0px))',
+    paddingRight: 'calc(20px + env(safe-area-inset-right, 0px))',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    pointerEvents: 'none', // only the sticks themselves are interactive
+    zIndex: 5,
+    opacity: visible ? 1 : 0, // faded-out sticks still work; touching them (or the screen) shows them again
+    transition: `opacity ${FADE_MS}ms ease`,
   }
 
-  if (!visible && opacity === 0) return <>{children}</>
-
   return (
-    <VirtualJoystickContext.Provider value={contextValue}>
-      {children}
-      {enabled && (
-        <>
-          <MoveJoystick
-            ref={moveRef}
-            opacity={opacity}
-            onTouchStart={handleMoveStart}
-            onTouchMove={handleMoveMove}
-            onTouchEnd={handleMoveEnd}
-            thumbPos={{ x: thumbMoveX, y: thumbMoveY }}
-          />
-          <LookJoystick
-            ref={lookRef}
-            opacity={opacity}
-            onTouchStart={handleLookStart}
-            onTouchMove={handleLookMove}
-            onTouchEnd={handleLookEnd}
-            thumbPos={{ x: thumbLookX, y: thumbLookY }}
-          />
-        </>
-      )}
-    </VirtualJoystickContext.Provider>
+    <div style={containerStyle}>
+      <Joystick label="Movement joystick" onChange={handleMove} onActiveChange={handleActiveChange} />
+      <Joystick label="Look joystick" onChange={handleLook} onActiveChange={handleActiveChange} />
+    </div>
   )
-}
-
-export function VirtualJoystick({ enabled = true }: { enabled?: boolean }) {
-  const { move, look, show } = useVirtualJoystick()
-
-  // Expose show for canvas touch handler
-  useEffect(() => {
-    if (enabled) {
-      const canvas = document.querySelector('canvas')
-      if (canvas) {
-        canvas.addEventListener('touchstart', show, { passive: true })
-        return () => canvas.removeEventListener('touchstart', show)
-      }
-    }
-  }, [enabled, show])
-
-  return null // Rendering handled by Provider
 }

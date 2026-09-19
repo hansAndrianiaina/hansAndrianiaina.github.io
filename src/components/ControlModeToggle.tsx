@@ -1,14 +1,11 @@
 // components/ControlModeToggle.tsx
-import { useEffect, useState, type CSSProperties } from 'react'
+import type { CSSProperties } from 'react'
 import { useMobile } from '../hooks/useMobile'
 
 type ControlMode = 'orbit' | 'walk'
 
 const TRACK_CLIP = 'polygon(9px 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%, 0 9px)'
 const PILL_CLIP = 'polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px)'
-
-// Mobile: larger touch targets (min 44px), bottom-center
-// Desktop: current bottom-right design
 
 export default function ControlModeToggle({
   mode,
@@ -17,31 +14,33 @@ export default function ControlModeToggle({
   mode: ControlMode
   onChange: (m: ControlMode) => void
 }) {
-  const { isMobile, isTablet } = useMobile()
-  const [isTouch, setIsTouch] = useState(false)
-
-  useEffect(() => {
-    setIsTouch(window.matchMedia('(pointer: coarse)').matches)
-  }, [])
-
-  const isMobileLayout = isMobile || (isTablet && isTouch)
+  const { isMobile } = useMobile()
 
   // 1. Move positioning, opacity, and the drop-shadow to an un-clipped wrapper
-  const wrapperStyle: CSSProperties = {
-    position: 'absolute',
-    bottom: isMobileLayout ? '2%' : '5%',
-    left: isMobileLayout ? '50%' : 'auto',
-    right: isMobileLayout ? 'auto' : '2%',
-    transform: isMobileLayout ? 'translateX(-50%)' : 'none',
-    opacity: 0.75,
-    filter: 'drop-shadow(0 0 10px rgba(80, 190, 200, 0.2))',
-    zIndex: 200,
-  }
+  const wrapperStyle: CSSProperties = isMobile
+    ? {
+        // Mobile: bottom-centre, above the browser's home indicator
+        position: 'absolute',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        bottom: 'calc(16px + env(safe-area-inset-bottom, 0px))',
+        opacity: 0.85,
+        zIndex: 9,
+        filter: 'drop-shadow(0 0 10px rgba(80, 190, 200, 0.2))',
+      }
+    : {
+        position: 'absolute',
+        bottom: '5%',
+        right: '2%',
+        opacity: 0.75,
+        zIndex: 9,
+        filter: 'drop-shadow(0 0 10px rgba(80, 190, 200, 0.2))',
+      }
 
   // 2. Keep the clip-path, backgrounds, and layout here
   const trackStyle: CSSProperties = {
     display: 'flex',
-    padding: isMobileLayout ? 6 : 3,
+    padding: 3,
     clipPath: TRACK_CLIP,
     WebkitClipPath: TRACK_CLIP,
     background: `
@@ -51,16 +50,18 @@ export default function ControlModeToggle({
     backgroundSize: '14px 14px, auto',
     backdropFilter: 'blur(6px)',
     WebkitBackdropFilter: 'blur(6px)',
+    // Note: Standard borders don't follow clip-paths well in CSS, 
+    // but leaving this here won't break it if it works for your use case.
     border: '1px solid rgba(190, 240, 245, 0.3)',
     fontFamily: "ui-monospace, 'SF Mono', Menlo, Consolas, monospace",
   }
 
   const pillStyle: CSSProperties = {
     position: 'absolute',
-    top: isMobileLayout ? 6 : 3,
-    left: isMobileLayout ? 6 : 3,
-    width: isMobileLayout ? 'calc(50% - 6px)' : 'calc(50% - 3px)',
-    height: isMobileLayout ? 'calc(100% - 12px)' : 'calc(100% - 6px)',
+    top: 3,
+    left: 3,
+    width: 'calc(50% - 3px)',
+    height: 'calc(100% - 6px)',
     clipPath: PILL_CLIP,
     WebkitClipPath: PILL_CLIP,
     background: 'linear-gradient(135deg, #d3f6f8 0%, #8fdee6 100%)',
@@ -72,20 +73,20 @@ export default function ControlModeToggle({
   const segmentStyle = (active: boolean): CSSProperties => ({
     position: 'relative',
     zIndex: 1,
-    width: isMobileLayout ? 88 : 72,
-    minHeight: isMobileLayout ? 44 : 0, // WCAG AA touch target
-    padding: isMobileLayout ? '10px 0' : '7px 0',
+    width: isMobile ? 96 : 72,
+    minHeight: isMobile ? 44 : undefined, // WCAG 2.5.5 touch target
+    padding: '7px 0',
     border: 'none',
     background: 'transparent',
     cursor: 'pointer',
-    fontSize: isMobileLayout ? 13 : 12,
+    touchAction: 'manipulation', // no double-tap-to-zoom delay on the buttons
+    fontSize: 12,
     fontWeight: 600,
     letterSpacing: '0.08em',
     textTransform: 'uppercase',
     fontFamily: 'inherit',
     color: active ? '#0b1b24' : 'rgba(210, 238, 240, 0.6)',
     transition: 'color 0.3s ease',
-    touchAction: 'manipulation',
   })
 
   return (
