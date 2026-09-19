@@ -24,16 +24,24 @@ import LoadingScreen from './LoadingScreen'
 import SceneReadySignal from './SceneReadySignal'
 import { useSoundPlayer } from './SoundPlayer';
 
+import { useMobile } from '../hooks/useMobile'
+import VirtualJoysticks from './VirtualJoystick'
+import TouchControlOverlay from './TouchControlOverlay'
+import AdaptiveFov from './AdaptiveFov'
+
 type ControlMode = 'orbit' | 'walk'
 
 const MIN_LOADING_MS = 1000   // loading screen stays up at least this long, even on a warm cache
 const MAX_LOADING_MS = 15000  // safety net — reveal anyway if assets never resolve (e.g. network failure)
 
 export default function Scene() {
+  const { isTouch, isMobile } = useMobile()
   const [introDone, setIntroDone] = useState(false)
   const [introKey, setIntroKey] = useState(0)   // bump to force IntroCamera remount
   const modelRef = useRefReact<THREE.Group>(null)
-  const [mode, setMode] = useState<ControlMode>('walk')
+  // Touch devices default to Orbit (drag to orbit, pinch to zoom). `isTouch` is known on the
+  // very first render, so this lazy initializer picks the right mode with no flash.
+  const [mode, setMode] = useState<ControlMode>(() => (isTouch ? 'orbit' : 'walk'))
   const [selected, setSelected] = useState<string | null>(null)
 
   // Loading screen gating: hidden once BOTH are true.
@@ -104,6 +112,9 @@ export default function Scene() {
           {/* <color attach="background" args={['#abbbb8']} /> */}
           {/* <fog attach="fog" args={['#abbbb8', 10, 20]} /> */}
 
+          {/* Widens the vertical FOV on portrait screens so phones can actually see the room */}
+          <AdaptiveFov />
+
           <Suspense fallback={null}>
             <DragGuardProvider>
               <Bounds clip margin={1.2}>
@@ -130,7 +141,7 @@ export default function Scene() {
           {introDone && <CameraCollisionGuard targetRef={modelRef} />}
 
           {introDone && mode === 'walk' && <WalkControls />}
-          {introDone && mode === 'orbit' && <CustomOrbitControls />}
+          {introDone && mode === 'orbit' && <CustomOrbitControls touch={isTouch} />}
 
 
           {import.meta.env.DEV && <CameraDebugPanel onReplay={handleReplay} />}
@@ -140,11 +151,18 @@ export default function Scene() {
 
       <LoadingScreen show={!sceneReady} />
 
+      {/* Stacking order (zIndex): joysticks 5 → touch hints 6 → InfoPanel 7 → object panel 8 → mode toggle 9 → loading 20 */}
+      {introDone && isTouch && mode === 'walk' && (
+        <VirtualJoysticks />
+      )}
+      {introDone && isTouch && (
+        <TouchControlOverlay mode={mode} />
+      )}
       {introDone && (
         <ControlModeToggle mode={mode} onChange={setMode} />
       )}
       {introDone && (
-        <InfoPanel />
+        <InfoPanel forceMinimized={isMobile && selected !== null} />
       )}
       {introDone && selected && (
         <AnimationInfoPanel
