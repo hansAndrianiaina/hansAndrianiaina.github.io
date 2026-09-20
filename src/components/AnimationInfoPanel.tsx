@@ -1,6 +1,7 @@
 // src/components/AnimationInfoPanel.tsx
 import type { CSSProperties } from 'react'
 import { useMobile } from '../hooks/useMobile'
+import MusicControls from './MusicControls'
 
 interface InfoSection {
   /** Section label, e.g. "Mission Brief", "Under the Hood" — your call, it's just a heading. */
@@ -327,6 +328,12 @@ export default function AnimationInfoPanel({
             >
               {demoLabel}
             </a>
+          )}
+
+          {title.toLowerCase() === 'boom box' && (
+            <div style={{ marginTop: 16, pointerEvents: visible ? 'auto' : 'none' }}>
+              <MusicControls inline />
+            </div>
           )}
         </div>
       </div>
