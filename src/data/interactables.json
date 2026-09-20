@@ -1,12 +1,134 @@
 {
-  "Cube004": { "title": "" },
-  "Cube004_2": { "title": "" },
-  "Cube004_4": { "title": "" },
-  "Cube004_6": { "title": "" },
-  "Cube004_8": { "title": "" },
-  "Cube004_10": { "title": "" },
-  "Cube004_12": { "title": "" },
-  "Cube004_14": { "title": "" },
+  "Cube007_1": { "title": "Portfolio Engineer & MLOps",
+    "panel": {
+      "hook": "Mar 2024 – Present · Axian Group, Antananarivo, MG",
+      "description": {
+        "heading": "Role Brief",
+        "content": "Major contributor to the design and operation of production machine learning systems for digital financial lending, supporting multiple initiatives across four operating companies in different countries."
+      },
+      "overview": {
+        "heading": "Highlights",
+        "items": [
+          "Built and maintained scalable hybrid data pipelines and ML workflows",
+          "Enabled daily refresh of customer eligibility scoring",
+          "Supported continuous KPI monitoring at group level"
+        ]
+      },
+      "techStack": [
+        "Python",
+        "Spark",
+        "Airflow",
+        "AWS",
+        "SQL Server"
+      ],
+      "techStackHeading": "Tools & Platforms"
+    } 
+  },
+  "Cube008_1": { "title": "Machine Learning Engineer",
+    "panel": {
+      "hook": "Dec 2023 – Feb 2024 · Mvola S.A, Antananarivo, MG",
+      "description": {
+        "heading": "Role Brief",
+        "content": "Designed and deployed machine learning solutions for financial lending, focusing on reliable integration between data pipelines, feature management, and model execution in production environments."
+      }
+    } 
+  },
+  "Cube006_1": { "title": "Msc MISA",
+    "panel": {
+      "hook": "University of Antananarivo · 2020 – May 2023 (Defended Dec 2025)",
+      "description": {
+        "heading": "Degree Brief",
+        "content": "Master's degree in Applied Mathematics, Computer Science, and Statistics (MISA) at the University of Antananarivo, providing the analytical and mathematical foundation behind the machine learning and data science work in this portfolio."
+      }
+    }
+   },
+  "Cube009_1": { "title": "Unity Developper",
+    "panel": {
+      "hook": "Jan 2022 – May 2022 · W3D, Antananarivo, MG",
+      "description": {
+        "heading": "Role Brief",
+        "content": "Built real-time AR applications using Unity, delivering interactive experiences including games, product showcases, and virtual tours."
+      },
+      "techStack": [
+        "Unity"
+      ],
+      "techStackHeading": "Tools"
+    }
+   },
+  "Cube010_1": { "title": "RFID Staff Management",
+    "panel": {
+      "hook": "An IoT system that tracks staff and student activity in real time.",
+      "description": {
+        "heading": "Mission Brief",
+        "content": "An IoT-based tracking system designed to monitor staff and student activity using RFID hardware paired with computer vision."
+      },
+      "overview": {
+        "heading": "What It Does",
+        "items": [
+          "Tracks staff and student activity via RFID",
+          "Integrates hardware I/O with a Node-RED flow-based backend",
+          "Uses computer vision for supplementary detection"
+        ]
+      },
+      "techStack": [
+        "Python",
+        "Node-RED",
+        "C++",
+        "OpenCV"
+      ],
+      "techStackHeading": "Built With"
+    } 
+  },
+  "Cube011_1": { "title": "3D Infographist",
+    "panel": {
+      "hook": "Sep 2021 – Jan 2022 · W3D, Antananarivo, MG",
+      "description": {
+        "heading": "Role Brief",
+        "content": "Created and optimized realistic 3D assets for games, VR/AR applications, and architectural visualization, balancing visual quality and performance constraints."
+      },
+      "techStack": [
+        "Blender",
+        "ZBrush",
+        "Substance Painter"
+      ],
+      "techStackHeading": "Tools"
+    }
+  },
+  "Cube012_1": { "title": "Créathon 2020",
+    "panel": {
+      "hook": "An innovation competition entry on AI for academic inclusion. Achieve top 8 in the national competition.",
+      "description": {
+        "heading": "Mission Brief",
+        "content": "Participation in Creathon 2020, an innovation competition, tackling the theme of artificial intelligence for academic inclusion."
+      }
+    } 
+  },
+  "Cube004_1": { "title": "Classification model performance monitoring and forecast",
+    "panel": {
+      "hook": "Estimating model performance in production — without ever seeing the ground truth.",
+      "description": {
+        "heading": "Mission Brief",
+        "content": "A production-oriented monitoring system that estimates classification model performance when true labels aren't available, combining confidence-based metrics with drift detection to catch silent model degradation early."
+      },
+      "overview": {
+        "heading": "What It Does",
+        "items": [
+          "Estimates classification performance without ground truth labels",
+          "Combines confidence-based metrics with univariate and multivariate drift detection",
+          "Validated across four datasets, including a simulated credit-scoring environment",
+          "Enables early detection and explanation of performance degradation"
+        ]
+      },
+      "howItWorks": {
+        "heading": "Under the Hood",
+        "content": "The system tracks shifts in input feature distributions (univariate and multivariate drift) alongside model confidence signals, correlating both against known degradation patterns to flag when a live model's real-world accuracy is likely slipping."
+      },
+      "techStack": [
+        "Python"
+      ],
+      "techStackHeading": "Built With"
+    }
+  },
   "Icosphere_5": { "title": "Levitational support", "panel": { "description": { "heading": "Description", "content": "A levitational support system for the flower pot" } } },
   "Cylinder_4": { "title": "Flower pot", "panel": { "description": { "heading": "Description", "content": "An artistic flower pot" } } },
   "Icosphere_3": { "title": "Levitational support", "panel": { "description": { "heading": "Description", "content": "A levitational support system for the flower pot" } } },
