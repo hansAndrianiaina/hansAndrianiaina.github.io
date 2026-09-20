@@ -22,12 +22,16 @@ import InfoPanel from './InfoPanel'
 import ErrorBoundary from './ErrorBoundary'
 import LoadingScreen from './LoadingScreen'
 import SceneReadySignal from './SceneReadySignal'
-import { useSoundPlayer } from './SoundPlayer';
+// import { useSoundPlayer } from './SoundPlayer';
 
 import { useMobile } from '../hooks/useMobile'
 import VirtualJoysticks from './VirtualJoystick'
 import TouchControlOverlay from './TouchControlOverlay'
 import AdaptiveFov from './AdaptiveFov'
+
+import { musicManager } from '../utils/music'
+
+import tracks from '../data/tracks.json'
 
 type ControlMode = 'orbit' | 'walk'
 
@@ -48,7 +52,7 @@ export default function Scene() {
   const [assetsLoaded, setAssetsLoaded] = useState(false)
   const [minTimeElapsed, setMinTimeElapsed] = useState(false)
   const sceneReady = assetsLoaded && minTimeElapsed
-  const { play : playAmbientSound } = useSoundPlayer(import.meta.env.BASE_URL + 'sounds/ambient.mp3', { volume: 0.125 });
+  // const { play : playAmbientSound } = useSoundPlayer(import.meta.env.BASE_URL + 'sounds/ambient.mp3', { volume: 0.125 });
 
 
   useEffect(() => {
@@ -134,10 +138,12 @@ export default function Scene() {
               instead of running underneath the loading screen or over unloaded geometry. */}
           {sceneReady && <IntroCamera key={introKey} onComplete={() => {
             setIntroDone(true)
-            playAmbientSound()
+            // playAmbientSound()
+            musicManager.play(tracks[0].src)
             }} />}
 
-
+          
+          
           {introDone && <CameraCollisionGuard targetRef={modelRef} />}
 
           {introDone && mode === 'walk' && <WalkControls />}
@@ -171,6 +177,7 @@ export default function Scene() {
           onClose={() => setSelected(null)}
         />        
       )}
+      {/* {introDone && <MusicControls />} */}
     </>
   )
 }
