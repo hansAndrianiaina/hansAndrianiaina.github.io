@@ -58,22 +58,22 @@ type GLTFResult = GLTF & {
     leave021: THREE.Mesh
     leave022: THREE.Mesh
     leave023: THREE.Mesh
+    Cube007: THREE.Mesh
+    Cube007_1: THREE.Mesh
+    Cube008: THREE.Mesh
+    Cube008_1: THREE.Mesh
+    Cube006: THREE.Mesh
+    Cube006_1: THREE.Mesh
+    Cube009: THREE.Mesh
+    Cube009_1: THREE.Mesh
+    Cube010: THREE.Mesh
+    Cube010_1: THREE.Mesh
+    Cube011: THREE.Mesh
+    Cube011_1: THREE.Mesh
+    Cube012: THREE.Mesh
+    Cube012_1: THREE.Mesh
     Cube004: THREE.Mesh
     Cube004_1: THREE.Mesh
-    Cube004_2: THREE.Mesh
-    Cube004_3: THREE.Mesh
-    Cube004_4: THREE.Mesh
-    Cube004_5: THREE.Mesh
-    Cube004_6: THREE.Mesh
-    Cube004_7: THREE.Mesh
-    Cube004_8: THREE.Mesh
-    Cube004_9: THREE.Mesh
-    Cube004_10: THREE.Mesh
-    Cube004_11: THREE.Mesh
-    Cube004_12: THREE.Mesh
-    Cube004_13: THREE.Mesh
-    Cube004_14: THREE.Mesh
-    Cube004_15: THREE.Mesh
     Sphere: THREE.Mesh
     Sphere_1: THREE.Mesh
     Sphere_2: THREE.Mesh
@@ -104,7 +104,14 @@ type GLTFResult = GLTF & {
     green_neon: THREE.MeshStandardMaterial
     leaves: THREE.MeshStandardMaterial
     project_panel: THREE.MeshStandardMaterial
-    project_panel_display: THREE.MeshStandardMaterial
+    axian_digibank_fintech: THREE.MeshStandardMaterial
+    mvola_ml_engineer: THREE.MeshStandardMaterial
+    education_msc_misa: THREE.MeshStandardMaterial
+    w3d_unity_developer: THREE.MeshStandardMaterial
+    rfid_staff_management: THREE.MeshStandardMaterial
+    w3d_3d_infographist: THREE.MeshStandardMaterial
+    creathon_2020: THREE.MeshStandardMaterial
+    classification_model_monitoring: THREE.MeshStandardMaterial
     robot_material: THREE.MeshStandardMaterial
     robot_light: THREE.MeshStandardMaterial
     robot_black: THREE.MeshStandardMaterial
@@ -184,36 +191,36 @@ export function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="leave023" geometry={nodes.leave023.geometry} material={materials.leaves} position={[0.063, 0.237, -0.104]} rotation={[-0.152, -0.758, -0.135]} scale={0.129} />
       </group>
       <group name="project_panel" position={[-1.205, 1.215, -2.964]}>
-        <mesh name="Cube004" geometry={nodes.Cube004.geometry} material={materials.project_panel} />
-        <mesh name="Cube004_1" geometry={nodes.Cube004_1.geometry} material={materials.project_panel_display} />
+        <mesh name="Cube007" geometry={nodes.Cube007.geometry} material={materials.project_panel} />
+        <mesh name="Cube007_1" geometry={nodes.Cube007_1.geometry} material={materials.axian_digibank_fintech} />
       </group>
       <group name="project_panel001" position={[-2.015, 1.215, -2.305]} rotation={[0, 1.249, 0]}>
-        <mesh name="Cube004_2" geometry={nodes.Cube004_2.geometry} material={materials.project_panel} />
-        <mesh name="Cube004_3" geometry={nodes.Cube004_3.geometry} material={materials.project_panel_display} />
+        <mesh name="Cube008" geometry={nodes.Cube008.geometry} material={materials.project_panel} />
+        <mesh name="Cube008_1" geometry={nodes.Cube008_1.geometry} material={materials.mvola_ml_engineer} />
       </group>
       <group name="project_panel002" position={[2.038, 1.215, -2.255]} rotation={[0, -1.254, 0]}>
-        <mesh name="Cube004_4" geometry={nodes.Cube004_4.geometry} material={materials.project_panel} />
-        <mesh name="Cube004_5" geometry={nodes.Cube004_5.geometry} material={materials.project_panel_display} />
+        <mesh name="Cube006" geometry={nodes.Cube006.geometry} material={materials.project_panel} />
+        <mesh name="Cube006_1" geometry={nodes.Cube006_1.geometry} material={materials.education_msc_misa} />
       </group>
       <group name="project_panel003" position={[-2.015, 1.215, 2.285]} rotation={[-Math.PI, 1.248, -Math.PI]}>
-        <mesh name="Cube004_6" geometry={nodes.Cube004_6.geometry} material={materials.project_panel} />
-        <mesh name="Cube004_7" geometry={nodes.Cube004_7.geometry} material={materials.project_panel_display} />
+        <mesh name="Cube009" geometry={nodes.Cube009.geometry} material={materials.project_panel} />
+        <mesh name="Cube009_1" geometry={nodes.Cube009_1.geometry} material={materials.w3d_unity_developer} />
       </group>
       <group name="project_panel004" position={[2.038, 1.215, 2.235]} rotation={[Math.PI, -1.254, Math.PI]}>
-        <mesh name="Cube004_8" geometry={nodes.Cube004_8.geometry} material={materials.project_panel} />
-        <mesh name="Cube004_9" geometry={nodes.Cube004_9.geometry} material={materials.project_panel_display} />
+        <mesh name="Cube010" geometry={nodes.Cube010.geometry} material={materials.project_panel} />
+        <mesh name="Cube010_1" geometry={nodes.Cube010_1.geometry} material={materials.rfid_staff_management} />
       </group>
       <group name="project_panel005" position={[-1.205, 1.215, 2.944]} rotation={[-Math.PI, 0, -Math.PI]}>
-        <mesh name="Cube004_10" geometry={nodes.Cube004_10.geometry} material={materials.project_panel} />
-        <mesh name="Cube004_11" geometry={nodes.Cube004_11.geometry} material={materials.project_panel_display} />
+        <mesh name="Cube011" geometry={nodes.Cube011.geometry} material={materials.project_panel} />
+        <mesh name="Cube011_1" geometry={nodes.Cube011_1.geometry} material={materials.w3d_3d_infographist} />
       </group>
       <group name="project_panel006" position={[1.197, 1.215, 2.944]} rotation={[-Math.PI, 0, -Math.PI]}>
-        <mesh name="Cube004_12" geometry={nodes.Cube004_12.geometry} material={materials.project_panel} />
-        <mesh name="Cube004_13" geometry={nodes.Cube004_13.geometry} material={materials.project_panel_display} />
+        <mesh name="Cube012" geometry={nodes.Cube012.geometry} material={materials.project_panel} />
+        <mesh name="Cube012_1" geometry={nodes.Cube012_1.geometry} material={materials.creathon_2020} />
       </group>
       <group name="project_panel007" position={[-0.126, 1.215, 2.944]} rotation={[-Math.PI, 0, -Math.PI]}>
-        <mesh name="Cube004_14" geometry={nodes.Cube004_14.geometry} material={materials.project_panel} />
-        <mesh name="Cube004_15" geometry={nodes.Cube004_15.geometry} material={materials.project_panel_display} />
+        <mesh name="Cube004" geometry={nodes.Cube004.geometry} material={materials.project_panel} />
+        <mesh name="Cube004_1" geometry={nodes.Cube004_1.geometry} material={materials.classification_model_monitoring} />
       </group>
       <group name="robot" position={[-1.25, 1.058, -1.315]} scale={0.157}>
         <mesh name="Sphere" geometry={nodes.Sphere.geometry} material={materials.robot_material} />
