@@ -1,6 +1,6 @@
 import { useEffect, useState, Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { Environment, Stats, Center, Bounds  } from '@react-three/drei'
+import { Stats, Center, Bounds  } from '@react-three/drei'
 import CameraDebugPanel from './CameraDebugPanel'
 import IntroCamera from './IntroCamera'
 
@@ -33,6 +33,8 @@ import { musicManager } from '../utils/music'
 
 import tracks from '../data/tracks.json'
 
+import RoomLighting from './RoomLighting'
+
 type ControlMode = 'orbit' | 'walk'
 
 const MIN_LOADING_MS = 1000   // loading screen stays up at least this long, even on a warm cache
@@ -50,6 +52,7 @@ export default function Scene() {
 
   // Loading screen gating: hidden once BOTH are true.
   const [assetsLoaded, setAssetsLoaded] = useState(false)
+  const [loadStalled, setLoadStalled] = useState(false)
   const [minTimeElapsed, setMinTimeElapsed] = useState(false)
   const sceneReady = assetsLoaded && minTimeElapsed
   // const { play : playAmbientSound } = useSoundPlayer(import.meta.env.BASE_URL + 'sounds/ambient.mp3', { volume: 0.125 });
@@ -57,7 +60,7 @@ export default function Scene() {
 
   useEffect(() => {
     const minTimer = setTimeout(() => setMinTimeElapsed(true), MIN_LOADING_MS)
-    const maxTimer = setTimeout(() => setAssetsLoaded(true), MAX_LOADING_MS)
+    const maxTimer = setTimeout(() => setLoadStalled(true), MAX_LOADING_MS)
     return () => {
       clearTimeout(minTimer)
       clearTimeout(maxTimer)
@@ -119,6 +122,7 @@ export default function Scene() {
           {/* Widens the vertical FOV on portrait screens so phones can actually see the room */}
           <AdaptiveFov />
 
+ 
           <Suspense fallback={null}>
             <DragGuardProvider>
               <Bounds clip margin={1.2}>
@@ -129,8 +133,8 @@ export default function Scene() {
                 </group>
               </Bounds>
             </DragGuardProvider>
-            <Environment preset="city" />
             {/* Fires once everything above has actually resolved (see SceneReadySignal.tsx) */}
+            <RoomLighting />
             <SceneReadySignal onReady={() => setAssetsLoaded(true)} />
           </Suspense>
 
@@ -155,7 +159,7 @@ export default function Scene() {
         </Canvas>
       </ErrorBoundary>
 
-      <LoadingScreen show={!sceneReady} />
+      <LoadingScreen show={!sceneReady} stalled={loadStalled}  />
 
       {/* Stacking order (zIndex): joysticks 5 → touch hints 6 → InfoPanel 7 → object panel 8 → mode toggle 9 → loading 20 */}
       {introDone && isTouch && mode === 'walk' && (
