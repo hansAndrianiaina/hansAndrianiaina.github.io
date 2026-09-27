@@ -131,7 +131,7 @@ export default function Scene() {
                 </group>
               </Bounds>
             </DragGuardProvider>
-            <Environment preset="city" environmentIntensity={1} />
+            <Environment files={import.meta.env.BASE_URL + 'hdri/autoshop_01_1k.hdr'} environmentIntensity={0.75} />
             {/* Fires once everything above has actually resolved (see SceneReadySignal.tsx) */}
             <SceneReadySignal onReady={() => setAssetsLoaded(true)} />
           </Suspense>
