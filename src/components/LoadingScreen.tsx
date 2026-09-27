@@ -6,6 +6,8 @@ import { useProgress } from '@react-three/drei'
 interface LoadingScreenProps {
   /** Parent flips this to false once the scene is actually ready to reveal. */
   show: boolean
+    /** True once loading has exceeded the safety-net timeout without completing. */
+  stalled?: boolean
   /** Fade-out duration in ms — kept in sync with the CSS transition below. */
   fadeDuration?: number
 }
@@ -27,7 +29,7 @@ function shortAssetName(url: string) {
   return parts[parts.length - 1] || url
 }
 
-export default function LoadingScreen({ show, fadeDuration = 700 }: LoadingScreenProps) {
+export default function LoadingScreen({ show, stalled = false, fadeDuration = 700 }: LoadingScreenProps) {
   const { progress, item } = useProgress()
   const [mounted, setMounted] = useState(true)
   const lastItem = useRef('')
@@ -92,8 +94,10 @@ export default function LoadingScreen({ show, fadeDuration = 700 }: LoadingScree
     position: 'relative',
     height: '100%',
     width: `${pct}%`,
-    background: 'linear-gradient(90deg, #4fb8c4, #eafcff)',
-    boxShadow: '0 0 10px rgba(190,245,250,0.7)',
+    background: stalled
+      ? 'linear-gradient(90deg, #c46b4f, #f8d2c4)'
+      : 'linear-gradient(90deg, #4fb8c4, #eafcff)',
+    boxShadow: stalled ? '0 0 10px rgba(250,180,150,0.7)' : '0 0 10px rgba(190,245,250,0.7)',
     transition: 'width 0.25s ease-out',
   }
 
@@ -126,8 +130,8 @@ export default function LoadingScreen({ show, fadeDuration = 700 }: LoadingScree
               width: 6,
               height: 6,
               borderRadius: '50%',
-              background: '#8fdee6',
-              boxShadow: '0 0 6px rgba(143,222,230,0.9)',
+              background: stalled ? '#f0a884' : '#8fdee6',
+              boxShadow: stalled ? '0 0 6px rgba(240,168,132,0.9)' : '0 0 6px rgba(143,222,230,0.9)',
             }}
           />
           <span
@@ -139,7 +143,7 @@ export default function LoadingScreen({ show, fadeDuration = 700 }: LoadingScree
               color: 'rgba(210,238,240,0.75)',
             }}
           >
-            Initializing
+            {stalled ? 'Taking longer than usual' : 'Initializing'}
           </span>
         </div>
 
@@ -183,7 +187,11 @@ export default function LoadingScreen({ show, fadeDuration = 700 }: LoadingScree
             textOverflow: 'ellipsis',
           }}
         >
-          {pct < 100 ? lastItem.current || 'preparing environment' : 'ready'}
+          {stalled
+            ? 'connection seems slow — check your network'
+            : pct < 100
+              ? lastItem.current || 'preparing environment'
+              : 'ready'}
         </div>
 
         {/* HUD frame outline + ruler ticks, same device as AnimationInfoPanel */}
