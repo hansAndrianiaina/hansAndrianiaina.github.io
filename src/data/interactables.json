@@ -192,5 +192,65 @@
         "content": "A robotic assistant acting as a butler. Program is currently under implementation. You will be able to talk to it soon."
       }
     }
+  },
+
+  "round_lamp": {
+    "title": "Lamp",
+    "panel": {
+      "description": {
+        "heading": "Description",
+        "content": "You can control the lighting"
+      }
+    }
+  },
+
+  "round_lamp001": {
+    "title": "Lamp",
+    "panel": {
+      "description": {
+        "heading": "Description",
+        "content": "You can control the lighting"
+      }
+    }
+  },
+
+  "round_lamp002": {
+    "title": "Lamp",
+    "panel": {
+      "description": {
+        "heading": "Description",
+        "content": "You can control the lighting"
+      }
+    }
+  },
+
+  "round_lamp003": {
+    "title": "Lamp",
+    "panel": {
+      "description": {
+        "heading": "Description",
+        "content": "You can control the lighting"
+      }
+    }
+  },
+
+  "round_lamp004": {
+    "title": "Lamp",
+    "panel": {
+      "description": {
+        "heading": "Description",
+        "content": "You can control the lighting"
+      }
+    }
+  },
+
+  "round_lamp005": {
+    "title": "Lamp",
+    "panel": {
+      "description": {
+        "heading": "Description",
+        "content": "You can control the lighting"
+      }
+    }
   }
 }
