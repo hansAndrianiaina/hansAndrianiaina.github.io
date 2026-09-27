@@ -1,6 +1,6 @@
 import { useEffect, useState, Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { Environment, Stats, Center, Bounds  } from '@react-three/drei'
+import { Stats, Center, Bounds  } from '@react-three/drei'
 import CameraDebugPanel from './CameraDebugPanel'
 import IntroCamera from './IntroCamera'
 
@@ -32,6 +32,8 @@ import AdaptiveFov from './AdaptiveFov'
 import { musicManager } from '../utils/music'
 
 import tracks from '../data/tracks.json'
+
+import RoomLighting from './RoomLighting'
 
 type ControlMode = 'orbit' | 'walk'
 
@@ -120,7 +122,7 @@ export default function Scene() {
           {/* Widens the vertical FOV on portrait screens so phones can actually see the room */}
           <AdaptiveFov />
 
-
+ 
           <Suspense fallback={null}>
             <DragGuardProvider>
               <Bounds clip margin={1.2}>
@@ -131,8 +133,8 @@ export default function Scene() {
                 </group>
               </Bounds>
             </DragGuardProvider>
-            <Environment files={import.meta.env.BASE_URL + 'hdri/autoshop_01_1k.hdr'} environmentIntensity={0.75} />
             {/* Fires once everything above has actually resolved (see SceneReadySignal.tsx) */}
+            <RoomLighting />
             <SceneReadySignal onReady={() => setAssetsLoaded(true)} />
           </Suspense>
 

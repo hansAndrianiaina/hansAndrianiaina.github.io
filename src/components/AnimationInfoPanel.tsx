@@ -2,6 +2,7 @@
 import type { CSSProperties } from 'react'
 import { useMobile } from '../hooks/useMobile'
 import MusicControls from './MusicControls'
+import LightningControls from './LightingControls'
 
 interface InfoSection {
   /** Section label, e.g. "Mission Brief", "Under the Hood" — your call, it's just a heading. */
@@ -333,6 +334,12 @@ export default function AnimationInfoPanel({
           {title.toLowerCase() === 'boom box' && (
             <div style={{ marginTop: 16, pointerEvents: visible ? 'auto' : 'none' }}>
               <MusicControls inline />
+            </div>
+          )}
+
+          {title.toLowerCase() === 'lamp' && (
+            <div style={{ marginTop: 16, pointerEvents: visible ? 'auto' : 'none' }}>
+              <LightningControls inline />
             </div>
           )}
         </div>
