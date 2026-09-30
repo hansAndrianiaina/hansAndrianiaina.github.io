@@ -10,7 +10,7 @@ interface RoomLightingState {
 }
 
 export const useRoomLighting = create<RoomLightingState>((set) => ({
-  intensity: 5,
+  intensity: 7,
   enabled: true,
 
   setIntensity: (intensity) =>

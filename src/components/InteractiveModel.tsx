@@ -1,7 +1,7 @@
 // src/components/InteractiveModel.tsx
 import { useRef, useState, useCallback, useEffect, useMemo } from 'react'
 import * as THREE from 'three'
-import type { ThreeEvent } from '@react-three/fiber'
+import { useFrame, type ThreeEvent } from '@react-three/fiber'
 import { Model } from './Model'
 import { INTERACTABLES } from '../interaction/interactables'
 import { useDidDrag } from '../interaction/DragGuardContext'
@@ -10,11 +10,17 @@ import { useSoundPlayer } from './SoundPlayer';
 const HOVER_COLOR = new THREE.Color('#ffffff')
 const HOVER_INTENSITY = 0.35
 
+const BOB_SPEED = 1      // radians/s; lower = slower (one full cycle takes 2π / speed seconds)
+const BOB_AMPLITUDE = 0.01  // scene units (the pots sit at about y = 0.26, so keep this small)
+
 // Pre-compute which mesh names are interactive for faster lookup
 const INTERACTABLE_NAMES = new Set(Object.keys(INTERACTABLES))
 
 export default function InteractiveModel({ onSelect }: { onSelect: (name: string) => void }) {
   const groupRef = useRef<THREE.Group>(null)
+  const robotRef = useRef<THREE.Object3D | null>(null)
+  const potPartsRef = useRef<{ mesh: THREE.Object3D; baseY: number; phase: number }[] | null>(null)
+
   const didDragRef = useDidDrag()
   const [, setHovered] = useState<string | null>(null)
   const originalEmissive = useRef<Map<THREE.Material, THREE.Color>>(new Map())
@@ -32,6 +38,39 @@ export default function InteractiveModel({ onSelect }: { onSelect: (name: string
     })
     return meshes
   }, [])
+
+  useFrame(({ clock }, delta) => {
+    const root = groupRef.current
+    if (!root) return
+
+    // robot spin
+    if (!robotRef.current) {
+      robotRef.current = root.getObjectByName('robot') ?? null
+    }
+    if (robotRef.current) robotRef.current.rotation.y += delta * 0.5
+
+    // pot bobbing: lazy lookup, runs once
+    if (!potPartsRef.current) {
+      const parts: { mesh: THREE.Object3D; baseY: number; phase: number }[] = []
+      let potIndex = 0
+      root.traverse((obj) => {
+        if (/^pot\d*$/.test(obj.name)) {
+          for (const child of obj.children) {
+            if (child instanceof THREE.Mesh) {   // direct meshes only, skips the Icosphere group
+              parts.push({ mesh: child, baseY: child.position.y, phase: potIndex })
+            }
+          }
+          potIndex++
+        }
+      })
+      potPartsRef.current = parts
+    }
+
+    const t = clock.elapsedTime
+    for (const { mesh, baseY, phase } of potPartsRef.current) {
+      mesh.position.y = baseY + Math.sin(t * BOB_SPEED + phase) * BOB_AMPLITUDE
+    }
+  })
 
   // Initialize material clones once
   useEffect(() => {
