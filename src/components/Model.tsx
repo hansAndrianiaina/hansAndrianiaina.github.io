@@ -116,6 +116,7 @@ type GLTFResult = GLTF & {
     robot_light: THREE.MeshStandardMaterial
     robot_black: THREE.MeshStandardMaterial
     room_base: THREE.MeshStandardMaterial
+    room_base_floor: THREE.MeshStandardMaterial
     sitting_table_details: THREE.MeshStandardMaterial
   }
   animations: GLTFAction[]
@@ -231,7 +232,7 @@ export function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="Plane002" geometry={nodes.Plane002.geometry} material={materials.room_base} />
         <mesh name="Plane002_1" geometry={nodes.Plane002_1.geometry} material={materials.green_neon} />
       </group>
-      <mesh name="room_floor" geometry={nodes.room_floor.geometry} material={materials.room_base} position={[0, 0, -0.01]} />
+      <mesh name="room_floor" geometry={nodes.room_floor.geometry} material={materials.room_base_floor} position={[0, 0, -0.01]} />
       <group name="room_wall" position={[0.164, 1.309, -0.01]}>
         <mesh name="Plane" geometry={nodes.Plane.geometry} material={materials.room_base} />
         <mesh name="Plane_1" geometry={nodes.Plane_1.geometry} material={materials.green_neon} />
