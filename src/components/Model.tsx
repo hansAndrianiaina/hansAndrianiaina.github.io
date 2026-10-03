@@ -13,17 +13,17 @@ type GLTFResult = GLTF & {
   nodes: {
     boom_box_1: THREE.Mesh
     boom_box_2: THREE.Mesh
-    Cube: THREE.Mesh
-    Cube001: THREE.Mesh
-    Cube002: THREE.Mesh
-    Cube003: THREE.Mesh
+    door: THREE.Mesh
+    door001: THREE.Mesh
+    door_frame: THREE.Mesh
+    door_frame001: THREE.Mesh
     Cube005: THREE.Mesh
     Cube005_1: THREE.Mesh
-    Cylinder: THREE.Mesh
-    Cylinder_1: THREE.Mesh
+    pot_1: THREE.Mesh
+    pot_2: THREE.Mesh
+    base_pot_1: THREE.Mesh
+    base_pot_2: THREE.Mesh
     branch: THREE.Mesh
-    Icosphere_1: THREE.Mesh
-    Icosphere_2: THREE.Mesh
     leave: THREE.Mesh
     leave001: THREE.Mesh
     leave002: THREE.Mesh
@@ -32,11 +32,11 @@ type GLTFResult = GLTF & {
     leave005: THREE.Mesh
     leave006: THREE.Mesh
     leave007: THREE.Mesh
-    Cylinder_2: THREE.Mesh
-    Cylinder_3: THREE.Mesh
+    pot001_1: THREE.Mesh
+    pot001_2: THREE.Mesh
+    base_pot001_1: THREE.Mesh
+    base_pot001_2: THREE.Mesh
     branch001: THREE.Mesh
-    Icosphere_3: THREE.Mesh
-    Icosphere_4: THREE.Mesh
     leave008: THREE.Mesh
     leave009: THREE.Mesh
     leave010: THREE.Mesh
@@ -45,11 +45,11 @@ type GLTFResult = GLTF & {
     leave013: THREE.Mesh
     leave014: THREE.Mesh
     leave015: THREE.Mesh
-    Cylinder_4: THREE.Mesh
-    Cylinder_5: THREE.Mesh
+    pot002_1: THREE.Mesh
+    pot002_2: THREE.Mesh
+    base_pot002_1: THREE.Mesh
+    base_pot002_2: THREE.Mesh
     branch002: THREE.Mesh
-    Icosphere_5: THREE.Mesh
-    Icosphere_6: THREE.Mesh
     leave016: THREE.Mesh
     leave017: THREE.Mesh
     leave018: THREE.Mesh
@@ -77,8 +77,8 @@ type GLTFResult = GLTF & {
     Sphere: THREE.Mesh
     Sphere_1: THREE.Mesh
     Sphere_2: THREE.Mesh
-    Plane002: THREE.Mesh
-    Plane002_1: THREE.Mesh
+    roof_1: THREE.Mesh
+    roof_2: THREE.Mesh
     room_floor: THREE.Mesh
     Plane: THREE.Mesh
     Plane_1: THREE.Mesh
@@ -88,8 +88,8 @@ type GLTFResult = GLTF & {
     round_lamp003: THREE.Mesh
     round_lamp004: THREE.Mesh
     round_lamp005: THREE.Mesh
+    Cube002: THREE.Mesh
     Cube002_1: THREE.Mesh
-    Cube002_2: THREE.Mesh
   }
   materials: {
     boom_box: THREE.MeshStandardMaterial
@@ -100,8 +100,8 @@ type GLTFResult = GLTF & {
     main_screençdisplay: THREE.MeshStandardMaterial
     sitting_table_base: THREE.MeshStandardMaterial
     dirt: THREE.MeshStandardMaterial
-    wood_branch: THREE.MeshStandardMaterial
     green_neon: THREE.MeshStandardMaterial
+    wood_branch: THREE.MeshStandardMaterial
     leaves: THREE.MeshStandardMaterial
     project_panel: THREE.MeshStandardMaterial
     axian_digibank_fintech: THREE.MeshStandardMaterial
@@ -125,29 +125,29 @@ type GLTFResult = GLTF & {
 const MODEL_PATH = import.meta.env.BASE_URL + 'models/scene.glb'
 
 export function Model(props: JSX.IntrinsicElements['group']) {
-  const { nodes, materials } = useGLTF(MODEL_PATH)  as unknown  as GLTFResult
+  const { nodes, materials } = useGLTF(MODEL_PATH) as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>
       <group name="boom_box" position={[-2.137, 0, -1.356]} rotation={[0, Math.PI / 2, 0]}>
         <mesh name="boom_box_1" geometry={nodes.boom_box_1.geometry} material={materials.boom_box} />
         <mesh name="boom_box_2" geometry={nodes.boom_box_2.geometry} material={materials.boom_pattern} />
       </group>
-      <mesh name="Cube" geometry={nodes.Cube.geometry} material={materials.door} position={[2.302, 1.215, -0.01]} />
-      <mesh name="Cube001" geometry={nodes.Cube001.geometry} material={materials.door_support} position={[2.302, 1.215, -0.01]} />
-      <mesh name="Cube002" geometry={nodes.Cube002.geometry} material={materials.door} position={[-2.297, 1.215, -0.01]} rotation={[-Math.PI, 0, 0]} scale={-1} />
-      <mesh name="Cube003" geometry={nodes.Cube003.geometry} material={materials.door_support} position={[-2.297, 1.215, -0.01]} rotation={[-Math.PI, 0, 0]} scale={-1} />
+      <mesh name="door" geometry={nodes.door.geometry} material={materials.door} position={[2.302, 1.215, -0.01]} />
+      <mesh name="door001" geometry={nodes.door001.geometry} material={materials.door} position={[-2.297, 1.215, -0.01]} rotation={[-Math.PI, 0, 0]} scale={-1} />
+      <mesh name="door_frame" geometry={nodes.door_frame.geometry} material={materials.door_support} position={[2.302, 1.215, -0.01]} />
+      <mesh name="door_frame001" geometry={nodes.door_frame001.geometry} material={materials.door_support} position={[-2.297, 1.215, -0.01]} rotation={[-Math.PI, 0, 0]} scale={-1} />
       <group name="main_screen" position={[0.603, 1.215, -2.964]}>
         <mesh name="Cube005" geometry={nodes.Cube005.geometry} material={materials.main_screen} />
         <mesh name="Cube005_1" geometry={nodes.Cube005_1.geometry} material={materials.main_screençdisplay} />
       </group>
       <group name="pot" position={[1.573, 0.262, -2.061]}>
-        <mesh name="Cylinder" geometry={nodes.Cylinder.geometry} material={materials.sitting_table_base} />
-        <mesh name="Cylinder_1" geometry={nodes.Cylinder_1.geometry} material={materials.dirt} />
-        <mesh name="branch" geometry={nodes.branch.geometry} material={materials.wood_branch} />
-        <group name="Icosphere" position={[0, -0.227, 0]}>
-          <mesh name="Icosphere_1" geometry={nodes.Icosphere_1.geometry} material={materials.sitting_table_base} />
-          <mesh name="Icosphere_2" geometry={nodes.Icosphere_2.geometry} material={materials.green_neon} />
+        <mesh name="pot_1" geometry={nodes.pot_1.geometry} material={materials.sitting_table_base} />
+        <mesh name="pot_2" geometry={nodes.pot_2.geometry} material={materials.dirt} />
+        <group name="base_pot" position={[0, -0.227, 0]}>
+          <mesh name="base_pot_1" geometry={nodes.base_pot_1.geometry} material={materials.sitting_table_base} />
+          <mesh name="base_pot_2" geometry={nodes.base_pot_2.geometry} material={materials.green_neon} />
         </group>
+        <mesh name="branch" geometry={nodes.branch.geometry} material={materials.wood_branch} />
         <mesh name="leave" geometry={nodes.leave.geometry} material={materials.leaves} position={[-0.021, 0.25, 0.147]} rotation={[-2.894, 0.079, 3.11]} scale={0.146} />
         <mesh name="leave001" geometry={nodes.leave001.geometry} material={materials.leaves} position={[-0.125, 0.227, 0.064]} rotation={[-2.67, 0.871, 2.456]} scale={0.129} />
         <mesh name="leave002" geometry={nodes.leave002.geometry} material={materials.leaves} position={[-0.111, 0.297, 0.01]} rotation={[-2.767, 1.289, 2.674]} scale={0.129} />
@@ -157,39 +157,39 @@ export function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="leave006" geometry={nodes.leave006.geometry} material={materials.leaves} position={[0.087, 0.293, -0.031]} rotation={[-0.243, -1.097, -0.247]} scale={0.129} />
         <mesh name="leave007" geometry={nodes.leave007.geometry} material={materials.leaves} position={[0.099, 0.272, 0.126]} rotation={[-2.833, -0.576, -2.981]} scale={0.146} />
       </group>
-      <group name="pot001" position={[1.534, 0.262, 2.629]} rotation={[0, -1.431, 0]}>
-        <mesh name="Cylinder_2" geometry={nodes.Cylinder_2.geometry} material={materials.sitting_table_base} />
-        <mesh name="Cylinder_3" geometry={nodes.Cylinder_3.geometry} material={materials.dirt} />
-        <mesh name="branch001" geometry={nodes.branch001.geometry} material={materials.wood_branch} rotation={[0, -1.431, 0]} />
-        <group name="Icosphere001" position={[0, -0.227, 0]} rotation={[0, -1.431, 0]}>
-          <mesh name="Icosphere_3" geometry={nodes.Icosphere_3.geometry} material={materials.sitting_table_base} />
-          <mesh name="Icosphere_4" geometry={nodes.Icosphere_4.geometry} material={materials.green_neon} />
+      <group name="pot001" position={[1.513, 0.262, 2.606]}>
+        <mesh name="pot001_1" geometry={nodes.pot001_1.geometry} material={materials.sitting_table_base} />
+        <mesh name="pot001_2" geometry={nodes.pot001_2.geometry} material={materials.dirt} />
+        <group name="base_pot001" position={[0, -0.227, 0]}>
+          <mesh name="base_pot001_1" geometry={nodes.base_pot001_1.geometry} material={materials.sitting_table_base} />
+          <mesh name="base_pot001_2" geometry={nodes.base_pot001_2.geometry} material={materials.green_neon} />
         </group>
-        <mesh name="leave008" geometry={nodes.leave008.geometry} material={materials.leaves} position={[-0.021, 0.25, 0.147]} rotation={[-1.798, 1.318, 1.794]} scale={0.146} />
-        <mesh name="leave009" geometry={nodes.leave009.geometry} material={materials.leaves} position={[-0.125, 0.227, 0.064]} rotation={[-0.407, 0.74, -0.031]} scale={0.129} />
-        <mesh name="leave010" geometry={nodes.leave010.geometry} material={materials.leaves} position={[-0.111, 0.297, 0.01]} rotation={[-0.111, 0.401, -0.063]} scale={0.129} />
-        <mesh name="leave011" geometry={nodes.leave011.geometry} material={materials.leaves} position={[0.031, 0.342, 0.126]} rotation={[-2.554, 1.073, 2.678]} scale={0.146} />
-        <mesh name="leave012" geometry={nodes.leave012.geometry} material={materials.leaves} position={[-0.052, 0.295, -0.073]} rotation={[-0.251, -1.023, -0.247]} scale={0.129} />
-        <mesh name="leave013" geometry={nodes.leave013.geometry} material={materials.leaves} position={[0.087, 0.293, -0.031]} rotation={[-3.008, -0.598, -3.096]} scale={0.129} />
-        <mesh name="leave014" geometry={nodes.leave014.geometry} material={materials.leaves} position={[0.099, 0.272, 0.126]} rotation={[-2.768, 0.797, 2.857]} scale={0.146} />
-        <mesh name="leave015" geometry={nodes.leave015.geometry} material={materials.leaves} position={[0.063, 0.237, -0.104]} rotation={[-2.501, -1.386, -2.539]} scale={0.129} />
+        <mesh name="branch001" geometry={nodes.branch001.geometry} material={materials.wood_branch} />
+        <mesh name="leave008" geometry={nodes.leave008.geometry} material={materials.leaves} position={[-0.021, 0.25, 0.147]} rotation={[-2.894, 0.079, 3.11]} scale={0.146} />
+        <mesh name="leave009" geometry={nodes.leave009.geometry} material={materials.leaves} position={[-0.125, 0.227, 0.064]} rotation={[-2.67, 0.871, 2.456]} scale={0.129} />
+        <mesh name="leave010" geometry={nodes.leave010.geometry} material={materials.leaves} position={[-0.111, 0.297, 0.01]} rotation={[-2.767, 1.289, 2.674]} scale={0.129} />
+        <mesh name="leave011" geometry={nodes.leave011.geometry} material={materials.leaves} position={[0.031, 0.342, 0.126]} rotation={[-2.863, -0.274, -2.998]} scale={0.146} />
+        <mesh name="leave012" geometry={nodes.leave012.geometry} material={materials.leaves} position={[-0.052, 0.295, -0.073]} rotation={[-0.14, 0.391, 0.022]} scale={0.129} />
+        <mesh name="leave013" geometry={nodes.leave013.geometry} material={materials.leaves} position={[0.087, 0.293, -0.031]} rotation={[-0.243, -1.097, -0.247]} scale={0.129} />
+        <mesh name="leave014" geometry={nodes.leave014.geometry} material={materials.leaves} position={[0.099, 0.272, 0.126]} rotation={[-2.833, -0.576, -2.981]} scale={0.146} />
+        <mesh name="leave015" geometry={nodes.leave015.geometry} material={materials.leaves} position={[0.063, 0.237, -0.104]} rotation={[-0.115, -0.287, -0.063]} scale={0.129} />
       </group>
-      <group name="pot002" position={[-1.48, 0.262, 2.629]} rotation={[0, -0.475, 0]}>
-        <mesh name="Cylinder_4" geometry={nodes.Cylinder_4.geometry} material={materials.sitting_table_base} />
-        <mesh name="Cylinder_5" geometry={nodes.Cylinder_5.geometry} material={materials.dirt} />
-        <mesh name="branch002" geometry={nodes.branch002.geometry} material={materials.wood_branch} rotation={[0, -0.475, 0]} />
-        <group name="Icosphere002" position={[0, -0.227, 0]} rotation={[0, -0.475, 0]}>
-          <mesh name="Icosphere_5" geometry={nodes.Icosphere_5.geometry} material={materials.sitting_table_base} />
-          <mesh name="Icosphere_6" geometry={nodes.Icosphere_6.geometry} material={materials.green_neon} />
+      <group name="pot002" position={[-1.49, 0.262, 2.625]}>
+        <mesh name="pot002_1" geometry={nodes.pot002_1.geometry} material={materials.sitting_table_base} />
+        <mesh name="pot002_2" geometry={nodes.pot002_2.geometry} material={materials.dirt} />
+        <group name="base_pot002" position={[0, -0.227, 0]}>
+          <mesh name="base_pot002_1" geometry={nodes.base_pot002_1.geometry} material={materials.sitting_table_base} />
+          <mesh name="base_pot002_2" geometry={nodes.base_pot002_2.geometry} material={materials.green_neon} />
         </group>
-        <mesh name="leave016" geometry={nodes.leave016.geometry} material={materials.leaves} position={[-0.021, 0.25, 0.147]} rotation={[-2.854, 0.538, 2.98]} scale={0.146} />
-        <mesh name="leave017" geometry={nodes.leave017.geometry} material={materials.leaves} position={[-0.125, 0.227, 0.064]} rotation={[-2.072, 1.231, 1.783]} scale={0.129} />
-        <mesh name="leave018" geometry={nodes.leave018.geometry} material={materials.leaves} position={[-0.111, 0.297, 0.01]} rotation={[-0.454, 1.336, 0.337]} scale={0.129} />
-        <mesh name="leave019" geometry={nodes.leave019.geometry} material={materials.leaves} position={[0.031, 0.342, 0.126]} rotation={[-2.869, 0.183, -3.127]} scale={0.146} />
-        <mesh name="leave020" geometry={nodes.leave020.geometry} material={materials.leaves} position={[-0.052, 0.295, -0.073]} rotation={[-0.13, -0.08, -0.042]} scale={0.129} />
-        <mesh name="leave021" geometry={nodes.leave021.geometry} material={materials.leaves} position={[0.087, 0.293, -0.031]} rotation={[-1.688, -1.46, -1.718]} scale={0.129} />
-        <mesh name="leave022" geometry={nodes.leave022.geometry} material={materials.leaves} position={[0.099, 0.272, 0.126]} rotation={[-2.882, -0.119, -3.121]} scale={0.146} />
-        <mesh name="leave023" geometry={nodes.leave023.geometry} material={materials.leaves} position={[0.063, 0.237, -0.104]} rotation={[-0.152, -0.758, -0.135]} scale={0.129} />
+        <mesh name="branch002" geometry={nodes.branch002.geometry} material={materials.wood_branch} />
+        <mesh name="leave016" geometry={nodes.leave016.geometry} material={materials.leaves} position={[-0.021, 0.25, 0.147]} rotation={[-2.894, 0.079, 3.11]} scale={0.146} />
+        <mesh name="leave017" geometry={nodes.leave017.geometry} material={materials.leaves} position={[-0.125, 0.227, 0.064]} rotation={[-2.67, 0.871, 2.456]} scale={0.129} />
+        <mesh name="leave018" geometry={nodes.leave018.geometry} material={materials.leaves} position={[-0.111, 0.297, 0.01]} rotation={[-2.767, 1.289, 2.674]} scale={0.129} />
+        <mesh name="leave019" geometry={nodes.leave019.geometry} material={materials.leaves} position={[0.031, 0.342, 0.126]} rotation={[-2.863, -0.274, -2.998]} scale={0.146} />
+        <mesh name="leave020" geometry={nodes.leave020.geometry} material={materials.leaves} position={[-0.052, 0.295, -0.073]} rotation={[-0.14, 0.391, 0.022]} scale={0.129} />
+        <mesh name="leave021" geometry={nodes.leave021.geometry} material={materials.leaves} position={[0.087, 0.293, -0.031]} rotation={[-0.243, -1.097, -0.247]} scale={0.129} />
+        <mesh name="leave022" geometry={nodes.leave022.geometry} material={materials.leaves} position={[0.099, 0.272, 0.126]} rotation={[-2.833, -0.576, -2.981]} scale={0.146} />
+        <mesh name="leave023" geometry={nodes.leave023.geometry} material={materials.leaves} position={[0.063, 0.237, -0.104]} rotation={[-0.115, -0.287, -0.063]} scale={0.129} />
       </group>
       <group name="project_panel" position={[-1.205, 1.215, -2.964]}>
         <mesh name="Cube007" geometry={nodes.Cube007.geometry} material={materials.project_panel} />
@@ -229,8 +229,8 @@ export function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="Sphere_2" geometry={nodes.Sphere_2.geometry} material={materials.robot_black} />
       </group>
       <group name="roof" position={[0, 2.014, -0.01]}>
-        <mesh name="Plane002" geometry={nodes.Plane002.geometry} material={materials.room_base} />
-        <mesh name="Plane002_1" geometry={nodes.Plane002_1.geometry} material={materials.green_neon} />
+        <mesh name="roof_1" geometry={nodes.roof_1.geometry} material={materials.room_base} />
+        <mesh name="roof_2" geometry={nodes.roof_2.geometry} material={materials.green_neon} />
       </group>
       <mesh name="room_floor" geometry={nodes.room_floor.geometry} material={materials.room_base_floor} position={[0, 0, -0.01]} />
       <group name="room_wall" position={[0.164, 1.309, -0.01]}>
@@ -244,8 +244,8 @@ export function Model(props: JSX.IntrinsicElements['group']) {
       <mesh name="round_lamp004" geometry={nodes.round_lamp004.geometry} material={materials.green_neon} position={[1, 2.015, 2.207]} rotation={[Math.PI, 0, Math.PI]} scale={0.083} />
       <mesh name="round_lamp005" geometry={nodes.round_lamp005.geometry} material={materials.green_neon} position={[-1, 2.015, 2.207]} rotation={[Math.PI, 0, Math.PI]} scale={0.083} />
       <group name="sitting_table" position={[-1.142, -0.01, -2.491]}>
-        <mesh name="Cube002_1" geometry={nodes.Cube002_1.geometry} material={materials.sitting_table_base} />
-        <mesh name="Cube002_2" geometry={nodes.Cube002_2.geometry} material={materials.sitting_table_details} />
+        <mesh name="Cube002" geometry={nodes.Cube002.geometry} material={materials.sitting_table_base} />
+        <mesh name="Cube002_1" geometry={nodes.Cube002_1.geometry} material={materials.sitting_table_details} />
       </group>
     </group>
   )

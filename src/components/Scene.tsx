@@ -147,7 +147,6 @@ export default function Scene() {
             }} />}
 
           
-          
           {introDone && <CameraCollisionGuard targetRef={modelRef} />}
 
           {introDone && mode === 'walk' && <WalkControls />}
@@ -165,8 +164,8 @@ export default function Scene() {
       {introDone && isTouch && mode === 'walk' && (
         <VirtualJoysticks />
       )}
-      {introDone && isTouch && (
-        <TouchControlOverlay mode={mode} />
+      {introDone && (
+        <TouchControlOverlay mode={mode} touch={isTouch}/>
       )}
       {introDone && (
         <ControlModeToggle mode={mode} onChange={setMode} />

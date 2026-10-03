@@ -135,6 +135,10 @@ The `<Canvas>` is configured with:
 **Model.tsx** - Auto-generated via gltfjsx:
 ```bash
 npx gltfjsx public/models/scene.glb --types --keepnames -o src/components/Model.tsx
+
+# or using the inner command in package.json 
+
+npm run gen:model 
 ```
 - Loads `public/models/scene.glb` via `useGLTF` from drei
 - Exports typed `nodes` and `materials` matching Blender object names
