@@ -1,57 +1,80 @@
 // src/components/TouchControlOverlay.tsx
-// Gesture hints shown once, on the first touch. Dismisses after 5s or on the next
-// touch (ignoring a 1s grace window so the second finger of a pinch doesn't close it).
-//
-// Also draws a small ripple where the finger lands in Orbit mode, as visual feedback
-// (Walk mode already has the joysticks for that).
-//
-// Everything is driven by refs / CSS transitions / Web Animations: no per-touch React renders.
 import { useEffect, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 
 type ControlMode = 'orbit' | 'walk'
 
-const AUTO_DISMISS_MS = 5000
-const GRACE_MS = 1000
+const SHOW_DELAY_MS = 50   // lets the first render paint at opacity 0 so the fade-in runs
+const AUTO_DISMISS_MS = 10000
 const FADE_MS = 400
-
-const HINTS: Record<ControlMode, string[]> = {
-  orbit: ['Drag to orbit', 'Pinch to zoom', 'Tap an object for info'],
-  walk: ['Left stick to move', 'Right stick to look', 'Tap an object for info'],
-}
 
 const CLIP = 'polygon(9px 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%, 0 9px)'
 
-export default function TouchControlOverlay({ mode }: { mode: ControlMode }) {
+// Module level: lives for the whole page load, survives unmount/remount,
+// and is wiped on refresh. Holds keys like "orbit:true".
+const seen = new Set<string>()
+
+export default function TouchControlOverlay({ mode, touch = false }: { mode: ControlMode; touch?: boolean }) {
   const [visible, setVisible] = useState(false)
   const modeRef = useRef(mode)
   const containerRef = useRef<HTMLDivElement>(null)
   const rippleRef = useRef<HTMLDivElement>(null)
 
+  const HINTS: Record<ControlMode, string[]> = {
+    orbit: touch
+      ? ['Drag to orbit', 'Pinch to zoom', 'Tap an object for info']
+      : ['Click and drag to orbit', 'Scroll to zoom', 'Click an object for info'],
+    walk: touch
+      ? ['Left stick to move', 'Right stick to look', 'Tap an object for info']
+      : ['Use WASD or arrow keys to move', 'Click and drag to look', 'Click an object for info'],
+  }
+
   useEffect(() => {
     modeRef.current = mode
   }, [mode])
 
+  // Show hints the first time each (mode, touch) combination is entered.
+  // Dismiss on timeout or on the first interaction.
   useEffect(() => {
-    let phase: 'idle' | 'shown' | 'done' = 'idle'
-    let shownAt = 0
-    let timer: number | undefined
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-    const dismiss = () => {
-      if (phase === 'done') return
-      phase = 'done'
-      window.clearTimeout(timer)
+    const key = `${mode}:${touch}`
+    if (seen.has(key)) {
       setVisible(false)
+      return
     }
 
-    const ripple = (clientX: number, clientY: number) => {
+    const dismiss = () => setVisible(false)
+
+    // Marked as seen only when actually shown, so StrictMode's double effect
+    // run (and quick mode switches) don't consume the hint without displaying it.
+    const showTimer = window.setTimeout(() => {
+      seen.add(key)
+      setVisible(true)
+    }, SHOW_DELAY_MS)
+    const hideTimer = window.setTimeout(dismiss, SHOW_DELAY_MS + AUTO_DISMISS_MS)
+
+    const events = ['pointerdown', 'keydown', 'wheel'] as const
+    events.forEach((ev) => window.addEventListener(ev, dismiss, { capture: true, passive: true }))
+
+    return () => {
+      window.clearTimeout(showTimer)
+      window.clearTimeout(hideTimer)
+      events.forEach((ev) => window.removeEventListener(ev, dismiss, { capture: true }))
+      setVisible(false)
+    }
+  }, [mode, touch])
+
+  // Touch ripple (Orbit mode only), independent of the hints
+  useEffect(() => {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    const onPointerDown = (e: PointerEvent) => {
+      if (e.pointerType !== 'touch' || modeRef.current !== 'orbit' || reduceMotion) return
       const el = rippleRef.current
       const box = containerRef.current
-      if (!el || !box || reduceMotion) return
+      if (!el || !box) return
       const rect = box.getBoundingClientRect()
-      el.style.left = `${clientX - rect.left}px`
-      el.style.top = `${clientY - rect.top}px`
+      el.style.left = `${e.clientX - rect.left}px`
+      el.style.top = `${e.clientY - rect.top}px`
       el.animate(
         [
           { transform: 'translate(-50%, -50%) scale(0.4)', opacity: 0.8 },
@@ -61,33 +84,15 @@ export default function TouchControlOverlay({ mode }: { mode: ControlMode }) {
       )
     }
 
-    const onPointerDown = (e: PointerEvent) => {
-      if (e.pointerType !== 'touch') return
-
-      if (modeRef.current === 'orbit') ripple(e.clientX, e.clientY)
-
-      if (phase === 'idle') {
-        phase = 'shown'
-        shownAt = performance.now()
-        setVisible(true)
-        timer = window.setTimeout(dismiss, AUTO_DISMISS_MS)
-      } else if (phase === 'shown' && performance.now() - shownAt > GRACE_MS) {
-        dismiss()
-      }
-    }
-
     window.addEventListener('pointerdown', onPointerDown, true)
-    return () => {
-      window.removeEventListener('pointerdown', onPointerDown, true)
-      window.clearTimeout(timer)
-    }
+    return () => window.removeEventListener('pointerdown', onPointerDown, true)
   }, [])
 
   const containerStyle: CSSProperties = {
     position: 'absolute',
     inset: 0,
     overflow: 'hidden',
-    pointerEvents: 'none', // never blocks the canvas
+    pointerEvents: 'none',
     zIndex: 6,
   }
 
