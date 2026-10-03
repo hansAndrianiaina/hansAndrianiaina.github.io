@@ -13,10 +13,10 @@ type GLTFResult = GLTF & {
   nodes: {
     boom_box_1: THREE.Mesh
     boom_box_2: THREE.Mesh
-    Cube: THREE.Mesh
-    Cube001: THREE.Mesh
-    Cube002: THREE.Mesh
-    Cube003: THREE.Mesh
+    door: THREE.Mesh
+    door001: THREE.Mesh
+    door_frame: THREE.Mesh
+    door_frame001: THREE.Mesh
     Cube005: THREE.Mesh
     Cube005_1: THREE.Mesh
     Cylinder: THREE.Mesh
@@ -32,11 +32,11 @@ type GLTFResult = GLTF & {
     leave005: THREE.Mesh
     leave006: THREE.Mesh
     leave007: THREE.Mesh
-    Cylinder_2: THREE.Mesh
-    Cylinder_3: THREE.Mesh
+    Cylinder: THREE.Mesh
+    Cylinder_1: THREE.Mesh
     branch001: THREE.Mesh
-    Icosphere_3: THREE.Mesh
-    Icosphere_4: THREE.Mesh
+    Icosphere_1: THREE.Mesh
+    Icosphere_2: THREE.Mesh
     leave008: THREE.Mesh
     leave009: THREE.Mesh
     leave010: THREE.Mesh
@@ -45,11 +45,11 @@ type GLTFResult = GLTF & {
     leave013: THREE.Mesh
     leave014: THREE.Mesh
     leave015: THREE.Mesh
-    Cylinder_4: THREE.Mesh
-    Cylinder_5: THREE.Mesh
+    Cylinder: THREE.Mesh
+    Cylinder_1: THREE.Mesh
     branch002: THREE.Mesh
-    Icosphere_5: THREE.Mesh
-    Icosphere_6: THREE.Mesh
+    Icosphere_1: THREE.Mesh
+    Icosphere_2: THREE.Mesh
     leave016: THREE.Mesh
     leave017: THREE.Mesh
     leave018: THREE.Mesh
@@ -88,8 +88,8 @@ type GLTFResult = GLTF & {
     round_lamp003: THREE.Mesh
     round_lamp004: THREE.Mesh
     round_lamp005: THREE.Mesh
+    Cube002: THREE.Mesh
     Cube002_1: THREE.Mesh
-    Cube002_2: THREE.Mesh
   }
   materials: {
     boom_box: THREE.MeshStandardMaterial
@@ -132,10 +132,10 @@ export function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="boom_box_1" geometry={nodes.boom_box_1.geometry} material={materials.boom_box} />
         <mesh name="boom_box_2" geometry={nodes.boom_box_2.geometry} material={materials.boom_pattern} />
       </group>
-      <mesh name="Cube" geometry={nodes.Cube.geometry} material={materials.door} position={[2.302, 1.215, -0.01]} />
-      <mesh name="Cube001" geometry={nodes.Cube001.geometry} material={materials.door_support} position={[2.302, 1.215, -0.01]} />
-      <mesh name="Cube002" geometry={nodes.Cube002.geometry} material={materials.door} position={[-2.297, 1.215, -0.01]} rotation={[-Math.PI, 0, 0]} scale={-1} />
-      <mesh name="Cube003" geometry={nodes.Cube003.geometry} material={materials.door_support} position={[-2.297, 1.215, -0.01]} rotation={[-Math.PI, 0, 0]} scale={-1} />
+      <mesh name="door" geometry={nodes.door.geometry} material={materials.door} position={[2.302, 1.215, -0.01]} />
+      <mesh name="door001" geometry={nodes.door001.geometry} material={materials.door} position={[-2.297, 1.215, -0.01]} rotation={[-Math.PI, 0, 0]} scale={-1} />
+      <mesh name="door_frame" geometry={nodes.door_frame.geometry} material={materials.door_support} position={[2.302, 1.215, -0.01]} />
+      <mesh name="door_frame001" geometry={nodes.door_frame001.geometry} material={materials.door_support} position={[-2.297, 1.215, -0.01]} rotation={[-Math.PI, 0, 0]} scale={-1} />
       <group name="main_screen" position={[0.603, 1.215, -2.964]}>
         <mesh name="Cube005" geometry={nodes.Cube005.geometry} material={materials.main_screen} />
         <mesh name="Cube005_1" geometry={nodes.Cube005_1.geometry} material={materials.main_screençdisplay} />
@@ -158,12 +158,12 @@ export function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="leave007" geometry={nodes.leave007.geometry} material={materials.leaves} position={[0.099, 0.272, 0.126]} rotation={[-2.833, -0.576, -2.981]} scale={0.146} />
       </group>
       <group name="pot001" position={[1.534, 0.262, 2.629]} rotation={[0, -1.431, 0]}>
-        <mesh name="Cylinder_2" geometry={nodes.Cylinder_2.geometry} material={materials.sitting_table_base} />
-        <mesh name="Cylinder_3" geometry={nodes.Cylinder_3.geometry} material={materials.dirt} />
+        <mesh name="Cylinder" geometry={nodes.Cylinder.geometry} material={materials.sitting_table_base} />
+        <mesh name="Cylinder_1" geometry={nodes.Cylinder_1.geometry} material={materials.dirt} />
         <mesh name="branch001" geometry={nodes.branch001.geometry} material={materials.wood_branch} rotation={[0, -1.431, 0]} />
         <group name="Icosphere001" position={[0, -0.227, 0]} rotation={[0, -1.431, 0]}>
-          <mesh name="Icosphere_3" geometry={nodes.Icosphere_3.geometry} material={materials.sitting_table_base} />
-          <mesh name="Icosphere_4" geometry={nodes.Icosphere_4.geometry} material={materials.green_neon} />
+          <mesh name="Icosphere_1" geometry={nodes.Icosphere_1.geometry} material={materials.sitting_table_base} />
+          <mesh name="Icosphere_2" geometry={nodes.Icosphere_2.geometry} material={materials.green_neon} />
         </group>
         <mesh name="leave008" geometry={nodes.leave008.geometry} material={materials.leaves} position={[-0.021, 0.25, 0.147]} rotation={[-1.798, 1.318, 1.794]} scale={0.146} />
         <mesh name="leave009" geometry={nodes.leave009.geometry} material={materials.leaves} position={[-0.125, 0.227, 0.064]} rotation={[-0.407, 0.74, -0.031]} scale={0.129} />
@@ -175,12 +175,12 @@ export function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="leave015" geometry={nodes.leave015.geometry} material={materials.leaves} position={[0.063, 0.237, -0.104]} rotation={[-2.501, -1.386, -2.539]} scale={0.129} />
       </group>
       <group name="pot002" position={[-1.48, 0.262, 2.629]} rotation={[0, -0.475, 0]}>
-        <mesh name="Cylinder_4" geometry={nodes.Cylinder_4.geometry} material={materials.sitting_table_base} />
-        <mesh name="Cylinder_5" geometry={nodes.Cylinder_5.geometry} material={materials.dirt} />
+        <mesh name="Cylinder" geometry={nodes.Cylinder.geometry} material={materials.sitting_table_base} />
+        <mesh name="Cylinder_1" geometry={nodes.Cylinder_1.geometry} material={materials.dirt} />
         <mesh name="branch002" geometry={nodes.branch002.geometry} material={materials.wood_branch} rotation={[0, -0.475, 0]} />
         <group name="Icosphere002" position={[0, -0.227, 0]} rotation={[0, -0.475, 0]}>
-          <mesh name="Icosphere_5" geometry={nodes.Icosphere_5.geometry} material={materials.sitting_table_base} />
-          <mesh name="Icosphere_6" geometry={nodes.Icosphere_6.geometry} material={materials.green_neon} />
+          <mesh name="Icosphere_1" geometry={nodes.Icosphere_1.geometry} material={materials.sitting_table_base} />
+          <mesh name="Icosphere_2" geometry={nodes.Icosphere_2.geometry} material={materials.green_neon} />
         </group>
         <mesh name="leave016" geometry={nodes.leave016.geometry} material={materials.leaves} position={[-0.021, 0.25, 0.147]} rotation={[-2.854, 0.538, 2.98]} scale={0.146} />
         <mesh name="leave017" geometry={nodes.leave017.geometry} material={materials.leaves} position={[-0.125, 0.227, 0.064]} rotation={[-2.072, 1.231, 1.783]} scale={0.129} />
@@ -244,11 +244,12 @@ export function Model(props: JSX.IntrinsicElements['group']) {
       <mesh name="round_lamp004" geometry={nodes.round_lamp004.geometry} material={materials.green_neon} position={[1, 2.015, 2.207]} rotation={[Math.PI, 0, Math.PI]} scale={0.083} />
       <mesh name="round_lamp005" geometry={nodes.round_lamp005.geometry} material={materials.green_neon} position={[-1, 2.015, 2.207]} rotation={[Math.PI, 0, Math.PI]} scale={0.083} />
       <group name="sitting_table" position={[-1.142, -0.01, -2.491]}>
-        <mesh name="Cube002_1" geometry={nodes.Cube002_1.geometry} material={materials.sitting_table_base} />
-        <mesh name="Cube002_2" geometry={nodes.Cube002_2.geometry} material={materials.sitting_table_details} />
+        <mesh name="Cube002" geometry={nodes.Cube002.geometry} material={materials.sitting_table_base} />
+        <mesh name="Cube002_1" geometry={nodes.Cube002_1.geometry} material={materials.sitting_table_details} />
       </group>
     </group>
   )
 }
 
 useGLTF.preload(MODEL_PATH)
+
