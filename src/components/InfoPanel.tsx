@@ -65,7 +65,7 @@ export default function InfoPanel({ forceMinimized = false }: InfoPanelProps) {
         left: '0%',
         zIndex: 7,
         transform: `translateX(5%)  scale(${minimized ? 0.98 : 1})`,
-        opacity: 0.75,
+        opacity: 0.85,
         width: minimized ? 100 : '100%',
         maxWidth: minimized ? 100 : 340,
         transition: 'width 0.35s ease, max-width 0.35s ease',
