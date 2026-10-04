@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">The Hanssi Gallery</title>
+  <desc id="desc">Minimal teal gallery icon with a chamfered frame, arch, and H monogram.</desc>
+
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="75%">
+      <stop offset="0%" stop-color="#123A44"/>
+      <stop offset="100%" stop-color="#0B1B24"/>
+    </radialGradient>
+
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4FB8C4"/>
+      <stop offset="100%" stop-color="#EAFCFF"/>
+    </linearGradient>
+
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="72" fill="url(#bg)"/>
+
+  <!-- Chamfered outer frame -->
+  <polygon
+    points="64,36 448,36 476,64 476,420 420,476 64,476 36,448 36,64"
+    fill="none"
+    stroke="#8FDEE6"
+    stroke-opacity=".55"
+    stroke-width="10"
+  />
+
+  <!-- Gallery arch -->
+  <path
+    d="M156 370V238
+       C156 166 198 120 256 120
+       C314 120 356 166 356 238
+       V370"
+    fill="none"
+    stroke="url(#accent)"
+    stroke-width="18"
+    stroke-linecap="square"
+    filter="url(#glow)"
+  />
+
+  <!-- H monogram -->
+  <path
+    d="M208 206V326
+       M304 206V326
+       M208 266H304"
+    fill="none"
+    stroke="#EAFCFF"
+    stroke-width="24"
+    stroke-linecap="square"
+    filter="url(#glow)"
+  />
+
+  <!-- Minimal base accent -->
+  <path
+    d="M146 388H366"
+    stroke="url(#accent)"
+    stroke-width="12"
+    stroke-linecap="square"
+  />
+</svg>
