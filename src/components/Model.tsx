@@ -74,6 +74,8 @@ type GLTFResult = GLTF & {
     Cube012_1: THREE.Mesh
     Cube004: THREE.Mesh
     Cube004_1: THREE.Mesh
+    Cube013: THREE.Mesh
+    Cube013_1: THREE.Mesh
     Sphere: THREE.Mesh
     Sphere_1: THREE.Mesh
     Sphere_2: THREE.Mesh
@@ -112,6 +114,7 @@ type GLTFResult = GLTF & {
     w3d_3d_infographist: THREE.MeshStandardMaterial
     creathon_2020: THREE.MeshStandardMaterial
     classification_model_monitoring: THREE.MeshStandardMaterial
+    scientific_publications_indri_research: THREE.MeshStandardMaterial
     robot_material: THREE.MeshStandardMaterial
     robot_light: THREE.MeshStandardMaterial
     robot_black: THREE.MeshStandardMaterial
@@ -207,21 +210,25 @@ export function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="Cube009" geometry={nodes.Cube009.geometry} material={materials.project_panel} />
         <mesh name="Cube009_1" geometry={nodes.Cube009_1.geometry} material={materials.w3d_unity_developer} />
       </group>
-      <group name="project_panel004" position={[2.038, 1.215, 2.235]} rotation={[Math.PI, -1.254, Math.PI]}>
+      <group name="project_panel004" position={[2.063, 1.215, 2.157]} rotation={[Math.PI, -1.254, Math.PI]}>
         <mesh name="Cube010" geometry={nodes.Cube010.geometry} material={materials.project_panel} />
         <mesh name="Cube010_1" geometry={nodes.Cube010_1.geometry} material={materials.rfid_staff_management} />
       </group>
-      <group name="project_panel005" position={[-1.205, 1.215, 2.944]} rotation={[-Math.PI, 0, -Math.PI]}>
+      <group name="project_panel005" position={[-1.326, 1.215, 2.944]} rotation={[-Math.PI, 0, -Math.PI]}>
         <mesh name="Cube011" geometry={nodes.Cube011.geometry} material={materials.project_panel} />
         <mesh name="Cube011_1" geometry={nodes.Cube011_1.geometry} material={materials.w3d_3d_infographist} />
       </group>
-      <group name="project_panel006" position={[1.197, 1.215, 2.944]} rotation={[-Math.PI, 0, -Math.PI]}>
+      <group name="project_panel006" position={[1.271, 1.215, 2.944]} rotation={[-Math.PI, 0, -Math.PI]}>
         <mesh name="Cube012" geometry={nodes.Cube012.geometry} material={materials.project_panel} />
         <mesh name="Cube012_1" geometry={nodes.Cube012_1.geometry} material={materials.creathon_2020} />
       </group>
-      <group name="project_panel007" position={[-0.126, 1.215, 2.944]} rotation={[-Math.PI, 0, -Math.PI]}>
+      <group name="project_panel007" position={[0.382, 1.215, 2.944]} rotation={[-Math.PI, 0, -Math.PI]}>
         <mesh name="Cube004" geometry={nodes.Cube004.geometry} material={materials.project_panel} />
         <mesh name="Cube004_1" geometry={nodes.Cube004_1.geometry} material={materials.classification_model_monitoring} />
+      </group>
+      <group name="project_panel008" position={[-0.474, 1.215, 2.944]} rotation={[-Math.PI, 0, -Math.PI]}>
+        <mesh name="Cube013" geometry={nodes.Cube013.geometry} material={materials.project_panel} />
+        <mesh name="Cube013_1" geometry={nodes.Cube013_1.geometry} material={materials.scientific_publications_indri_research} />
       </group>
       <group name="robot" position={[-1.25, 1.058, -1.315]} scale={0.157}>
         <mesh name="Sphere" geometry={nodes.Sphere.geometry} material={materials.robot_material} />

@@ -252,5 +252,35 @@
         "content": "You can control the lighting"
       }
     }
+  },
+
+
+  "Cube013_1": {
+    "title": "Scientific Research — Indri Behavioral & Tourism Analysis",
+    "panel": {
+      "hook": "Co-author and data analyst investigating how tourism conditions influence Indri behavior and habitat use in Madagascar.",
+      "description": {
+        "heading": "Research Brief",
+        "content": "The research combined structured field observations with quantitative statistical analysis. The first study analyzed 816 scan samples and 359 foraging observations from six Indri groups using statistical test to compare foraging support characteristics across tourism-exposure groups. The second study analyzed 220 tourist–Indri encounters to examine how tourist behavior and group size were associated with Indri responses."
+      },
+      "overview": {
+        "heading": "Research Contributions",
+        "items": [
+          "Analyzed observational data on Indri habitat use, foraging behavior, tourist interactions, and group size",
+          "Applied statistical methods to identify differences in foraging support height and tree diameter across tourism-exposure groups",
+          "Produced data visualizations and statistical interpretations supporting the research findings",
+          "Contributed to research published in Human-Animal Interactions and American Journal of Primatology"
+        ]
+      },
+      "techStack": [
+        "R",
+        "Statistical Analysis",
+        "Data Visualization",
+        "Ecological Data Analysis"
+      ],
+      "techStackHeading": "Methods & Tools",
+      "demoUrl": "https://doi.org/10.1079/hai.2026.0004",
+      "demoLabel": "Read Research"
+    }
   }
 }
