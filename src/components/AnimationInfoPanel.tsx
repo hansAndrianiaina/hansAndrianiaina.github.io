@@ -128,21 +128,21 @@ export default function AnimationInfoPanel({
         maxHeight: `min(80dvh, calc(100dvh - ${MOBILE_TOP_OFFSET}px - env(safe-area-inset-top, 0px) - 12px))`,
         transform: `scale(${visible ? 1 : 0.98})`,
         transformOrigin: 'top center',
-        opacity: visible ? 0.92 : 0,
+        opacity: visible ? 0.85 : 0,
         transition: 'opacity 0.6s ease, transform 0.6s ease',
         pointerEvents: 'none', // only the scroll body + close button re-enable themselves below
         filter: 'drop-shadow(0 0 18px rgba(80, 190, 200, 0.25))',
       }
     : {
         position: 'absolute',
-        top: '5%',
+        top: '10%',
         right: '0%',
         zIndex: 8,
         display: 'flex',
         flexDirection: 'column',
-        maxHeight: '90dvh', // top: 5% + 90% leaves a 5% margin at the bottom
+        maxHeight: '80dvh', // top: 10% + 80% leaves a 10% margin at the bottom
         transform: `translateX(-5%)  scale(${visible ? 1 : 0.98})`,
-        opacity: visible ? 0.75 : 0,
+        opacity: visible ? 0.85 : 0,
         transition: 'opacity 0.6s ease, transform 0.6s ease',
         pointerEvents: 'none', // only the scroll body + close button re-enable themselves below
         minWidth: 320,
