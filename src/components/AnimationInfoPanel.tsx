@@ -122,11 +122,15 @@ export default function AnimationInfoPanel({
         left: 12,
         right: 12,
         zIndex: 8,
+        display: 'flex',
+        flexDirection: 'column',
+        // never taller than 80% of the screen, and never run past the bottom edge
+        maxHeight: `min(80dvh, calc(100dvh - ${MOBILE_TOP_OFFSET}px - env(safe-area-inset-top, 0px) - 12px))`,
         transform: `scale(${visible ? 1 : 0.98})`,
         transformOrigin: 'top center',
         opacity: visible ? 0.92 : 0,
         transition: 'opacity 0.6s ease, transform 0.6s ease',
-        pointerEvents: 'none', // panel + close button re-enable themselves below
+        pointerEvents: 'none', // only the scroll body + close button re-enable themselves below
         filter: 'drop-shadow(0 0 18px rgba(80, 190, 200, 0.25))',
       }
     : {
@@ -134,10 +138,13 @@ export default function AnimationInfoPanel({
         top: '5%',
         right: '0%',
         zIndex: 8,
+        display: 'flex',
+        flexDirection: 'column',
+        maxHeight: '90dvh', // top: 5% + 90% leaves a 5% margin at the bottom
         transform: `translateX(-5%)  scale(${visible ? 1 : 0.98})`,
         opacity: visible ? 0.75 : 0,
         transition: 'opacity 0.6s ease, transform 0.6s ease',
-        pointerEvents: 'none', // wrapper stays click-through; interactive children re-enable themselves below
+        pointerEvents: 'none', // only the scroll body + close button re-enable themselves below
         minWidth: 320,
         maxWidth: 320,
         filter: 'drop-shadow(0 0 18px rgba(80, 190, 200, 0.25))',
@@ -145,6 +152,10 @@ export default function AnimationInfoPanel({
 
   const panelStyle: CSSProperties = {
     position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
+    flex: '1 1 auto',
+    minHeight: 0, // lets the panel shrink below its content height so the body can scroll
     padding: '22px 26px',
     clipPath: CLIP_PATH,
     WebkitClipPath: CLIP_PATH,
@@ -159,20 +170,26 @@ export default function AnimationInfoPanel({
     color: '#eafcff',
     fontFamily: "system-ui, -apple-system, 'Segoe UI', sans-serif",
     textAlign: 'center',
-    // Desktop stays click-through to the canvas; on mobile the panel captures touches so it can scroll.
-    pointerEvents: isMobile && visible ? 'auto' : 'none',
+    pointerEvents: 'none', // only the scroll body below captures input
   }
 
-  // On mobile, long content scrolls inside this box instead of running off-screen.
-  // (Inner box, not the panel, so the close button stays put while content scrolls.)
-  const contentStyle: CSSProperties = isMobile
-    ? {
-        maxHeight: 'min(60dvh, calc(100dvh - 146px))',
-        overflowY: 'auto',
-        overscrollBehavior: 'contain',
-        touchAction: 'pan-y',
-      }
-    : {}
+  // Title + hook: never scrolls
+  const headerStyle: CSSProperties = {
+    flexShrink: 0,
+  }
+
+  // Everything else: takes the remaining height and scrolls when it doesn't fit
+  const scrollBodyStyle: CSSProperties = {
+    flex: '1 1 auto',
+    minHeight: 0,
+    overflowY: 'auto',
+    overscrollBehavior: 'contain',
+    touchAction: 'pan-y',
+    paddingRight: 6, // keeps text off the scrollbar
+    scrollbarWidth: 'thin',
+    scrollbarColor: 'rgba(190, 240, 245, 0.4) transparent',
+    pointerEvents: visible ? 'auto' : 'none',
+  }
 
   const closeButtonStyle: CSSProperties = {
     position: 'absolute',
@@ -252,8 +269,8 @@ export default function AnimationInfoPanel({
           ✕
         </button>
 
-        <div style={contentStyle}>
-          {/* Title */}
+        {/* Pinned header: title + hook */}
+        <div style={headerStyle}>
           <div
             style={{
               fontSize: 14,
@@ -268,7 +285,6 @@ export default function AnimationInfoPanel({
             {title}
           </div>
 
-          {/* One-line hook */}
           {hook && (
             <div
               style={{
@@ -284,9 +300,11 @@ export default function AnimationInfoPanel({
               {hook}
             </div>
           )}
+        </div>
 
+        {/* Scrollable body */}
+        <div style={scrollBodyStyle}>
           {description && <Section {...description} />}
-
 
           {/* "What it is" — heading name is yours to choose via overview.heading */}
           {overview && <Section {...overview} />}
@@ -332,13 +350,13 @@ export default function AnimationInfoPanel({
           )}
 
           {title.toLowerCase() === 'boom box' && (
-            <div style={{ marginTop: 16, pointerEvents: visible ? 'auto' : 'none' }}>
+            <div style={{ marginTop: 16 }}>
               <MusicControls inline />
             </div>
           )}
 
           {title.toLowerCase() === 'lamp' && (
-            <div style={{ marginTop: 16, pointerEvents: visible ? 'auto' : 'none' }}>
+            <div style={{ marginTop: 16 }}>
               <LightningControls inline />
             </div>
           )}
@@ -349,7 +367,7 @@ export default function AnimationInfoPanel({
       <svg
         viewBox="0 0 100 100"
         preserveAspectRatio="none"
-        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}
       >
         <polyline
           points={FRAME_POINTS}

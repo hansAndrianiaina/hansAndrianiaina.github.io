@@ -18,6 +18,7 @@ const CHIP_CLIP = 'polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px
 
 const NAME = 'Hanssi Andrianiaina Rasolomanana'
 const INITIALS = 'HR'
+const TITLE = ' Data Product Engineer / 3D Artist'
 
 const LINKS = [
   { label: 'Email', href: 'mailto:rasanssian@gmail.com', external: false },
@@ -164,7 +165,7 @@ export default function InfoPanel({ forceMinimized = false }: InfoPanelProps) {
                 textOverflow: 'ellipsis',
               }}
             >
-              3D Artist / Data Product Engineer
+              {TITLE}
             </div>
           </div>
 
