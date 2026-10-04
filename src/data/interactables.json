@@ -4,14 +4,15 @@
       "hook": "Mar 2024 – Present · Axian Group, Antananarivo, MG",
       "description": {
         "heading": "Role Brief",
-        "content": "Major contributor to the design and operation of production machine learning systems for digital financial lending, supporting multiple initiatives across four operating companies in different countries."
+        "content": "Design, implement and operate data product and machine learning systems for digital financial lending, supporting multiple portfolio initiatives across multiple countries."
       },
       "overview": {
         "heading": "Highlights",
         "items": [
           "Built and maintained scalable hybrid data pipelines and ML workflows",
-          "Enabled daily refresh of customer eligibility scoring",
-          "Supported continuous KPI monitoring at group level"
+          "Enabled daily refresh of customer eligibility scoring based on behavioral and transactional data",
+          "Supported continuous monitoring of business KPIs and model performance, with automated alerts for anomalies",
+          "Collaborated with cross-functional and cross-country teams to integrate data products into production systems"
         ]
       },
       "techStack": [
@@ -49,6 +50,14 @@
         "heading": "Role Brief",
         "content": "Built real-time AR applications using Unity, delivering interactive experiences including games, product showcases, and virtual tours."
       },
+      "overview": {
+        "heading": "Highlights",
+        "items": [
+          "Infinite runner game",
+          "Architectural visualization and virtual tours",
+          "Product showcase using interactive 3D"
+        ]
+      },
       "techStack": [
         "Unity"
       ],
@@ -59,7 +68,7 @@
     "panel": {
       "hook": "An IoT system that tracks staff and student activity in real time.",
       "description": {
-        "heading": "Mission Brief",
+        "heading": "Project Brief",
         "content": "An IoT-based tracking system designed to monitor staff and student activity using RFID hardware paired with computer vision."
       },
       "overview": {
@@ -67,14 +76,16 @@
         "items": [
           "Tracks staff and student activity via RFID",
           "Integrates hardware I/O with a Node-RED flow-based backend",
-          "Uses computer vision for supplementary detection"
+          "Uses computer vision for supplementary detection",
+          "PHP based web interface"
         ]
       },
       "techStack": [
         "Python",
         "Node-RED",
         "C++",
-        "OpenCV"
+        "OpenCV",
+        "PHP"
       ],
       "techStackHeading": "Built With"
     } 
@@ -86,6 +97,13 @@
         "heading": "Role Brief",
         "content": "Created and optimized realistic 3D assets for games, VR/AR applications, and architectural visualization, balancing visual quality and performance constraints."
       },
+      "overview": {
+        "heading": "Highlights",
+        "items": [
+          "Game assets optimization for real-time rendering",
+          "Artistic object modeling and texturing"
+        ]
+      },
       "techStack": [
         "Blender",
         "ZBrush",
@@ -96,10 +114,17 @@
   },
   "Cube012_1": { "title": "Créathon 2020",
     "panel": {
-      "hook": "An innovation competition entry on AI for academic inclusion. Achieve top 8 in the national competition.",
+      "hook": "An innovation competition entry on AI for academic inclusion.",
       "description": {
-        "heading": "Mission Brief",
-        "content": "Participation in Creathon 2020, an innovation competition, tackling the theme of artificial intelligence for academic inclusion."
+        "heading": "Project Brief",
+        "content": "An innovation competition, tackling the theme of artificial intelligence for academic inclusion."
+      },
+      "overview": {
+        "heading": "Highlights",
+        "items": [
+          "Team based competition",
+          "Achieved top 8 in the national competition"
+        ]
       }
     } 
   },
@@ -107,16 +132,16 @@
     "panel": {
       "hook": "Estimating model performance in production — without ever seeing the ground truth.",
       "description": {
-        "heading": "Mission Brief",
+        "heading": "Project Brief",
         "content": "A production-oriented monitoring system that estimates classification model performance when true labels aren't available, combining confidence-based metrics with drift detection to catch silent model degradation early."
       },
       "overview": {
         "heading": "What It Does",
         "items": [
-          "Estimates classification performance without ground truth labels",
-          "Combines confidence-based metrics with univariate and multivariate drift detection",
-          "Validated across four datasets, including a simulated credit-scoring environment",
-          "Enables early detection and explanation of performance degradation"
+          "Estimates classification performance without ground truth labels using NannyML's CBPE methods",
+          "Combines confidence-based metrics with univariate and multivariate drift detection to detect early signs of model degradation",
+          "Enables early detection and explanation of performance degradation",
+          "Validated across four datasets, including a simulated credit-scoring environment"
         ]
       },
       "howItWorks": {
@@ -124,7 +149,8 @@
         "content": "The system tracks shifts in input feature distributions (univariate and multivariate drift) alongside model confidence signals, correlating both against known degradation patterns to flag when a live model's real-world accuracy is likely slipping."
       },
       "techStack": [
-        "Python"
+        "Python",
+        "NannyML"
       ],
       "techStackHeading": "Built With"
     }
@@ -135,42 +161,45 @@
   "pot001_1": { "title": "Flower pot", "panel": { "description": { "heading": "Description", "content": "An artistic flower pot that levitate" } } },
   "base_pot002_1": { "title": "Levitational support", "panel": { "description": { "heading": "Description", "content": "A levitational support system for the flower pot" } } },
   "pot002_1": { "title": "Flower pot", "panel": { "description": { "heading": "Description", "content": "An artistic flower pot that levitate" } } },
-  "Cube002_1": { "title": "Sitting table", "panel": { "description": { "heading": "Description", "content": "You can sit there" } } },
-  "Cube002_2": { "title": "Sitting table", "panel": { "description": { "heading": "Description", "content": "You can sit there" } } },
-  "boom_box_1": { "title": "Boom Box", "panel": { "description": { "heading": "Description", "content": "Play music" } } },
-  "boom_box_2": { "title": "Boom Box", "panel": { "description": { "heading": "Description", "content": "Play music" } } },
+  "Cube002_1": { "title": "Sitting table", "panel": { "description": { "heading": "", "content": "You can sit there" } } },
+  "Cube002_2": { "title": "Sitting table", "panel": { "description": { "heading": "", "content": "You can sit there" } } },
+  "boom_box_1": { "title": "Boom Box", "panel": { "description": { "heading": "Maybe ?", "content": "Play some music" } } },
+  "boom_box_2": { "title": "Boom Box", "panel": { "description": { "heading": "Maybe ?", "content": "Play some music" } } },
+  
   "Cube005_1": {
-    "title": "DOSSIER-H",
+    "title": "Welcome to my portfolio",
     "panel": {
       "hook": "Data product engineer & 3D artist",
       "description": {
-        "heading": "Description",
-        "content": "A comprehensive overview of Hanssi's professional journey — academic background, key roles held, technical expertise, and the mission-driven work that has shaped their career to date."
+        "heading": "About Me",
+        "content": "I am a data product engineer and 3D artist with a passion for building interactive experiences. This portfolio showcases my academic background, key roles, and projects."
       },
       "overview": {
-        "heading": "Content",
-        "content": "Academic background, key roles, and the mission-driven work that has shaped Hanssi's career so far."
+        "heading": "Feel free to look around !!!",
+        "content": "You can roam around the 3D space and interact with the various objects you see. Each one of them has different informations but also different ways to interact with the whole scene."
       },
       "howItWorks": {
-        "heading": "Field Notes",
+        "heading": "My fields of focus",
         "items": [
-          "Data product engineering — pipelines, tooling, product thinking",
+          "Data product engineering — bridging business and technology to deliver impactful data-driven solutions",
+          "Machine Learning & MLOps — AI — data engineering",
           "3D art & real-time interactive scenes",
-          "This portfolio itself is one of the case studies"
+          "This portfolio itself will serve as a demo to mix the fields of focus above. It's still a work in progress, many updates will come soon. You can contact me through the links at the bottom left of the screen."
         ]
       },
       "techStack": ["React", "TypeScript", "Three.js", "Blender", "Python"],
       "demoUrl": "https://www.linkedin.com/in/hanssi-andrianiaina-rasolomanana-047183205/",
-      "demoLabel": "Open Résumé ↗"
+      "demoLabel": "Linkedin ↗"
     }
   },
+  
   "door": { "title": "Door", "panel": { "description": { "heading": "Status", "content": "This door is currently locked" } } },
   "door001": { "title": "Door", "panel": { "description": { "heading": "Status", "content": "This door is currently locked" } } },
   "Sphere": {
     "title": "Robutler",
     "panel": {
       "description": {
-        "heading": "Description",
+        "heading": "Compiling...",
         "content": "A robotic assistant acting as a butler. Program is currently under implementation. You will be able to talk to it soon."
       }
     }
@@ -179,7 +208,7 @@
     "title": "Robutler",
     "panel": {
       "description": {
-        "heading": "Description",
+        "heading": "Compiling...",
         "content": "A robotic assistant acting as a butler. Program is currently under implementation. You will be able to talk to it soon."
       }
     }
@@ -188,7 +217,7 @@
     "title": "Robutler",
     "panel": {
       "description": {
-        "heading": "Description",
+        "heading": "Compiling...",
         "content": "A robotic assistant acting as a butler. Program is currently under implementation. You will be able to talk to it soon."
       }
     }
@@ -198,7 +227,7 @@
     "title": "Lamp",
     "panel": {
       "description": {
-        "heading": "Description",
+        "heading": "Maybe ?",
         "content": "You can control the lighting"
       }
     }
@@ -208,7 +237,7 @@
     "title": "Lamp",
     "panel": {
       "description": {
-        "heading": "Description",
+        "heading": "Maybe ?",
         "content": "You can control the lighting"
       }
     }
@@ -218,7 +247,7 @@
     "title": "Lamp",
     "panel": {
       "description": {
-        "heading": "Description",
+        "heading": "Maybe ?",
         "content": "You can control the lighting"
       }
     }
@@ -228,7 +257,7 @@
     "title": "Lamp",
     "panel": {
       "description": {
-        "heading": "Description",
+        "heading": "Maybe ?",
         "content": "You can control the lighting"
       }
     }
@@ -238,7 +267,7 @@
     "title": "Lamp",
     "panel": {
       "description": {
-        "heading": "Description",
+        "heading": "Maybe ?",
         "content": "You can control the lighting"
       }
     }
@@ -248,7 +277,7 @@
     "title": "Lamp",
     "panel": {
       "description": {
-        "heading": "Description",
+        "heading": "Maybe ?",
         "content": "You can control the lighting"
       }
     }
@@ -261,7 +290,7 @@
       "hook": "Co-author and data analyst investigating how tourism conditions influence Indri behavior and habitat use in Madagascar.",
       "description": {
         "heading": "Research Brief",
-        "content": "The research combined structured field observations with quantitative statistical analysis. The first study analyzed 816 scan samples and 359 foraging observations from six Indri groups using statistical test to compare foraging support characteristics across tourism-exposure groups. The second study analyzed 220 tourist–Indri encounters to examine how tourist behavior and group size were associated with Indri responses."
+        "content": "The research combines structured field observations with quantitative statistical analysis. The first study analyzed 816 scan samples and 359 foraging observations from six Indri groups using statistical test to compare foraging support characteristics across tourism-exposure groups. The second study analyzed 220 tourist–Indri encounters to examine how tourist behavior and group size were associated with Indri responses."
       },
       "overview": {
         "heading": "Research Contributions",

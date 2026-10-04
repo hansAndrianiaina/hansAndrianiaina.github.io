@@ -38,7 +38,7 @@ import RoomLighting from './RoomLighting'
 type ControlMode = 'orbit' | 'walk'
 
 const MIN_LOADING_MS = 1000   // loading screen stays up at least this long, even on a warm cache
-const MAX_LOADING_MS = 15000  // safety net — reveal anyway if assets never resolve (e.g. network failure)
+const STALL_MS  = 15000  // safety net — reveal anyway if assets never resolve (e.g. network failure)
 
 export default function Scene() {
   const { isTouch, isMobile } = useMobile()
@@ -60,7 +60,7 @@ export default function Scene() {
 
   useEffect(() => {
     const minTimer = setTimeout(() => setMinTimeElapsed(true), MIN_LOADING_MS)
-    const maxTimer = setTimeout(() => setLoadStalled(true), MAX_LOADING_MS)
+    const maxTimer = setTimeout(() => setLoadStalled(true), STALL_MS)
     return () => {
       clearTimeout(minTimer)
       clearTimeout(maxTimer)
@@ -158,7 +158,7 @@ export default function Scene() {
         </Canvas>
       </ErrorBoundary>
 
-      <LoadingScreen show={!sceneReady} stalled={loadStalled}  />
+      <LoadingScreen show={!sceneReady} stalled={loadStalled && !sceneReady}  />
 
       {/* Stacking order (zIndex): joysticks 5 → touch hints 6 → InfoPanel 7 → object panel 8 → mode toggle 9 → loading 20 */}
       {introDone && isTouch && mode === 'walk' && (
