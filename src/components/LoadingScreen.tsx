@@ -43,9 +43,23 @@ export default function LoadingScreen({ show, stalled = false, fadeDuration = 70
     return () => clearTimeout(t)
   }, [show, fadeDuration])
 
+  const FAKE_START = 20
+
+  // Start the bar at 0 for one frame so it animates up to 20% instead of appearing there
+  const [started, setStarted] = useState(false)
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setStarted(true))
+    return () => cancelAnimationFrame(id)
+  }, [])
+
   if (!mounted) return null
 
-  const pct = Math.min(100, Math.round(progress))
+  const real = Math.min(100, Math.round(progress))
+  const pct = !show
+    ? 100 // fade-out: always finish at 100, since useProgress can stay at 0 on a warm cache
+    : started
+      ? Math.round(FAKE_START + (real * (100 - FAKE_START)) / 100)
+      : 0
 
   const overlayStyle: CSSProperties = {
     position: 'absolute',
@@ -99,6 +113,23 @@ export default function LoadingScreen({ show, stalled = false, fadeDuration = 70
       : 'linear-gradient(90deg, #4fb8c4, #eafcff)',
     boxShadow: stalled ? '0 0 10px rgba(250,180,150,0.7)' : '0 0 10px rgba(190,245,250,0.7)',
     transition: 'width 0.25s ease-out',
+  }
+
+  const refreshButtonStyle: CSSProperties = {
+    marginTop: 18,
+    padding: '9px 22px',
+    minHeight: 44,
+    fontSize: 11,
+    fontWeight: 700,
+    letterSpacing: '0.1em',
+    textTransform: 'uppercase',
+    color: '#0b1b24',
+    background: 'linear-gradient(135deg, #f8d2c4 0%, #f0a884 100%)',
+    border: 'none',
+    clipPath: 'polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px)',
+    cursor: 'pointer',
+    boxShadow: '0 0 12px rgba(250,180,150,0.5)',
+    fontFamily: 'inherit',
   }
 
   return (
@@ -194,6 +225,16 @@ export default function LoadingScreen({ show, stalled = false, fadeDuration = 70
               : 'ready'}
         </div>
 
+        {stalled && (
+          <button
+            type="button"
+            onClick={() => window.location.reload()}
+            style={refreshButtonStyle}
+          >
+            Refresh
+          </button>
+        )}
+        
         {/* HUD frame outline + ruler ticks, same device as AnimationInfoPanel */}
         <svg
           viewBox="0 0 100 100"
