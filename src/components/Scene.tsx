@@ -35,6 +35,11 @@ import tracks from '../data/tracks.json'
 
 import RoomLighting from './RoomLighting'
 
+import { useChatStore } from '../store/chatStore'
+
+import ChatPanel from './ChatPanel'
+
+
 type ControlMode = 'orbit' | 'walk'
 
 const MIN_LOADING_MS = 1000   // loading screen stays up at least this long, even on a warm cache
@@ -55,8 +60,24 @@ export default function Scene() {
   const [loadStalled, setLoadStalled] = useState(false)
   const [minTimeElapsed, setMinTimeElapsed] = useState(false)
   const sceneReady = assetsLoaded && minTimeElapsed
-  // const { play : playAmbientSound } = useSoundPlayer(import.meta.env.BASE_URL + 'sounds/ambient.mp3', { volume: 0.125 });
 
+  // chat constant 
+  // const chatOpen = useChatStore((s) => s.chatOpen)
+  
+  const openChat = useChatStore((s) => s.openChat)
+  const setLastClicked = useChatStore((s) => s.setLastClicked)
+
+  const handleSelect = (meshName: string) => {
+    const id = INTERACTABLES[meshName].id
+    setLastClicked(id)
+    if (id === 'robutler') {
+      setSelected(null)   // close any open info panel
+      openChat()          // Robutler opens the chat instead of a static panel
+      return
+    }
+    setSelected(meshName)
+    console.log(useChatStore.getState())
+  }
 
   useEffect(() => {
     const minTimer = setTimeout(() => setMinTimeElapsed(true), MIN_LOADING_MS)
@@ -128,7 +149,7 @@ export default function Scene() {
               <Bounds clip margin={1.2}>
                 <group ref={modelRef}>
                   <Center>
-                    <InteractiveModel onSelect={setSelected} />
+                    <InteractiveModel onSelect={handleSelect} />
                   </Center>
                 </group>
               </Bounds>
@@ -180,6 +201,10 @@ export default function Scene() {
           onClose={() => setSelected(null)}
         />        
       )}
+
+      {/* {introDone && chatOpen && <ChatPanel />} */}
+      {introDone && <ChatPanel />}
+
       {/* {introDone && <MusicControls />} */}
     </>
   )
