@@ -129,8 +129,11 @@ export default function ChatPanel() {
     try {
       const reply = await sendMessage({ message: text, history, lastClicked })
       addMessage({ role: 'assistant', content: reply })
-    } catch {
-      addMessage({ role: 'assistant', content: 'Sorry, something went wrong. Try again.' })
+    } catch (e) {
+      addMessage({
+        role: 'assistant',
+        content: e instanceof Error ? e.message : 'Sorry, something went wrong. Try again.',
+      })
     } finally {
       setThinking(false)
     }
