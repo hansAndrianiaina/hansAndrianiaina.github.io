@@ -1,5 +1,7 @@
 {
-  "Cube007_1": { "title": "Portfolio Engineer & MLOps",
+  "Cube007_1": {
+    "id": "portfolio_engineer",
+    "title": "Portfolio Engineer & MLOps",
     "panel": {
       "hook": "Mar 2024 – Present · Axian Group, Antananarivo, MG",
       "description": {
@@ -23,18 +25,22 @@
         "SQL Server"
       ],
       "techStackHeading": "Tools & Platforms"
-    } 
+    }
   },
-  "Cube008_1": { "title": "Machine Learning Engineer",
+  "Cube008_1": {
+    "id": "machine_learning_engineer",
+    "title": "Machine Learning Engineer",
     "panel": {
       "hook": "Dec 2023 – Feb 2024 · Mvola S.A, Antananarivo, MG",
       "description": {
         "heading": "Role Brief",
         "content": "Designed and deployed machine learning solutions for financial lending, focusing on reliable integration between data pipelines, feature management, and model execution in production environments."
       }
-    } 
+    }
   },
-  "Cube006_1": { "title": "Msc MISA",
+  "Cube006_1": {
+    "id": "msc_misa",
+    "title": "Msc MISA",
     "panel": {
       "hook": "University of Antananarivo · 2020 – May 2023 (Defended Dec 2025)",
       "description": {
@@ -42,8 +48,10 @@
         "content": "Master's degree in Applied Mathematics, Computer Science, and Statistics (MISA) at the University of Antananarivo, providing the analytical and mathematical foundation behind the machine learning and data science work in this portfolio."
       }
     }
-   },
-  "Cube009_1": { "title": "Unity Developper",
+  },
+  "Cube009_1": {
+    "id": "unity_developer",
+    "title": "Unity Developper",
     "panel": {
       "hook": "Jan 2022 – May 2022 · W3D, Antananarivo, MG",
       "description": {
@@ -63,8 +71,10 @@
       ],
       "techStackHeading": "Tools"
     }
-   },
-  "Cube010_1": { "title": "RFID Staff Management",
+  },
+  "Cube010_1": {
+    "id": "rfid_staff_management",
+    "title": "RFID Staff Management",
     "panel": {
       "hook": "An IoT system that tracks staff and student activity in real time.",
       "description": {
@@ -88,9 +98,11 @@
         "PHP"
       ],
       "techStackHeading": "Built With"
-    } 
+    }
   },
-  "Cube011_1": { "title": "3D Infographist",
+  "Cube011_1": {
+    "id": "3d_infographist",
+    "title": "3D Infographist",
     "panel": {
       "hook": "Sep 2021 – Jan 2022 · W3D, Antananarivo, MG",
       "description": {
@@ -112,7 +124,9 @@
       "techStackHeading": "Tools"
     }
   },
-  "Cube012_1": { "title": "Créathon 2020",
+  "Cube012_1": {
+    "id": "creathon_2020",
+    "title": "Créathon 2020",
     "panel": {
       "hook": "An innovation competition entry on AI for academic inclusion.",
       "description": {
@@ -126,9 +140,11 @@
           "Achieved top 8 in the national competition"
         ]
       }
-    } 
+    }
   },
-  "Cube004_1": { "title": "Classification model performance monitoring and forecast",
+  "Cube004_1": {
+    "id": "classification_model_monitoring",
+    "title": "Classification model performance monitoring and forecast",
     "panel": {
       "hook": "Estimating model performance in production — without ever seeing the ground truth.",
       "description": {
@@ -155,18 +171,108 @@
       "techStackHeading": "Built With"
     }
   },
-  "base_pot_1": { "title": "Levitational support", "panel": { "description": { "heading": "Description", "content": "A levitational support system for the flower pot" } } },
-  "pot_1": { "title": "Flower pot", "panel": { "description": { "heading": "Description", "content": "An artistic flower pot that levitate" } } },
-  "base_pot001_1": { "title": "Levitational support", "panel": { "description": { "heading": "Description", "content": "A levitational support system for the flower pot" } } },
-  "pot001_1": { "title": "Flower pot", "panel": { "description": { "heading": "Description", "content": "An artistic flower pot that levitate" } } },
-  "base_pot002_1": { "title": "Levitational support", "panel": { "description": { "heading": "Description", "content": "A levitational support system for the flower pot" } } },
-  "pot002_1": { "title": "Flower pot", "panel": { "description": { "heading": "Description", "content": "An artistic flower pot that levitate" } } },
-  "Cube002_1": { "title": "Sitting table", "panel": { "description": { "heading": "", "content": "You can sit there" } } },
-  "Cube002_2": { "title": "Sitting table", "panel": { "description": { "heading": "", "content": "You can sit there" } } },
-  "boom_box_1": { "title": "Boom Box", "panel": { "description": { "heading": "Maybe ?", "content": "Play some music" } } },
-  "boom_box_2": { "title": "Boom Box", "panel": { "description": { "heading": "Maybe ?", "content": "Play some music" } } },
-  
+  "base_pot_1": {
+    "id": "base_pot",
+    "title": "Levitational support",
+    "panel": {
+      "description": {
+        "heading": "Description",
+        "content": "A levitational support system for the flower pot"
+      }
+    }
+  },
+  "pot_1": {
+    "id": "pot",
+    "title": "Flower pot",
+    "panel": {
+      "description": {
+        "heading": "Description",
+        "content": "An artistic flower pot that levitate"
+      }
+    }
+  },
+  "base_pot001_1": {
+    "id": "base_pot",
+    "title": "Levitational support",
+    "panel": {
+      "description": {
+        "heading": "Description",
+        "content": "A levitational support system for the flower pot"
+      }
+    }
+  },
+  "pot001_1": {
+    "id": "pot",
+    "title": "Flower pot",
+    "panel": {
+      "description": {
+        "heading": "Description",
+        "content": "An artistic flower pot that levitate"
+      }
+    }
+  },
+  "base_pot002_1": {
+    "id": "base_pot",
+    "title": "Levitational support",
+    "panel": {
+      "description": {
+        "heading": "Description",
+        "content": "A levitational support system for the flower pot"
+      }
+    }
+  },
+  "pot002_1": {
+    "id": "pot",
+    "title": "Flower pot",
+    "panel": {
+      "description": {
+        "heading": "Description",
+        "content": "An artistic flower pot that levitate"
+      }
+    }
+  },
+  "Cube002_1": {
+    "id": "sitting_table",
+    "title": "Sitting table",
+    "panel": {
+      "description": {
+        "heading": "",
+        "content": "You can sit there"
+      }
+    }
+  },
+  "Cube002_2": {
+    "id": "sitting_table",
+    "title": "Sitting table",
+    "panel": {
+      "description": {
+        "heading": "",
+        "content": "You can sit there"
+      }
+    }
+  },
+  "boom_box_1": {
+    "id": "boom_box",
+    "title": "Boom Box",
+    "panel": {
+      "description": {
+        "heading": "Maybe ?",
+        "content": "Play some music"
+      }
+    }
+  },
+  "boom_box_2": {
+    "id": "boom_box",
+    "title": "Boom Box",
+    "panel": {
+      "description": {
+        "heading": "Maybe ?",
+        "content": "Play some music"
+      }
+    }
+  },
   "Cube005_1": {
+    "id": "portfolio_intro",
     "title": "Welcome to my portfolio",
     "panel": {
       "hook": "Data product engineer & 3D artist",
@@ -187,15 +293,39 @@
           "This portfolio itself will serve as a demo to mix the fields of focus above. It's still a work in progress, many updates will come soon. You can contact me through the links at the bottom left of the screen."
         ]
       },
-      "techStack": ["React", "TypeScript", "Three.js", "Blender", "Python"],
-      "demoUrl": "https://www.linkedin.com/in/hanssi-andrianiaina-rasolomanana-047183205/",
+      "techStack": [
+        "React",
+        "TypeScript",
+        "Three.js",
+        "Blender",
+        "Python"
+      ],
+      "demoUrl": "[https://www.linkedin.com/in/hanssi-andrianiaina-rasolomanana-047183205/](https://www.linkedin.com/in/hanssi-andrianiaina-rasolomanana-047183205/)",
       "demoLabel": "Linkedin ↗"
     }
   },
-  
-  "door": { "title": "Door", "panel": { "description": { "heading": "Status", "content": "This door is currently locked" } } },
-  "door001": { "title": "Door", "panel": { "description": { "heading": "Status", "content": "This door is currently locked" } } },
+  "door": {
+    "id": "door",
+    "title": "Door",
+    "panel": {
+      "description": {
+        "heading": "Status",
+        "content": "This door is currently locked"
+      }
+    }
+  },
+  "door001": {
+    "id": "door",
+    "title": "Door",
+    "panel": {
+      "description": {
+        "heading": "Status",
+        "content": "This door is currently locked"
+      }
+    }
+  },
   "Sphere": {
+    "id": "robutler",
     "title": "Robutler",
     "panel": {
       "description": {
@@ -205,6 +335,7 @@
     }
   },
   "Sphere_1": {
+    "id": "robutler",
     "title": "Robutler",
     "panel": {
       "description": {
@@ -214,6 +345,7 @@
     }
   },
   "Sphere_2": {
+    "id": "robutler",
     "title": "Robutler",
     "panel": {
       "description": {
@@ -222,8 +354,8 @@
       }
     }
   },
-
   "round_lamp": {
+    "id": "round_lamp",
     "title": "Lamp",
     "panel": {
       "description": {
@@ -232,8 +364,8 @@
       }
     }
   },
-
   "round_lamp001": {
+    "id": "round_lamp",
     "title": "Lamp",
     "panel": {
       "description": {
@@ -242,8 +374,8 @@
       }
     }
   },
-
   "round_lamp002": {
+    "id": "round_lamp",
     "title": "Lamp",
     "panel": {
       "description": {
@@ -252,8 +384,8 @@
       }
     }
   },
-
   "round_lamp003": {
+    "id": "round_lamp",
     "title": "Lamp",
     "panel": {
       "description": {
@@ -262,8 +394,8 @@
       }
     }
   },
-
   "round_lamp004": {
+    "id": "round_lamp",
     "title": "Lamp",
     "panel": {
       "description": {
@@ -272,8 +404,8 @@
       }
     }
   },
-
   "round_lamp005": {
+    "id": "round_lamp",
     "title": "Lamp",
     "panel": {
       "description": {
@@ -282,9 +414,8 @@
       }
     }
   },
-
-
   "Cube013_1": {
+    "id": "scientific_research_indri",
     "title": "Scientific Research — Indri Behavioral & Tourism Analysis",
     "panel": {
       "hook": "Co-author and data analyst investigating how tourism conditions influence Indri behavior and habitat use in Madagascar.",
@@ -308,8 +439,9 @@
         "Ecological Data Analysis"
       ],
       "techStackHeading": "Methods & Tools",
-      "demoUrl": "https://doi.org/10.1079/hai.2026.0004",
+      "demoUrl": "[https://doi.org/10.1079/hai.2026.0004](https://doi.org/10.1079/hai.2026.0004)",
       "demoLabel": "Read Research"
     }
   }
 }
+
