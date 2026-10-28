@@ -13,7 +13,7 @@ const SCROLL_STICK_PX = 24  // "at the bottom" tolerance
 const MONO = "ui-monospace, 'SF Mono', Menlo, Consolas, monospace"
 const CLIP = 'polygon(9px 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%, 0 9px)'
 const CHIP_CLIP = 'polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px)'
-
+const WAKEUP_TIME = 10000
 // 1 while fresh, linear fade to 0 after HOLD_MS
 function ageOpacity(age: number) {
   if (age <= HOLD_MS) return 1
@@ -42,6 +42,7 @@ export default function ChatPanel() {
   const setThinking = useChatStore((s) => s.setThinking)
   const openChat = useChatStore((s) => s.openChat)
   const closeChat = useChatStore((s) => s.closeChat)
+  const [slow, setSlow] = useState(false)
 
   const [input, setInput] = useState('')
   const panelRef = useRef<HTMLDivElement>(null)
@@ -126,6 +127,7 @@ export default function ChatPanel() {
     addMessage({ role: 'user', content: text })
     closeChat()             // back to compact state right after sending
     setThinking(true)
+    const slowTimer = setTimeout(() => setSlow(true), WAKEUP_TIME)
     try {
       const reply = await sendMessage({ message: text, history, lastClicked })
       addMessage({ role: 'assistant', content: reply })
@@ -135,6 +137,8 @@ export default function ChatPanel() {
         content: e instanceof Error ? e.message : 'Sorry, something went wrong. Try again.',
       })
     } finally {
+      clearTimeout(slowTimer)
+      setSlow(false)
       setThinking(false)
     }
   }, [input, isThinking, messages, lastClicked, addMessage, closeChat, setThinking])
@@ -280,7 +284,8 @@ export default function ChatPanel() {
             ))}
             {isThinking && (
               <div className="chat-line" style={line(1)}>
-                <span style={label('assistant')}>Robutler</span>…
+                {/* <span style={label('assistant')}>Robutler</span>… */}
+                <span style={label('assistant')}>Robutler</span>{slow ? 'is waking up, one moment…' : '…'}
               </div>
             )}
           </div>

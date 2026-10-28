@@ -33,6 +33,7 @@ export async function sendMessage(req: ChatRequest): Promise<string> {
         lastClicked: req.lastClicked,
       })
   console.log(body_content)
+  console.log(`${API_URL}/chat`)
   try {
     res = await fetch(`${API_URL}/chat`, {
       method: 'POST',
@@ -40,8 +41,12 @@ export async function sendMessage(req: ChatRequest): Promise<string> {
       body: body_content,
       signal: AbortSignal.timeout(TIMEOUT_MS),
     })
-  } catch {
-    throw new Error("I can't reach my brain right now. Try again in a moment.")
+  } catch (error) {
+    console.error('Chat API error:', error)
+
+    throw new Error(
+      `I can't reach my brain right now. Try again later`
+    )
   }
 
   if (!res.ok) {
