@@ -1,4 +1,5 @@
 import type { ChatTurn } from '../store/chatStore'
+import { speak, primeAudio, stopSpeech } from '../utils/speech'
 
 export interface ChatRequest {
   message: string
@@ -26,6 +27,9 @@ export function warmUp(): void {
 export async function sendMessage(req: ChatRequest): Promise<string> {
   if (!API_URL) throw new Error('Robutler is not configured yet (missing VITE_API_URL).')
 
+  primeAudio()   // ← new: still inside the user's click, before any await
+  stopSpeech()   // ← new: don't talk over the previous reply
+  
   let res: Response
   let body_content = JSON.stringify({
         message: req.message,
@@ -67,5 +71,7 @@ export async function sendMessage(req: ChatRequest): Promise<string> {
   }
 
   const data = (await res.json()) as { reply?: string }
-  return data.reply ?? '…'
+  const reply = data.reply ?? '…'
+  if (data.reply) void speak(reply)   // ← fire-and-forget, text isn't delayed
+  return reply
 }
