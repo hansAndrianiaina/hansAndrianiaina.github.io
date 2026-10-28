@@ -3,6 +3,7 @@ import type { CSSProperties } from 'react'
 import { useChatStore } from '../store/chatStore'
 import type { ChatTurn } from '../store/chatStore'
 import { sendMessage } from '../services/aiClient'
+import { setVoiceEnabled, stopSpeech } from '../utils/speech'
 
 // ---- HUD tuning knobs ----
 const HOLD_MS = 7000        // a message stays fully visible this long
@@ -51,6 +52,13 @@ export default function ChatPanel() {
   const stickRef = useRef(true)        // is the user at the bottom of the list?
   const forceScrollRef = useRef(false) // set when the user sends a message
 
+  const [muted, setMuted] = useState(false)
+
+  const toggleMute = () => {
+    const next = !muted
+    setMuted(next)
+    setVoiceEnabled(!next)   // muting also stops any speech currently playing
+  }
 //   const lastTs = messages[messages.length - 1]?.ts ?? 0
 //   const now = useNow(!active && now0Check())
 //   function now0Check() {
@@ -84,6 +92,9 @@ export default function ChatPanel() {
       forceScrollRef.current = false
     }
   }, [messages.length, isThinking, active])
+
+  // stop the voice if the panel itself unmounts
+  useEffect(() => () => stopSpeech(), [])
 
   const onScroll = () => {
     const el = listRef.current
@@ -226,9 +237,9 @@ export default function ChatPanel() {
     position: 'relative',
     display: 'block',
     width: 'fit-content',
-    minWidth: 140,
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    minWidth: active ? 0 : 140,
+    // marginLeft: 'auto',
+    // marginRight: 'auto',
     overflow: 'hidden',
     maxHeight: active ? 0 : 44,
     marginTop: active ? 0 : 6,
@@ -248,7 +259,7 @@ export default function ChatPanel() {
     transition: 'max-height 0.25s ease, margin-top 0.25s ease, opacity 0.2s ease',
   }
 
-    const actionBtn = (primary: boolean): CSSProperties => ({
+  const actionBtn = (primary: boolean): CSSProperties => ({
     flexShrink: 0,
     height: 26,
     padding: primary ? '0 12px' : '0 9px',
@@ -267,6 +278,57 @@ export default function ChatPanel() {
     color: primary ? '#0b1b24' : 'rgba(234,252,255,0.8)',
     transition: 'opacity 0.2s ease',
     })
+
+  const muteBtn: CSSProperties = {
+    ...actionBtn(false),
+    width: 30,
+    padding: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: muted ? '#8fdee6' : 'rgba(234,252,255,0.8)',
+    opacity: muted ? 0.75 : 1,
+    pointerEvents: 'auto', // the panel is click-through when inactive, so opt back in
+  }
+
+  const footer: CSSProperties = {
+    position: 'relative',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: active ? 0 : 6,   // was: marginTop: 6
+  }
+
+  const renderMuteButton = (inRow: boolean) => (
+    <button
+      type="button"
+      style={muteBtn}
+      aria-label={muted ? 'Unmute Robutler' : 'Mute Robutler'}
+      aria-pressed={muted}
+      title={muted ? 'Unmute voice' : 'Mute voice'}
+      tabIndex={inRow && !active ? -1 : 0}   // the row is hidden when collapsed, so keep it out of tab order
+      disabled={inRow && !active}
+      onClick={(e) => {
+        toggleMute()
+        if (inRow) inputRef.current?.focus({ preventScroll: true }) // keep typing
+        else e.currentTarget.blur() // so the next Enter opens the chat instead of hitting this button
+      }}
+    >
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+        {muted ? (
+          <>
+            <line x1="23" y1="9" x2="17" y2="15" />
+            <line x1="17" y1="9" x2="23" y2="15" />
+          </>
+        ) : (
+          <path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14" />
+        )}
+      </svg>
+    </button>
+  )
 
   return (
     <div style={wrapper}>
@@ -346,11 +408,17 @@ export default function ChatPanel() {
             >
             ✕
             </button>
+
+            {renderMuteButton(true)}   {/* ← new */}
         </div>
 
-        <button type="button" style={trigger} onClick={openChat} tabIndex={active ? -1 : 0}>
-          Chat ↵
-        </button>
+        <div style={footer}>
+          <button type="button" style={trigger} onClick={openChat} tabIndex={active ? -1 : 0}>
+            Chat ↵
+          </button>
+
+          {!active && renderMuteButton(false)}
+        </div>
       </div>
 
       <style>{`
