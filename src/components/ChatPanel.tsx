@@ -5,6 +5,9 @@ import type { ChatTurn } from '../store/chatStore'
 import { sendMessage } from '../services/aiClient'
 import { setVoiceEnabled, stopSpeech } from '../utils/speech'
 
+import { useMobile } from '../hooks/useMobile'
+import { useKeyboardOffset } from '../hooks/useKeyboardOffset'
+
 // ---- HUD tuning knobs ----
 const HOLD_MS = 7000        // a message stays fully visible this long
 const FADE_MS = 3000        // then fades out over this long
@@ -51,6 +54,9 @@ export default function ChatPanel() {
   const inputRef = useRef<HTMLInputElement>(null)
   const stickRef = useRef(true)        // is the user at the bottom of the list?
   const forceScrollRef = useRef(false) // set when the user sends a message
+
+  const { isMobile } = useMobile()
+  const keyboardOffset = useKeyboardOffset(isMobile)
 
   const [muted, setMuted] = useState(false)
 
@@ -173,13 +179,16 @@ export default function ChatPanel() {
 
   // ---- styles ----
   const wrapper: CSSProperties = {
-    position: 'absolute',
-    bottom: '10%',
+    position: isMobile ? 'fixed' : 'absolute', // fixed = relative to the visible screen, not the 100vh container
+    bottom: isMobile && active ? keyboardOffset + 8 : '10%',
     left: '50%',
     transform: 'translateX(-50%)',
     width: 'min(440px, 92vw)',
-    pointerEvents: 'none', // inactive: clicks go through to the scene
+    pointerEvents: 'none',
+    zIndex: isMobile ? 50 : undefined, // above InfoPanel, ControlModeToggle, AnimationInfoPanel
+    transition: isMobile ? 'bottom 0.2s ease' : undefined,
   }
+
   const panel: CSSProperties = {
     position: 'relative',
     padding: '8px 10px',
@@ -201,7 +210,7 @@ export default function ChatPanel() {
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
-    maxHeight: LIST_MAX_HEIGHT,
+    maxHeight: isMobile ? 'min(220px, 30dvh)' : LIST_MAX_HEIGHT,
     overflowY: active ? 'auto' : 'hidden',
   }
   const line = (opacity: number): CSSProperties => ({
@@ -376,7 +385,7 @@ export default function ChatPanel() {
             style={{
               flex: 1,
               padding: '5px 2px',
-              fontSize: 13,
+              fontSize: isMobile ? 16 : 13,
               fontFamily: MONO,
               color: '#eafcff',
               background: 'transparent',
