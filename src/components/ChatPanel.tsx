@@ -339,6 +339,7 @@ export default function ChatPanel() {
     </button>
   )
 
+
   return (
     <div style={wrapper}>
       <div ref={panelRef} style={panel}>
@@ -422,21 +423,35 @@ export default function ChatPanel() {
         </div>
 
         <div style={footer}>
-          <button type="button" style={trigger} onClick={openChat} tabIndex={active ? -1 : 0}>
-            Chat ↵
-          </button>
-
+          <span
+            className={!active ? 'chat-trigger-pulse' : undefined}
+            style={{ display: 'flex' }}
+          >
+            <button
+              type="button"
+              style={trigger}
+              onClick={openChat}
+              tabIndex={active ? -1 : 0}
+            >
+              Chat ↵
+            </button>
+          </span>
           {!active && renderMuteButton(false)}
         </div>
       </div>
 
       <style>{`
         @keyframes chat-in { from { opacity: 0; transform: translateY(3px); } }
+        @keyframes chat-pulse {
+          0%, 100% { transform: scale(1);    filter: drop-shadow(0 0 0 rgba(143,222,230,0)); }
+          50%      { transform: scale(1.05); filter: drop-shadow(0 0 10px rgba(143,222,230,0.9)); }
+        }
         .chat-line { animation: chat-in 0.25s ease-out; }
+        .chat-trigger-pulse { animation: chat-pulse 2s ease-in-out infinite; }
         .chat-list { scrollbar-width: thin; scrollbar-color: rgba(190,240,245,0.35) transparent; }
         .chat-list::-webkit-scrollbar { width: 4px; }
         .chat-list::-webkit-scrollbar-thumb { background: rgba(190,240,245,0.35); }
-        @media (prefers-reduced-motion: reduce) { .chat-line { animation: none; } }
+        @media (prefers-reduced-motion: reduce) { .chat-line, .chat-trigger-pulse { animation: none; } }
       `}</style>
     </div>
   )
