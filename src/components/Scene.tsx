@@ -22,7 +22,7 @@ import InfoPanel from './InfoPanel'
 import ErrorBoundary from './ErrorBoundary'
 import LoadingScreen from './LoadingScreen'
 import SceneReadySignal from './SceneReadySignal'
-// import { useSoundPlayer } from './SoundPlayer';
+import { useSoundPlayer } from './SoundPlayer';
 
 import { useMobile } from '../hooks/useMobile'
 import VirtualJoysticks from './VirtualJoystick'
@@ -38,6 +38,7 @@ import RoomLighting from './RoomLighting'
 import { useChatStore } from '../store/chatStore'
 
 import ChatPanel from './ChatPanel'
+
 
 
 type ControlMode = 'orbit' | 'walk'
@@ -67,12 +68,15 @@ export default function Scene() {
   const openChat = useChatStore((s) => s.openChat)
   const setLastClicked = useChatStore((s) => s.setLastClicked)
 
+  const { play } = useSoundPlayer(import.meta.env.BASE_URL + 'sounds/mac-mini-startup.mp3', { volume: 0.5 });
+
   const handleSelect = (meshName: string) => {
     const id = INTERACTABLES[meshName].id
     setLastClicked(id)
     if (id === 'robutler') {
       setSelected(null)   // close any open info panel
       openChat()          // Robutler opens the chat instead of a static panel
+      play()
       return
     }
     setSelected(meshName)
