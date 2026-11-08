@@ -1,6 +1,6 @@
 import { useEffect, useState, Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { Stats, Center, Bounds  } from '@react-three/drei'
+import { StatsGl , Center, Bounds  } from '@react-three/drei'
 import CameraDebugPanel from './CameraDebugPanel'
 import IntroCamera from './IntroCamera'
 
@@ -179,7 +179,7 @@ export default function Scene() {
 
 
           {import.meta.env.DEV && <CameraDebugPanel onReplay={handleReplay} />}
-          {import.meta.env.DEV && <Stats />}
+          {import.meta.env.DEV && <StatsGl  />}
         </Canvas>
       </ErrorBoundary>
 

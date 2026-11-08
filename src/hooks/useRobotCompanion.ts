@@ -8,7 +8,6 @@ import * as THREE from 'three'
 const ROBOT_NAME = 'robot'
 
 // Where the robot parks relative to the clicked object
-const STANDOFF = 0.4
 const MIN_Y = 0.6
 const MAX_Y = 1.7
 
@@ -27,7 +26,17 @@ const ROBOT_YAW_OFFSET = 0
 
 // Idle hover
 const BOB_SPEED = 2
-const BOB_AMPLITUDE = 0.03
+const BOB_AMPLITUDE = 0.02
+
+const ROBOT_RADIUS = 0.2     // rough size of the robot incl. hover bob
+const SIDE_MARGIN = 0.15     // gap between object edge and robot
+const PREFERRED_SIDE = -1    // -1 = screen-left (info panel is on the right), 1 = right
+const LIFT = 0.15            // hover slightly above the object's center
+const ROOM_HALF_X = 2.2      // tune to your room; used to reject out-of-room spots
+const ROOM_HALF_Z = 2.8
+
+const MAX_HALF_WIDTH = 0.6   // cap so wide objects don't push the robot far away
+const WALL_MARGIN = 0.35     // keep the robot this far from the walls
 
 type MotionPhase = 'idle' | 'turning' | 'moving'
 
@@ -56,6 +65,8 @@ export function useRobotCompanion(
   const arrived = useRef(true)
   const lastActive = useRef(0)
 
+
+
   // Reusable objects to avoid allocations every frame
   const tmp = useMemo(
     () => ({
@@ -67,6 +78,8 @@ export function useRobotCompanion(
       desired: new THREE.Vector3(),
       cameraWorld: new THREE.Vector3(),
       cameraLocal: new THREE.Vector3(),
+      right: new THREE.Vector3(),
+      candidate: new THREE.Vector3(),
     }),
     []
   )
@@ -283,35 +296,57 @@ export function useRobotCompanion(
       tmp.box.getCenter(tmp.center)
       tmp.box.getSize(tmp.size)
 
-      // Horizontal direction from object towards camera
-      tmp.dir.subVectors(camera.position, tmp.center)
+      // Horizontal camera -> object direction
+      tmp.dir.subVectors(tmp.center, camera.position)
       tmp.dir.y = 0
-
-      if (tmp.dir.lengthSq() < 1e-6) {
-        tmp.dir.set(0, 0, 1)
-      }
-
+      if (tmp.dir.lengthSq() < 1e-6) tmp.dir.set(0, 0, -1)
       tmp.dir.normalize()
 
-      // Distance to the object's surface + stand-off
-      const reach =
-        (
-          Math.abs(tmp.dir.x) * tmp.size.x +
-          Math.abs(tmp.dir.z) * tmp.size.z
-        ) / 2 + STANDOFF
+      // Screen-right axis (dir x up)
+      tmp.right.set(-tmp.dir.z, 0, tmp.dir.x)
 
-      tmp.center.addScaledVector(tmp.dir, reach)
-
-      // Convert world position to robot parent-local space
-      r.parent.worldToLocal(tmp.center)
-
-      tmp.center.y = THREE.MathUtils.clamp(
-        tmp.center.y,
-        MIN_Y,
-        MAX_Y
+      const halfWidth = Math.min(
+        (Math.abs(tmp.right.x) * tmp.size.x + Math.abs(tmp.right.z) * tmp.size.z) / 2,
+        MAX_HALF_WIDTH
       )
+      const offset = halfWidth + ROBOT_RADIUS + SIDE_MARGIN
 
-      // Set destination
+      const limitX = ROOM_HALF_X - WALL_MARGIN
+      const limitZ = ROOM_HALF_Z - WALL_MARGIN
+      const inRoom = (v: THREE.Vector3) =>
+        Math.abs(v.x) <= limitX && Math.abs(v.z) <= limitZ
+
+      // Candidate positions for one side, optionally pulled toward the camera
+      const build = (side: number, pull: number, out: THREE.Vector3) =>
+        out
+          .copy(tmp.center)
+          .addScaledVector(tmp.right, side * offset)
+          .addScaledVector(tmp.dir, -pull)
+
+      let found = false
+      // Try preferred side, then the other; for each, pull progressively toward the camera
+      for (const side of [PREFERRED_SIDE, -PREFERRED_SIDE]) {
+        for (const pull of [0.1, 0.3, 0.5, 0.8]) {
+          build(side, pull, tmp.candidate)
+          if (inRoom(tmp.candidate)) {
+            found = true
+            break
+          }
+        }
+        if (found) break
+      }
+
+      // Last resort: take the preferred side and clamp it into the room
+      if (!found) {
+        build(PREFERRED_SIDE, 0.5, tmp.candidate)
+        tmp.candidate.x = THREE.MathUtils.clamp(tmp.candidate.x, -limitX, limitX)
+        tmp.candidate.z = THREE.MathUtils.clamp(tmp.candidate.z, -limitZ, limitZ)
+      }
+
+      tmp.candidate.y = tmp.center.y + LIFT
+      tmp.center.copy(tmp.candidate)
+      r.parent.worldToLocal(tmp.center)
+      tmp.center.y = THREE.MathUtils.clamp(tmp.center.y, MIN_Y, MAX_Y)
       target.current.copy(tmp.center)
 
       // Always turn before moving, including when changing targets
