@@ -8,7 +8,7 @@ import { useDidDrag } from '../interaction/DragGuardContext'
 import { useSoundPlayer } from './SoundPlayer';
 import { useRobotCompanion } from '../hooks/useRobotCompanion'
 
-const ROBOT_RETURN_DELAY = 10 // seconds without interaction before the robot flies home
+const ROBOT_RETURN_DELAY = 30 // seconds without interaction before the robot flies home
 
 const HOVER_COLOR = new THREE.Color('#ffffff')
 const HOVER_INTENSITY = 0.35
