@@ -6,6 +6,9 @@ import { Model } from './Model'
 import { INTERACTABLES } from '../interaction/interactables'
 import { useDidDrag } from '../interaction/DragGuardContext'
 import { useSoundPlayer } from './SoundPlayer';
+import { useRobotCompanion } from '../hooks/useRobotCompanion'
+
+const ROBOT_RETURN_DELAY = 30 // seconds without interaction before the robot flies home
 
 const HOVER_COLOR = new THREE.Color('#ffffff')
 const HOVER_INTENSITY = 0.35
@@ -18,7 +21,8 @@ const INTERACTABLE_NAMES = new Set(Object.keys(INTERACTABLES))
 
 export default function InteractiveModel({ onSelect }: { onSelect: (name: string) => void }) {
   const groupRef = useRef<THREE.Group>(null)
-  const robotRef = useRef<THREE.Object3D | null>(null)
+  // const robotRef = useRef<THREE.Object3D | null>(null)
+  const { goTo: sendRobotTo } = useRobotCompanion(groupRef, { returnDelay: ROBOT_RETURN_DELAY })
   const potPartsRef = useRef<{ mesh: THREE.Object3D; baseY: number; phase: number }[] | null>(null)
 
   const didDragRef = useDidDrag()
@@ -39,15 +43,15 @@ export default function InteractiveModel({ onSelect }: { onSelect: (name: string
     return meshes
   }, [])
 
-  useFrame(({ clock }, delta) => {
+  useFrame(({ clock }) => {
     const root = groupRef.current
     if (!root) return
 
-    // robot spin
-    if (!robotRef.current) {
-      robotRef.current = root.getObjectByName('robot') ?? null
-    }
-    if (robotRef.current) robotRef.current.rotation.y += delta * 0.5
+    // // robot spin
+    // if (!robotRef.current) {
+    //   robotRef.current = root.getObjectByName('robot') ?? null
+    // }
+    // if (robotRef.current) robotRef.current.rotation.y += delta * 0.5
 
     // pot bobbing: lazy lookup, runs once
     if (!potPartsRef.current) {
@@ -114,10 +118,18 @@ export default function InteractiveModel({ onSelect }: { onSelect: (name: string
   }, [setEmissive])
 
   const handleClick = useCallback((e: ThreeEvent<MouseEvent>) => {
+
+
     if (!INTERACTABLE_NAMES.has(e.object.name)) return
+    
+    // console.log('InteractiveModel handleClick', e.object.name)
+    // console.log('ID:', INTERACTABLES[e.object.name].id)
+
     e.stopPropagation()
     if (didDragRef.current) return // swallow the click that ended a drag
-    play(); // Play click sound on selection
+    if (!(INTERACTABLES[e.object.name].id === 'robutler')) play(); // Play click sound on selection if not Robutler
+      
+    sendRobotTo(e.object)   // <-- new
     onSelect(e.object.name)
   }, [onSelect, didDragRef])
 

@@ -1,6 +1,6 @@
 import { useEffect, useState, Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { Stats, Center, Bounds  } from '@react-three/drei'
+import { StatsGl , Center, Bounds  } from '@react-three/drei'
 import CameraDebugPanel from './CameraDebugPanel'
 import IntroCamera from './IntroCamera'
 
@@ -22,7 +22,7 @@ import InfoPanel from './InfoPanel'
 import ErrorBoundary from './ErrorBoundary'
 import LoadingScreen from './LoadingScreen'
 import SceneReadySignal from './SceneReadySignal'
-// import { useSoundPlayer } from './SoundPlayer';
+import { useSoundPlayer } from './SoundPlayer';
 
 import { useMobile } from '../hooks/useMobile'
 import VirtualJoysticks from './VirtualJoystick'
@@ -34,6 +34,12 @@ import { musicManager } from '../utils/music'
 import tracks from '../data/tracks.json'
 
 import RoomLighting from './RoomLighting'
+
+import { useChatStore } from '../store/chatStore'
+
+import ChatPanel from './ChatPanel'
+
+
 
 type ControlMode = 'orbit' | 'walk'
 
@@ -55,8 +61,27 @@ export default function Scene() {
   const [loadStalled, setLoadStalled] = useState(false)
   const [minTimeElapsed, setMinTimeElapsed] = useState(false)
   const sceneReady = assetsLoaded && minTimeElapsed
-  // const { play : playAmbientSound } = useSoundPlayer(import.meta.env.BASE_URL + 'sounds/ambient.mp3', { volume: 0.125 });
 
+  // chat constant 
+  // const chatOpen = useChatStore((s) => s.chatOpen)
+  
+  const openChat = useChatStore((s) => s.openChat)
+  const setLastClicked = useChatStore((s) => s.setLastClicked)
+
+  const { play } = useSoundPlayer(import.meta.env.BASE_URL + 'sounds/mac-mini-startup.mp3', { volume: 0.5 });
+
+  const handleSelect = (meshName: string) => {
+    const id = INTERACTABLES[meshName].id
+    setLastClicked(id)
+    if (id === 'robutler') {
+      setSelected(null)   // close any open info panel
+      openChat()          // Robutler opens the chat instead of a static panel
+      play()
+      return
+    }
+    setSelected(meshName)
+    console.log(useChatStore.getState())
+  }
 
   useEffect(() => {
     const minTimer = setTimeout(() => setMinTimeElapsed(true), MIN_LOADING_MS)
@@ -128,7 +153,7 @@ export default function Scene() {
               <Bounds clip margin={1.2}>
                 <group ref={modelRef}>
                   <Center>
-                    <InteractiveModel onSelect={setSelected} />
+                    <InteractiveModel onSelect={handleSelect} />
                   </Center>
                 </group>
               </Bounds>
@@ -154,7 +179,7 @@ export default function Scene() {
 
 
           {import.meta.env.DEV && <CameraDebugPanel onReplay={handleReplay} />}
-          {import.meta.env.DEV && <Stats />}
+          {import.meta.env.DEV && <StatsGl  />}
         </Canvas>
       </ErrorBoundary>
 
@@ -180,6 +205,10 @@ export default function Scene() {
           onClose={() => setSelected(null)}
         />        
       )}
+
+      {/* {introDone && chatOpen && <ChatPanel />} */}
+      {introDone && <ChatPanel />}
+
       {/* {introDone && <MusicControls />} */}
     </>
   )
